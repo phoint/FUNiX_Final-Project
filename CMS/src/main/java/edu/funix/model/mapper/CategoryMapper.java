@@ -10,12 +10,12 @@ public class CategoryMapper implements RowMapper<CategoryModel> {
 	@Override
 	public CategoryModel mapRow(ResultSet rs) {
 		try {
-			CategoryModel model = new CategoryModel();
-			model.setId(rs.getLong("catID"));
-			model.setTitle(rs.getString("catName"));
-			model.setUrl(rs.getString("URL"));
-			model.setCreatedDate(rs.getTimestamp("createDate"));
-			return model;
+			CategoryModel category = new CategoryModel();
+			category.setId(rs.getLong("CatID"));
+			category.setName(rs.getString("CatName"));
+			category.setUrl(rs.getString("CatURL"));
+			category.setDesc(rs.getNString("CatDesc"));
+			return category;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

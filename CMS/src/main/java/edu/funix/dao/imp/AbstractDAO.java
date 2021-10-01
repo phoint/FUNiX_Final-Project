@@ -55,6 +55,8 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 				stm.setTimestamp(index, (Timestamp) parameter);
 			} else if (parameter instanceof Integer) {
 				stm.setInt(index, (Integer) parameter);
+			} else if (parameter == null) {
+				stm.setNString(index, null);
 			}
 		}
 	}

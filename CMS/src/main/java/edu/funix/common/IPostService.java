@@ -6,6 +6,8 @@ import edu.funix.model.PostModel;
 
 public interface IPostService {
 	List<PostModel> findAll();
-	PostModel save();
+	PostModel findPostById(long postId);
+	Long save(PostModel postModel);
+	void edit(PostModel postModel);
 	Long getTotalItems();
 }

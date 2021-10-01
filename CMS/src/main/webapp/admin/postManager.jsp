@@ -51,9 +51,17 @@
 			<c:forEach items="${posts.listResult}" var="post">
 				<tr>
 					<td><input type="checkbox" name="" id=""></td>
-					<td>${post.title}</td>
-					<td>data</td>
-					<td>placeholder</td>
+					<td>
+				    <div>${post.title}</div>
+				    <div>
+				      <a href="<c:url value="edit?post=${post.id}"/>">Edit</a>
+				      <a class="ml-2" href="<c:url value="delete?post=${post.id}"/>">Delete</a>
+				    </div>
+			    </td>
+					<td>${post.author.username}</td>
+					<td><c:forEach items="${post.categories}" var="category">
+					<span>${category.title}</span>
+					</c:forEach></td>
 					<td>text</td>
 					<td>${post.publishDate}</td>
 				</tr>
@@ -79,7 +87,7 @@
 			<ul class="pagination" id="pagination"></ul>
 		</nav>
 	</div>
-	<form action="<c:url value="/PostManagement"/>" id="pagination-info">
+	<form action="<c:url value="/admin-posts"/>" id="pagination-info">
     <input type="hidden" name="maxItem" id="maxItem"/>
     <input type="hidden" name="currentPage" id="currentPage"/>
 	</form> 

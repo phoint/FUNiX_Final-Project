@@ -1,19 +1,37 @@
 package edu.funix.model;
 
 public class CategoryModel extends AbstractModel<CategoryModel> {
-	private String title;
+	private String name;
 	private String url;
+	private String desc;
+	private long totalPost;
+
+	public long getTotalPost() {
+		return totalPost;
+	}
+
+	public void setTotalPost(long totalPost) {
+		this.totalPost = totalPost;
+	}
 
 	public CategoryModel() {
 		super();
 	}
 
-	public String getTitle() {
-		return title;
+	public String getDesc() {
+		return desc;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getUrl() {

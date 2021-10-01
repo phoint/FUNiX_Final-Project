@@ -8,8 +8,8 @@ public class AbstractModel<T> {
 	private long id;
 	private Timestamp createdDate;
 	private Timestamp modifiedDate;
-	private String createdBy;
-	private String modifiedBy;
+	private long createdBy;
+	private long modifiedBy;
 	private long[] ids;
 	private List<T> listResult = new ArrayList<>();
 	private int page;
@@ -32,23 +32,22 @@ public class AbstractModel<T> {
 		this.maxItem = maxItem;
 	}
 
-
 	public AbstractModel() {
 	}
 
-	public String getCreatedBy() {
+	public long getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(long createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	public String getModifiedBy() {
+	public long getModifiedBy() {
 		return modifiedBy;
 	}
 
-	public void setModifiedBy(String modifiedBy) {
+	public void setModifiedBy(long modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 

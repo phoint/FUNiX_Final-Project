@@ -7,11 +7,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>${pageInfo.title}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" 
           integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" 
           crossorigin="anonymous">
-    <link rel="stylesheet" href="<c:url value="admin/admin.css"/>">
+    <link rel="stylesheet" href="<c:url value="css/admin.css"/>">
+    <script src="https://cdn.ckeditor.com/ckeditor5/29.2.0/classic/ckeditor.js"></script>
   </head>
   <body>
     <div class="container-fluid">
@@ -66,9 +67,6 @@
         </main>
       </div>
     </div>
-
-
-    <!-- <script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.slim.min.js"><\/script>')</script> -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" 
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" 
             crossorigin="anonymous"></script>
@@ -76,9 +74,8 @@
             integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" 
             crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script> -->
-    <script src="<c:url value="admin/jquery.twbsPagination.min.js"/>"></script>
-    <script src="<c:url value="admin/admin.js"/>"></script>
+    <script src="<c:url value="vendor/jquery.twbsPagination.min.js"/>"></script>
+    <script src="<c:url value="js/admin.js"/>"></script>
     <script type="text/javascript">
     var totalPage = ${posts.page};
     var currentPage = ${posts.currentPage};

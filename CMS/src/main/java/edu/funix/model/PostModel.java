@@ -1,7 +1,8 @@
 package edu.funix.model;
 
 import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PostModel extends AbstractModel<PostModel> {
 	private String title;
@@ -12,9 +13,29 @@ public class PostModel extends AbstractModel<PostModel> {
 	private int postStatus;
 	private boolean isVisible;
 	private String feature;
+	private AbstractModel<UserModel> author;
+	private List<CategoryModel> categories;
 
 	public PostModel() {
 		super();
+		author = new UserModel();
+		categories = new ArrayList<CategoryModel>();
+	}
+
+	public AbstractModel<UserModel> getAuthor() {
+		return author;
+	}
+
+	public void setAuthor(AbstractModel<UserModel> author) {
+		this.author = author;
+	}
+
+	public List<CategoryModel> getCategories() {
+		return categories;
+	}
+
+	public void setCategories(List<CategoryModel> categories) {
+		this.categories = categories;
 	}
 
 	public String getTitle() {

@@ -17,14 +17,14 @@ import edu.funix.model.PostModel;
 /**
  * Servlet implementation class PostManagement
  */
-@WebServlet("/PostManagement")
-public class PostManagement extends HttpServlet {
+@WebServlet("/admin-posts")
+public class Posts extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private IPostService postService;
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public PostManagement() {
+	public Posts() {
 		postService = new PostService();
 	}
 

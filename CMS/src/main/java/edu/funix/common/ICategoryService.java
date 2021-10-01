@@ -1,14 +1,13 @@
-package edu.funix.dao;
+package edu.funix.common;
 
 import java.util.List;
 
 import edu.funix.model.CategoryModel;
 
-public interface ICategoryDAO extends GenericDAO<CategoryModel> {
+public interface ICategoryService {
 	List<CategoryModel> findAll();
-	CategoryModel findCategoryById(long id);
+	CategoryModel findCategoryById(int id);
 	void save(CategoryModel category);
-	List<CategoryModel> findAllByPostId(long postID);
 	void edit(CategoryModel category);
 	void delete(long id);
 }

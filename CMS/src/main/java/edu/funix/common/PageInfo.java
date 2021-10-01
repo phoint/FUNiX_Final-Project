@@ -12,14 +12,20 @@ public class PageInfo {
 	public static Map<PageType, PageInfo> pageRoute = new HashMap<PageType, PageInfo>();
 
 	static {
-		pageRoute.put(PageType.POST_MANAGEMENT_PAGE, new PageInfo("Post Management", "posts.jsp", null));
+		pageRoute.put(PageType.USER_MANAGEMENT_PAGE, new PageInfo("User Management", "users.jsp", null));
+		pageRoute.put(PageType.CATEGORY_MANAGEMENT_PAGE, new PageInfo("Categories Management", "category.jsp", null));
+		pageRoute.put(PageType.EDIT_CATEGORY, new PageInfo("Edit Category", "edit-category.jsp", null));
+		pageRoute.put(PageType.POST_MANAGEMENT_PAGE, new PageInfo("Post Management", "postManager.jsp", null));
+		pageRoute.put(PageType.NEW_POST, new PageInfo("Add New Post", "newPost.jsp", null));
+		pageRoute.put(PageType.EDIT_POST, new PageInfo("User Management", "editPost.jsp", null));
+		
 	}
 	
 	public static void PrepareAndForward(HttpServletRequest request, HttpServletResponse response, PageType pageType) 
 			throws ServletException, IOException {
 		PageInfo page = pageRoute.get(pageType);
 		request.setAttribute("pageInfo", page);
-		request.getRequestDispatcher("admin/layout.jsp").forward(request, response);
+		request.getRequestDispatcher("/admin/layout.jsp").forward(request, response);
 	}
 	private String title;
 	private String contentUrl;
