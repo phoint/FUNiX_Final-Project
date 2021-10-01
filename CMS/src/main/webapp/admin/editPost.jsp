@@ -6,6 +6,7 @@
 	<a href="" class="btn btn-sm btn-outline-primary mb-3">Add New</a>
 </div>
 <form action="<c:url value="Edit"/>" method="post">
+  <input type="hidden" name="id" value="${p.id}">
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-8">
@@ -24,7 +25,7 @@
 				</div>
 				<div class="mt-3">
 				  <h6>Excerpt</h6>
-				  <textarea name="excerpt" id="excerpt" width="100%">${p.excerpt}</textarea>
+				  <textarea class="form-control" name="excerpt" id="excerpt" rows="4">${p.excerpt}</textarea>
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -55,8 +56,8 @@
 								thị</label> <select
 								class="form-control form-control-sm w-auto d-inline-block"
 								name="isVisible" id="isVisible">
-								<option value="true" <c:if test="${p.visible}">selected</c:if>>Public</option>
-								<option value="fasle" <c:if test="${not p.visible}">selected</c:if>>Private</option>
+								<option value="1" <c:if test="${p.isVisible gt 0}">selected</c:if>>Public</option>
+								<option value="0" <c:if test="${p.isVisible eq 0}">selected</c:if>>Private</option>
 							</select>
 						</div>
 						<div class="d-flex flex-row-reverse">

@@ -11,9 +11,9 @@ public class PostModel extends AbstractModel<PostModel> {
 	private String postUrl;
 	private Date publishDate;
 	private int postStatus;
-	private boolean isVisible;
+	private int isVisible;
 	private String feature;
-	private AbstractModel<UserModel> author;
+	private UserModel author;
 	private List<CategoryModel> categories;
 
 	public PostModel() {
@@ -26,7 +26,7 @@ public class PostModel extends AbstractModel<PostModel> {
 		return author;
 	}
 
-	public void setAuthor(AbstractModel<UserModel> author) {
+	public void setAuthor(UserModel author) {
 		this.author = author;
 	}
 
@@ -86,11 +86,11 @@ public class PostModel extends AbstractModel<PostModel> {
 		this.postStatus = postStatus;
 	}
 
-	public boolean isVisible() {
+	public int getIsVisible() {
 		return isVisible;
 	}
 
-	public void setVisible(boolean isVisible) {
+	public void setIsVisible(int isVisible) {
 		this.isVisible = isVisible;
 	}
 

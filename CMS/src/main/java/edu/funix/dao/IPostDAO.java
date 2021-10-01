@@ -10,4 +10,5 @@ public interface IPostDAO extends GenericDAO<PostModel> {
 	Long save(PostModel postModel);
 	void edit(PostModel postModel);
 	Long getTotalItems();
+	void delete(long id);
 }

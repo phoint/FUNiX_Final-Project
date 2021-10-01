@@ -1,6 +1,7 @@
 package edu.funix.dao.imp;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -55,6 +56,8 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 				stm.setTimestamp(index, (Timestamp) parameter);
 			} else if (parameter instanceof Integer) {
 				stm.setInt(index, (Integer) parameter);
+			} else if (parameter instanceof Date ) {
+				stm.setDate(index, (Date) parameter);
 			} else if (parameter == null) {
 				stm.setNString(index, null);
 			}
@@ -90,7 +93,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 				setParameter(updateStm, parameters);
 				updateStm.executeUpdate();
 				ResultSet rs = updateStm.getGeneratedKeys();
-				if (rs.next()) {
+				while (rs.next()) {
 					id = rs.getLong(1);
 				}
 				conn.commit();
@@ -131,7 +134,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return 0L;
+		return null;
 	}
 
 }

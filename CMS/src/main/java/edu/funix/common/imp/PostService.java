@@ -26,10 +26,10 @@ public class PostService implements IPostService{
 	@Override
 	public List<PostModel> findAll() {
 		List<PostModel> postList = postDAO.findAll();
-		for (PostModel post : postList) {
-			post.setCategories(catDAO.findAllByPostId(post.getId()));
-			post.setAuthor(userDAO.findUserById(post.getCreatedBy()));
-		}
+//		for (PostModel post : postList) {
+//			post.setCategories(catDAO.findAllByPostId(post.getId()));
+//			post.setAuthor(userDAO.findUserById(post.getCreatedBy()));
+//		}
 		return postList;
 	}
 
@@ -55,6 +55,12 @@ public class PostService implements IPostService{
 	@Override
 	public void edit(PostModel postModel) {
 		postDAO.edit(postModel);
+		
+	}
+
+	@Override
+	public void delete(long id) {
+		postDAO.delete(id);
 		
 	}
 	

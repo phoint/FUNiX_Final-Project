@@ -51,13 +51,15 @@ public class EditPost extends HttpServlet {
 	 *      response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.setContentType("text/html;charset=UTF-8");
+		request.setCharacterEncoding("UTF-8");
 		try {
 			PostModel post = new PostModel();
 			BeanUtils.populate(post, request.getParameterMap());
 			//TODO: Problem with Parameter mapping and could not set value for parameter in sql query
 			postService.edit(post);
-			long postId = post.getId();
-			request.setAttribute("id", postId);
+			post = postService.findPostById(post.getId());
+			request.setAttribute("p", post);
 			request.setAttribute("message", "Success");
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block

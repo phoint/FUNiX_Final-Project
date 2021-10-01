@@ -16,11 +16,11 @@ public class PostMapper implements RowMapper<PostModel> {
 			post.setContent(rs.getNString("Content"));
 			post.setExcerpt(rs.getNString("Excerpt"));
 			post.setPostUrl(rs.getString("PostURL"));
-			post.setCreatedDate(rs.getTimestamp("CreateDate"));
+			post.setCreatedDate(rs.getDate("CreateDate"));
 			post.setPublishDate(rs.getDate("PublishDate"));
-			post.setModifiedDate(rs.getTimestamp("ModifyDate"));
+			post.setModifiedDate(rs.getDate("ModifyDate"));
 			post.setPostStatus(rs.getInt("PostStatus"));
-			post.setVisible(rs.getInt("isVisible") != 0);
+			post.setIsVisible(rs.getInt("IsVisible"));
 			post.setCreatedBy(rs.getLong("Author"));
 			return post;
 		} catch (SQLException e) {
