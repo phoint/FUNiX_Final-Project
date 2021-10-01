@@ -16,35 +16,17 @@
 			<button type="submit" class="btn btn-sm btn-outline-primary mx-1">Submit</button>
 		</form>
 	</div>
-	<div class="d-inline-flex">
-		<form class="form-inline" action="" method="post">
-			<select class="form-control form-control-sm mx-1" name="" id="">
-				<option>All Date</option>
-				<option>Delete</option>
-				<option>Edit</option>
-			</select> <select class="form-control form-control-sm mx-1" name="" id="">
-				<option>All Date</option>
-				<option>Delete</option>
-				<option>Edit</option>
-			</select> <select class="form-control form-control-sm mx-1" name="" id="">
-				<option>All Date</option>
-				<option>Delete</option>
-				<option>Edit</option>
-			</select>
-			<button type="submit" class="btn btn-sm btn-outline-primary mx-1">Submit</button>
-		</form>
-	</div>
 </div>
 <div class="table-responsive">
 	<table class="table table-striped table-sm">
 		<thead>
 			<tr>
 				<th><input type="checkbox" name="" id=""></th>
-				<th>Title</th>
-				<th>Author</th>
-				<th>Categories</th>
-				<th>Tag</th>
-				<th>Date</th>
+				<th>Username</th>
+				<th>Name</th>
+				<th>Email</th>
+				<th>Role</th>
+				<th>Posts</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -52,10 +34,10 @@
 				<tr>
 					<td><input type="checkbox" name="" id=""></td>
 					<td>${user.username}</td>
-					<td>data</td>
-					<td>placeholder</td>
-					<td>text</td>
-					<td>${user.displayName}</td>
+					<td>${user.displayName }</td>
+					<td>${user.email}</td>
+					<td>${user.role ? "admin" : "user"}</td>
+					<td>postCount</td>
 				</tr>
 			</c:forEach>
 			<tr>
