@@ -31,8 +31,18 @@ public class Users extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		request.setAttribute("users", userService.findAll());
+		String id = request.getParameter("id");
+		String action = request.getParameter("action");
+		try {
+			if (id != null && action.equals("delete")) {
+				userService.permanentDelete(Long.parseLong(id));
+			}
+			
+			request.setAttribute("users", userService.findAll());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		PageInfo.PrepareAndForward(request, response, PageType.USER_MANAGEMENT_PAGE);
 	}
 

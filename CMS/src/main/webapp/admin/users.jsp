@@ -3,7 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div class="page-header">
 	<h2 class="d-inline-flex mr-3">Post</h2>
-	<a href="" class="btn btn-sm btn-outline-primary mb-3">Add New</a>
+	<a href="<c:url value="NewUser"/>"
+		class="btn btn-sm btn-outline-primary mb-3">Add New</a>
+	<div class="alert alert-success" role="alert">${message}</div>
 </div>
 <div class="wrap my-1">
 	<div class="d-inline-flex mr-2">
@@ -33,7 +35,14 @@
 			<c:forEach items="${users}" var="user">
 				<tr>
 					<td><input type="checkbox" name="" id=""></td>
-					<td>${user.username}</td>
+					<td>
+						<div>${user.username}</div>
+						<div>
+							<a href="<c:url value="EditUser?id=${user.id}"/>">Edit</a> <a
+								href="<c:url value="Users?id=${user.id}&action=delete"/>"
+								class="ml-2">Delete</a>
+						</div>
+					</td>
 					<td>${user.displayName }</td>
 					<td>${user.email}</td>
 					<td>${user.role ? "admin" : "user"}</td>
@@ -62,7 +71,7 @@
 		</nav>
 	</div>
 	<form action="<c:url value="/PostManagement"/>" id="pagination-info">
-    <input type="hidden" name="maxItem" id="maxItem"/>
-    <input type="hidden" name="currentPage" id="currentPage"/>
-	</form> 
+		<input type="hidden" name="maxItem" id="maxItem" /> <input
+			type="hidden" name="currentPage" id="currentPage" />
+	</form>
 </div>

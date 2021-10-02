@@ -12,56 +12,59 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import edu.funix.common.IPostService;
+import edu.funix.common.IUserService;
 import edu.funix.common.PageInfo;
 import edu.funix.common.PageType;
-import edu.funix.common.imp.PostService;
-import edu.funix.model.PostModel;
+import edu.funix.common.imp.UserService;
+import edu.funix.model.UserModel;
 
 /**
- * Servlet implementation class NewPost
+ * Servlet implementation class NewUser
  */
-@WebServlet("/NewPost")
-public class NewPost extends HttpServlet {
+@WebServlet("/NewUser")
+public class NewUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private IPostService postService; 
+	private IUserService userService;
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public NewPost() {
-        postService = new PostService();
+    public NewUser() {
+    	userService = new UserService();
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		PageInfo.PrepareAndForward(request, response, PageType.NEW_POST);
+		PageInfo.PrepareAndForward(request, response, PageType.NEW_USER);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html;charset=UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
+		UserModel user = new UserModel();
+		String message = null;
 		try {
-			PostModel post = new PostModel();
-			BeanUtils.populate(post, request.getParameterMap());
-			Long id = postService.save(post);
-			post = postService.findPostById(id);
-			request.setAttribute("p", post);
-			request.setAttribute("message", "Success");
+			BeanUtils.populate(user, request.getParameterMap());
+			Long id = userService.save(user);
+			message = "Success";
+			request.setAttribute("users", userService.findAll());
 		} catch (IllegalAccessException | InvocationTargetException e) {
-			// TODO Auto-generated catch block
+			message = "Fail";
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			message = "Fail";
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			message = "Fail";
 			e.printStackTrace();
 		}
-		PageInfo.PrepareAndForward(request, response, PageType.EDIT_POST);
+		
+		request.setAttribute("message", message);
+		PageInfo.PrepareAndForward(request, response, PageType.USER_MANAGEMENT_PAGE);
 	}
+
 }

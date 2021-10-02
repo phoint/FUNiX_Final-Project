@@ -12,80 +12,77 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import edu.funix.common.ICategoryService;
+import edu.funix.common.IUserService;
 import edu.funix.common.PageInfo;
 import edu.funix.common.PageType;
-import edu.funix.common.imp.CategoryService;
-import edu.funix.model.CategoryModel;
+import edu.funix.common.imp.UserService;
+import edu.funix.model.UserModel;
 
 /**
- * Servlet implementation class EditCategory
+ * Servlet implementation class EditUser
  */
-@WebServlet("/EditCategory")
-public class EditCategory extends HttpServlet {
+@WebServlet("/EditUser")
+public class EditUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private ICategoryService categoryService;
+	private IUserService userService;
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public EditCategory() {
-        super();
-        categoryService = new CategoryService();
+    public EditUser() {
+        userService = new UserService();
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		UserModel user = new UserModel();
 		String id = request.getParameter("id");
-		CategoryModel category = null;
+		String message = null;
 		try {
 			if (id != null) {
-				category = categoryService.findCategoryById(Integer.parseInt(id));
+				user = userService.findUserById(Long.parseLong(id));
 			}
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
+			message = "Did not find any user";
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			message = "Did not find any user";
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			message = "Did not find any user";
 			e.printStackTrace();
 		}
-		request.setAttribute("category", category);
-		PageInfo.PrepareAndForward(request, response, PageType.EDIT_CATEGORY);
+		request.setAttribute("message", message);
+		request.setAttribute("user", user);
+		PageInfo.PrepareAndForward(request, response, PageType.EDIT_USER);
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html;charset=UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
+		UserModel user = new UserModel();
+		String message = null;
 		try {
-			CategoryModel category = new CategoryModel();
-			BeanUtils.populate(category, request.getParameterMap());
-			if (category.getDesc().equals("")) {
-				category.setDesc(null);
-			}
-			categoryService.edit(category);
-			request.setAttribute("category", category);
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
+			BeanUtils.populate(user, request.getParameterMap());
+			userService.edit(user);
+			request.setAttribute("user", userService.findUserById(user.getId()));
+			message = "Success";
+		} catch (IllegalAccessException | InvocationTargetException e) {
+			message = "Fail";
 			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			message = "Fail";
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			message = "Fail";
 			e.printStackTrace();
 		}
-		request.setAttribute("message", "Success");
-		PageInfo.PrepareAndForward(request, response, PageType.EDIT_CATEGORY);
+		request.setAttribute("message", message);
+		PageInfo.PrepareAndForward(request, response, PageType.EDIT_USER);
 	}
 
 }

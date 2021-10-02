@@ -2,6 +2,7 @@ package edu.funix.controller.manage;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -40,17 +41,27 @@ public class Categories extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id = request.getParameter("id");
 		String action = request.getParameter("action");
-		if (id != null && action.equals("delete")) {
-			categoryService.delete(Long.parseLong(id));
+		try {
+			if (id != null && action.equals("delete")) {
+				categoryService.delete(Long.parseLong(id));
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		CategoryModel listCategory = new CategoryModel();
-		listCategory.setListResult(categoryService.findAll());
+		try {
+			listCategory.setListResult(categoryService.findAll());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 //		listCategory.setCurrentPage(
 //		    request.getParameter("currentPage") == null ? 1 : Integer.parseInt(request.getParameter("currentPage")));
 //		model.setPage((int) Math.ceil((double) postService.getTotalItems() / model.getMaxItem()));
 		request.setAttribute("categories", listCategory);
 		PageInfo.PrepareAndForward(request, response, PageType.CATEGORY_MANAGEMENT_PAGE);
-		
+
 	}
 
 	/**
@@ -69,10 +80,13 @@ public class Categories extends HttpServlet {
 			categoryService.save(category);
 			category.setListResult(categoryService.findAll());
 			request.setAttribute("categories", category);
-		} catch (IllegalAccessException e) {
+		} catch (IllegalAccessException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (InvocationTargetException e) {
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

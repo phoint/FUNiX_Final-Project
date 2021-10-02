@@ -13,12 +13,13 @@ public class PageInfo {
 
 	static {
 		pageRoute.put(PageType.USER_MANAGEMENT_PAGE, new PageInfo("User Management", "users.jsp", null));
+		pageRoute.put(PageType.NEW_USER, new PageInfo("New User", "newuser.jsp", null));
+		pageRoute.put(PageType.EDIT_USER, new PageInfo("Edit User", "edituser.jsp", null));
 		pageRoute.put(PageType.CATEGORY_MANAGEMENT_PAGE, new PageInfo("Categories Management", "category.jsp", null));
 		pageRoute.put(PageType.EDIT_CATEGORY, new PageInfo("Edit Category", "edit-category.jsp", null));
 		pageRoute.put(PageType.POST_MANAGEMENT_PAGE, new PageInfo("Post Management", "postManager.jsp", null));
-		pageRoute.put(PageType.NEW_POST, new PageInfo("Add New Post", "newPost.jsp", null));
-		pageRoute.put(PageType.EDIT_POST, new PageInfo("User Management", "editPost.jsp", null));
-		
+		pageRoute.put(PageType.NEW_POST, new PageInfo("New Post", "newPost.jsp", null));
+		pageRoute.put(PageType.EDIT_POST, new PageInfo("Edit Post", "editPost.jsp", null));		
 	}
 	
 	public static void PrepareAndForward(HttpServletRequest request, HttpServletResponse response, PageType pageType) 

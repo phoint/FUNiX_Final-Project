@@ -36,11 +36,16 @@ public class Posts extends HttpServlet {
 			throws ServletException, IOException {
 		String id = request.getParameter("id");
 		String action = request.getParameter("action");
-		if (id != null && action.equals("delete")) {
-			postService.delete(Long.parseLong(id));
-		}
 		PostModel model = new PostModel();
-		model.setListResult(postService.findAll());
+		try {
+			if (id != null && action.equals("delete")) {
+				postService.delete(Long.parseLong(id));
+			}
+			model.setListResult(postService.findAll());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 //		model.setCurrentPage(request.getParameter("currentPage") == null ? 1 : Integer.parseInt(request.getParameter("currentPage")));
 //		model.setPage((int) Math.ceil((double) postService.getTotalItems() / model.getMaxItem()));
 		request.setAttribute("posts", model);

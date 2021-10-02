@@ -23,7 +23,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 	}
 
 	@Override
-	public <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... parameters) {
+	public <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... parameters) throws SQLException, Exception {
 		List<T> items = new ArrayList<>();
 		try (Connection conn = dbObject.getConnection();
 			PreparedStatement stm = conn.prepareStatement(sql)) {
@@ -34,10 +34,6 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 			while (result.next()) {
 				items.add(rowMapper.mapRow(result));
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
 		}
 		return items;
 	}
@@ -65,7 +61,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 	}
 
 	@Override
-	public void update(String sql, Object... parameters) {
+	public void update(String sql, Object... parameters) throws SQLException, Exception {
 		try (Connection conn = dbObject.getConnection()) {
 			try (PreparedStatement updateStm = conn.prepareStatement(sql)) {
 				conn.setAutoCommit(false);
@@ -78,14 +74,11 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 			} finally {
 				conn.setAutoCommit(true);
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public Long insert(String sql, Object... parameters) {
+	public Long insert(String sql, Object... parameters) throws SQLException, Exception {
 		Long id = null;
 		try (Connection conn = dbObject.getConnection()) {
 			try (PreparedStatement updateStm = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -97,22 +90,18 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 					id = rs.getLong(1);
 				}
 				conn.commit();
-				return id;
 			} catch (Exception ex) {
 				conn.rollback();
 				ex.printStackTrace();
 			} finally {
 				conn.setAutoCommit(true);
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		return null;
+		return id;
 	}
 
 	@Override
-	public Long count(String sql, Object... parameters) {
+	public Long count(String sql, Object... parameters) throws SQLException, Exception {
 		Long totalItems = null;
 		try (Connection conn = dbObject.getConnection()) {
 			try (PreparedStatement stm = conn.prepareStatement(sql)) {
@@ -130,11 +119,8 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 			} finally {
 				conn.setAutoCommit(true);
 			}
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		return null;
+		return totalItems;
 	}
 
 }

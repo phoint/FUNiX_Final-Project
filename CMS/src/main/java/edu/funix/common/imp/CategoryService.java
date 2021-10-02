@@ -1,5 +1,6 @@
 package edu.funix.common.imp;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import edu.funix.common.ICategoryService;
@@ -15,27 +16,27 @@ public class CategoryService implements ICategoryService {
 	}
 
 	@Override
-	public List<CategoryModel> findAll() {
+	public List<CategoryModel> findAll() throws SQLException, Exception {
 		return categoryDAO.findAll();
 	}
 
 	@Override
-	public CategoryModel findCategoryById(int id) {
+	public CategoryModel findCategoryById(int id) throws SQLException, Exception {
 		return categoryDAO.findCategoryById(id);
 	}
 
 	@Override
-	public void save(CategoryModel category) {
+	public void save(CategoryModel category) throws SQLException, Exception {
 		categoryDAO.save(category);
 	}
 
 	@Override
-	public void edit(CategoryModel category) {
+	public void edit(CategoryModel category) throws SQLException, Exception {
 		categoryDAO.edit(category);
 	}
 
 	@Override
-	public void delete(long id) {
+	public void delete(long id) throws SQLException, Exception {
 		categoryDAO.delete(id);
 	}
 
