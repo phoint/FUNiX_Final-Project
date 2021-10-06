@@ -6,6 +6,8 @@ import java.util.List;
 import edu.funix.common.IUserService;
 import edu.funix.dao.IUserDAO;
 import edu.funix.dao.imp.UserDAO;
+import edu.funix.model.CategoryModel;
+import edu.funix.model.PageModel;
 import edu.funix.model.UserModel;
 
 public class UserService implements IUserService {
@@ -18,6 +20,11 @@ public class UserService implements IUserService {
 	@Override
 	public List<UserModel> findAll() throws SQLException, Exception {
 		return userDAO.findAll();
+	}
+	
+	@Override
+	public List<UserModel> findAll(long offset, long limit) throws SQLException, Exception {
+		return userDAO.findAll(offset,limit);
 	}
 
 	@Override
@@ -49,6 +56,23 @@ public class UserService implements IUserService {
 	@Override
 	public void permanentDelete(long id) throws SQLException, Exception {
 		userDAO.permanentDelete(id);
+	}
+	
+	@Override
+	public List<UserModel> pageRequest(PageModel page) throws SQLException, Exception {
+		if (page.getMaxItem() == null) {
+			page.setMaxItem(10);
+		}
+		page.setTotalPage((long)Math.ceil((double)getTotalItems() / page.getMaxItem()));
+		if (page.getTotalPage() > 1 && page.getCurrentPage() == null) {
+			page.setCurrentPage(1);
+		} 
+		if (page.getCurrentPage() != null) {
+			long offset = (page.getCurrentPage() - 1) * page.getMaxItem();
+			long limit = page.getCurrentPage() * page.getMaxItem();
+			return findAll(offset, limit);
+		}
+		return findAll();
 	}
 
 	@Override

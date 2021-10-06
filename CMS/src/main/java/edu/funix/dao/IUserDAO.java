@@ -14,4 +14,5 @@ public interface IUserDAO extends GenericDAO<UserModel> {
 	void permanentDelete(long id) throws SQLException, Exception;
 	Long getTotalItems() throws SQLException, Exception;
 	UserModel checkLogin(String username, String password) throws SQLException, Exception;
+	List<UserModel> findAll(long offset, long limit) throws SQLException, Exception;
 }

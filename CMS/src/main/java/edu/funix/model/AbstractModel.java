@@ -13,25 +13,6 @@ public class AbstractModel<T> {
 	private long modifiedBy;
 	private long[] ids;
 	private List<T> listResult = new ArrayList<>();
-	private int totalPage;
-	private int maxItem = 10;
-	private int currentPage = 1;
-
-	public int getTotalPage() {
-		return totalPage;
-	}
-
-	public void setTotalPage(int totalPage) {
-		this.totalPage = totalPage;
-	}
-
-	public int getMaxItem() {
-		return maxItem;
-	}
-
-	public void setMaxItem(int maxItem) {
-		this.maxItem = maxItem;
-	}
 
 	public AbstractModel() {
 	}
@@ -90,13 +71,5 @@ public class AbstractModel<T> {
 
 	public void setListResult(List<T> listResult) {
 		this.listResult = listResult;
-	}
-
-	public int getCurrentPage() {
-		return currentPage;
-	}
-
-	public void setCurrentPage(int currentPage) {
-		this.currentPage = currentPage;
 	}
 }

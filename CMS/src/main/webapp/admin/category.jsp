@@ -3,7 +3,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div class="page-header">
 	<h2 class="d-inline-flex mr-3">Categories</h2>
-	<a href="" class="btn btn-sm btn-outline-primary mb-3">Add New</a>
 </div>
 <div class="container-fluid">
 	<div class="row">
@@ -94,6 +93,16 @@
 						</tr>
 					</tbody>
 				</table>
+				<div class="container justify-content-center">
+					<nav class="d-block" aria-label="Page navigation">
+						<ul class="pagination" id="pagination"></ul>
+					</nav>
+				</div>
+				<form action="<c:url value="/admin-categories"/>" id="pagination-info"
+					method="get">
+					<input type="hidden" name="maxItem" id="maxItem" /> <input
+						type="hidden" name="currentPage" id="currentPage" />
+				</form>
 			</div>
 		</div>
 	</div>

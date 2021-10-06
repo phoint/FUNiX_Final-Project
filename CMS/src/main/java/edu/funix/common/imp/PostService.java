@@ -14,6 +14,7 @@ import edu.funix.dao.imp.CategoryDAO;
 import edu.funix.dao.imp.PostDAO;
 import edu.funix.dao.imp.PostGroupedDAO;
 import edu.funix.dao.imp.UserDAO;
+import edu.funix.model.PageModel;
 import edu.funix.model.PostModel;
 
 public class PostService implements IPostService {
@@ -84,11 +85,20 @@ public class PostService implements IPostService {
 	}
 
 	@Override
-	public List<PostModel> pageRequest(PageRequest page) throws SQLException, Exception {
-		if (page.getPage() != null) {
-			return postDAO.findAll(page.getOffset(), page.getLimit());
+	public List<PostModel> pageRequest(PageModel page) throws SQLException, Exception {
+		if (page.getMaxItem() == null) {
+			page.setMaxItem(10);
 		}
-		return postDAO.findAll();
+		page.setTotalPage((long)Math.ceil((double)getTotalItems() / page.getMaxItem()));
+		if (page.getTotalPage() > 1 && page.getCurrentPage() == null) {
+			page.setCurrentPage(1);
+		} 
+		if (page.getCurrentPage() != null) {
+			long offset = (page.getCurrentPage() - 1) * page.getMaxItem();
+			long limit = page.getCurrentPage() * page.getMaxItem();
+			return findAll(offset, limit);
+		}
+		return findAll();
 	}
-
+	
 }

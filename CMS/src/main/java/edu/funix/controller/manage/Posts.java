@@ -15,6 +15,7 @@ import edu.funix.Utils.PageType;
 import edu.funix.common.IPostService;
 import edu.funix.common.imp.PageRequest;
 import edu.funix.common.imp.PostService;
+import edu.funix.model.PageModel;
 import edu.funix.model.PostModel;
 
 /**
@@ -40,19 +41,19 @@ public class Posts extends HttpServlet {
 		String id = request.getParameter("id");
 		String action = request.getParameter("action");
 		PostModel model = new PostModel();
+		PageModel page = new PageModel();
 		try {
 			if (id != null && action.equals("delete")) {
 				postService.delete(Long.parseLong(id));
 			}
-			BeanUtils.populate(model, request.getParameterMap());
-			PageRequest page = new PageRequest(model.getCurrentPage(), model.getMaxItem());
-			model.setTotalPage((int) (postService.getTotalItems() / model.getMaxItem() + 1));
+			BeanUtils.populate(page, request.getParameterMap());
 			model.setListResult(postService.pageRequest(page));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		request.setAttribute("posts", model);
+		request.setAttribute("page", page);
 		PageInfo.PrepareAndForward(request, response, PageType.POST_MANAGEMENT_PAGE);
 	}
 

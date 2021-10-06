@@ -5,7 +5,7 @@
 	<h2 class="d-inline-flex mr-3">Post</h2>
 	<a href="<c:url value="NewUser"/>"
 		class="btn btn-sm btn-outline-primary mb-3">Add New</a>
-	<div class="alert alert-success" role="alert">${message}</div>
+	<!-- <div class="alert alert-success" role="alert">${message}</div> -->
 </div>
 <div class="wrap my-1">
 	<div class="d-inline-flex mr-2">
@@ -32,7 +32,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach items="${users}" var="user">
+			<c:forEach items="${users.listResult}" var="user">
 				<tr>
 					<td><input type="checkbox" name="" id=""></td>
 					<td>

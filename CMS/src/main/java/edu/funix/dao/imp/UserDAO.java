@@ -14,6 +14,15 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO{
 		String sql = "SELECT * FROM tblUSER";
 		return query(sql, new UserMapper());
 	}
+	
+	@Override
+	public List<UserModel> findAll(long offset, long limit) throws SQLException, Exception {
+		StringBuilder sql = new StringBuilder("SELECT TOP(?) * FROM ");
+		sql.append("(SELECT *, ROW_NUMBER() OVER (ORDER BY Username ASC) AS RowNumber ");
+		sql.append("FROM tblUSER) AS Pagable ");
+		sql.append("WHERE RowNumber > ?");
+		return query(sql.toString(), new UserMapper(), limit, offset);
+	}
 
 	@Override
 	public UserModel findUserById(long id) throws SQLException, Exception {

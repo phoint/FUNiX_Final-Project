@@ -3,6 +3,7 @@ package edu.funix.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import edu.funix.common.imp.PageRequest;
 import edu.funix.model.PostModel;
 
 public interface IPostDAO extends GenericDAO<PostModel> {

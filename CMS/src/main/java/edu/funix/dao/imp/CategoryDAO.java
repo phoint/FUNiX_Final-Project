@@ -14,6 +14,21 @@ public class CategoryDAO extends AbstractDAO<CategoryModel> implements ICategory
 		String sql = "SELECT * FROM tblCATEGORY";
 		return query(sql, new CategoryMapper());
 	}
+	
+	@Override
+	public List<CategoryModel> findAll(long offset, long limit) throws SQLException, Exception {
+		StringBuilder sql = new StringBuilder("SELECT TOP(?) * FROM ");
+		sql.append("(SELECT *, ROW_NUMBER() OVER (ORDER BY CatName ASC) AS RowNumber ");
+		sql.append("FROM tblCATEGORY) AS Pagable ");
+		sql.append("WHERE RowNumber > ?");
+		return query(sql.toString(), new CategoryMapper(), limit, offset);
+	}
+	
+	@Override
+	public Long getTotalItems() throws SQLException, Exception {
+		String sql = "SELECT count(*) FROM tblCATEGORY";
+		return count(sql);
+	}
 
 	@Override
 	public CategoryModel findCategoryById(long id) throws SQLException, Exception {

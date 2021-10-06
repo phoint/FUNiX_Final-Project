@@ -17,6 +17,7 @@ import edu.funix.Utils.PageType;
 import edu.funix.common.ICategoryService;
 import edu.funix.common.imp.CategoryService;
 import edu.funix.model.CategoryModel;
+import edu.funix.model.PageModel;
 import edu.funix.model.PostModel;
 
 /**
@@ -41,25 +42,21 @@ public class Categories extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String id = request.getParameter("id");
 		String action = request.getParameter("action");
+		CategoryModel categories = new CategoryModel();
+		PageModel page = new PageModel();
 		try {
 			if (id != null && action.equals("delete")) {
 				categoryService.delete(Long.parseLong(id));
 			}
+			BeanUtils.populate(page, request.getParameterMap());
+			categories.setListResult(categoryService.pageRequest(page));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		CategoryModel listCategory = new CategoryModel();
-		try {
-			listCategory.setListResult(categoryService.findAll());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-//		listCategory.setCurrentPage(
-//		    request.getParameter("currentPage") == null ? 1 : Integer.parseInt(request.getParameter("currentPage")));
-//		model.setPage((int) Math.ceil((double) postService.getTotalItems() / model.getMaxItem()));
-		request.setAttribute("categories", listCategory);
+		
+		request.setAttribute("page", page);
+		request.setAttribute("categories", categories);
 		PageInfo.PrepareAndForward(request, response, PageType.CATEGORY_MANAGEMENT_PAGE);
 
 	}
@@ -71,15 +68,16 @@ public class Categories extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
+		CategoryModel category = new CategoryModel();
+		PageModel page = new PageModel();
+		
 		try {
-			CategoryModel category = new CategoryModel();
 			BeanUtils.populate(category, request.getParameterMap());
 			if (category.getDesc().equals("")) {
 				category.setDesc(null);
 			}
 			categoryService.save(category);
-			category.setListResult(categoryService.findAll());
-			request.setAttribute("categories", category);
+			category.setListResult(categoryService.pageRequest(page));
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -91,6 +89,8 @@ public class Categories extends HttpServlet {
 			e.printStackTrace();
 		}
 		request.setAttribute("message", "Success");
+		request.setAttribute("categories", category);
+		request.setAttribute("page", page);
 		PageInfo.PrepareAndForward(request, response, PageType.CATEGORY_MANAGEMENT_PAGE);
 	}
 }

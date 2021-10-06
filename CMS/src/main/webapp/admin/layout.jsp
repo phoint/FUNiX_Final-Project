@@ -79,8 +79,9 @@
     <script src="<c:url value="vendor/jquery.twbsPagination.min.js"/>"></script>
     <script src="<c:url value="js/admin.js"/>"></script>
     <script type="text/javascript">
-    var totalPage = ${posts.totalPage};
-    var currentPage = ${posts.currentPage};
+    var maxItem = 10;
+    var totalPage = ${page.totalPage};
+    var currentPage = ${page.currentPage};
       $(function () {
           window.pagObj = $('#pagination').twbsPagination({
               totalPages: totalPage,
