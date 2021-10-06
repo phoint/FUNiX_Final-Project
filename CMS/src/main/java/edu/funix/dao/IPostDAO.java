@@ -7,6 +7,7 @@ import edu.funix.model.PostModel;
 
 public interface IPostDAO extends GenericDAO<PostModel> {
 	List<PostModel> findAll() throws SQLException, Exception;
+	List<PostModel> findAll(long offset, long limit) throws SQLException, Exception;
 	PostModel findPostById(long postId) throws SQLException, Exception;
 	Long save(PostModel postModel) throws SQLException, Exception;
 	void edit(PostModel postModel) throws SQLException, Exception;

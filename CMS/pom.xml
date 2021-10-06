@@ -40,8 +40,21 @@
 			<artifactId>commons-beanutils</artifactId>
 			<version>1.9.4</version>
 		</dependency>
+		<dependency>
+			<groupId>com.cksource</groupId>
+			<artifactId>ckfinder3</artifactId>
+			<version>3.5.2</version>
+		</dependency>
 
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>cksource-mvn-repo</id>
+			<name>CKSource Maven Repository</name>
+			<url>https://maven.cksource.com/</url>
+		</repository>
+	</repositories>
 	<build>
 		<plugins>
 			<plugin>

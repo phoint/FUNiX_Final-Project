@@ -12,9 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import edu.funix.Utils.PageInfo;
+import edu.funix.Utils.PageType;
 import edu.funix.common.ICategoryService;
-import edu.funix.common.PageInfo;
-import edu.funix.common.PageType;
 import edu.funix.common.imp.CategoryService;
 import edu.funix.model.CategoryModel;
 

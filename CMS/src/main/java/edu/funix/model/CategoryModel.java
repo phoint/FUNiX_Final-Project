@@ -5,6 +5,15 @@ public class CategoryModel extends AbstractModel<CategoryModel> {
 	private String url;
 	private String desc;
 	private long totalPost;
+	private boolean isUsed;
+
+	public boolean isUsed() {
+		return isUsed;
+	}
+
+	public void setUsed(boolean isUsed) {
+		this.isUsed = isUsed;
+	}
 
 	public long getTotalPost() {
 		return totalPost;

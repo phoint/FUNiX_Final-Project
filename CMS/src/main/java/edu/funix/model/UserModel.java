@@ -6,6 +6,15 @@ public class UserModel extends AbstractModel<UserModel> {
 	private String password;
 	private String displayName;
 	private boolean role;
+	private String loginMessage;
+
+	public String getLoginMessage() {
+		return loginMessage;
+	}
+
+	public void setLoginMessage(String loginMessage) {
+		this.loginMessage = loginMessage;
+	}
 
 	public UserModel() {
 		super();

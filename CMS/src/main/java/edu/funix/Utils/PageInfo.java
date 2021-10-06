@@ -1,4 +1,4 @@
-package edu.funix.common;
+package edu.funix.Utils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -20,6 +20,7 @@ public class PageInfo {
 		pageRoute.put(PageType.POST_MANAGEMENT_PAGE, new PageInfo("Post Management", "postManager.jsp", null));
 		pageRoute.put(PageType.NEW_POST, new PageInfo("New Post", "newPost.jsp", null));
 		pageRoute.put(PageType.EDIT_POST, new PageInfo("Edit Post", "editPost.jsp", null));		
+		pageRoute.put(PageType.LOGIN, new PageInfo("Login", "login.jsp", null));		
 	}
 	
 	public static void PrepareAndForward(HttpServletRequest request, HttpServletResponse response, PageType pageType) 
@@ -28,6 +29,14 @@ public class PageInfo {
 		request.setAttribute("pageInfo", page);
 		request.getRequestDispatcher("/admin/layout.jsp").forward(request, response);
 	}
+	public static void WebPrepareAndForward(HttpServletRequest request, HttpServletResponse response, PageType pageType) 
+			throws ServletException, IOException {
+		PageInfo page = pageRoute.get(pageType);
+		request.setAttribute("pageInfo", page);
+		request.getRequestDispatcher("/web/layout.jsp").forward(request, response);
+	}
+	
+	
 	private String title;
 	private String contentUrl;
 	private String scriptUrl;

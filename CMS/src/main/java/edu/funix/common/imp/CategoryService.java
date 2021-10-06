@@ -5,7 +5,9 @@ import java.util.List;
 
 import edu.funix.common.ICategoryService;
 import edu.funix.dao.ICategoryDAO;
+import edu.funix.dao.IPostGroupedDAO;
 import edu.funix.dao.imp.CategoryDAO;
+import edu.funix.dao.imp.PostGroupedDAO;
 import edu.funix.model.CategoryModel;
 
 public class CategoryService implements ICategoryService {

@@ -13,6 +13,7 @@
           crossorigin="anonymous">
     <link rel="stylesheet" href="<c:url value="css/admin.css"/>">
     <script src="https://cdn.ckeditor.com/ckeditor5/29.2.0/classic/ckeditor.js"></script>
+    <script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
   </head>
   <body>
     <div class="container-fluid">
@@ -67,6 +68,7 @@
         </main>
       </div>
     </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" 
             integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" 
             crossorigin="anonymous"></script>
@@ -77,7 +79,7 @@
     <script src="<c:url value="vendor/jquery.twbsPagination.min.js"/>"></script>
     <script src="<c:url value="js/admin.js"/>"></script>
     <script type="text/javascript">
-    var totalPage = ${posts.page};
+    var totalPage = ${posts.totalPage};
     var currentPage = ${posts.currentPage};
       $(function () {
           window.pagObj = $('#pagination').twbsPagination({
@@ -85,12 +87,12 @@
               visiblePages: 3,
               startPage: currentPage,
               onPageClick: function (event, page) {
-            	  //console.info(page + ' (from options)');
+            	  console.info(page + ' (from options)');
               }
           }).on('page', function (event, page) {
               console.info(page + ' (from event listening)');
               $('#currentPage').val(page);
-              $('#maxItem').val(5);
+              $('#maxItem').val(10);
               $('#pagination-info').submit();
           });
       });

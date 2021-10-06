@@ -3,7 +3,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div class="page-header">
 	<h2 class="d-inline-flex mr-3">Post</h2>
-	<a href="<c:url value="NewPost"/>" class="btn btn-sm btn-outline-primary mb-3">Add New</a>
+	<a href="<c:url value="NewPost"/>"
+		class="btn btn-sm btn-outline-primary mb-3">Add New</a>
 </div>
 <div class="wrap my-1">
 	<div class="d-inline-flex mr-2">
@@ -52,16 +53,19 @@
 				<tr>
 					<td><input type="checkbox" name="" id=""></td>
 					<td>
-				    <div>${post.title}</div>
-				    <div>
-				      <a href="<c:url value="Edit?id=${post.id}"/>">Edit</a>
-				      <a class="ml-2" href="<c:url value="admin-posts?id=${post.id}&action=delete"/>">Delete</a>
-				    </div>
-			    </td>
+						<div>${post.title}</div>
+						<div>
+							<a href="<c:url value="Edit?id=${post.id}"/>">Edit</a> <a
+								class="ml-2"
+								href="<c:url value="admin-posts?id=${post.id}&action=delete"/>">Delete</a>
+						</div>
+					</td>
 					<td>${post.author.username}</td>
 					<td><c:forEach items="${post.categories}" var="category">
-					<span>${category.name}</span>
-					</c:forEach></td>
+							<c:if test="${category.used}">
+								<span>${category.name}</span>
+							</c:if>
+						</c:forEach></td>
 					<td>text</td>
 					<td>${post.publishDate}</td>
 				</tr>
@@ -87,8 +91,9 @@
 			<ul class="pagination" id="pagination"></ul>
 		</nav>
 	</div>
-	<form action="<c:url value="/admin-posts"/>" id="pagination-info">
-    <input type="hidden" name="maxItem" id="maxItem"/>
-    <input type="hidden" name="currentPage" id="currentPage"/>
-	</form> 
+	<form action="<c:url value="/admin-posts"/>" id="pagination-info"
+		method="get">
+		<input type="hidden" name="maxItem" id="maxItem" /> <input
+			type="hidden" name="currentPage" id="currentPage" />
+	</form>
 </div>

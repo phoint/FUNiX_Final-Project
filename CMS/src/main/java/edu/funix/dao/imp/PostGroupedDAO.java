@@ -16,6 +16,12 @@ public class PostGroupedDAO extends AbstractDAO<PostGroupedModel> implements IPo
 	}
 
 	@Override
+	public boolean search(long catId, long postId) throws SQLException, Exception {
+		String sql = "SELECT * FROM tblPOSTGROUP WHERE CatID = ? AND PostID = ?";
+		return query(sql, new PostGroupedMapper(), catId, postId).isEmpty() ? false : true;
+	}
+
+	@Override
 	public List<PostGroupedModel> findAllPostByCatId(long catId) throws SQLException, Exception {
 		String sql = "SELECT * FROM tblPOSTGROUP WHERE CatID = ?";
 		return query(sql, new PostGroupedMapper(), catId);
@@ -31,6 +37,13 @@ public class PostGroupedDAO extends AbstractDAO<PostGroupedModel> implements IPo
 	public void save(long CatId, long PostId) throws SQLException, Exception {
 		String sql = "INSERT INTO tblPOSTGROUP(CatID, PostID) VALUES (?,?)";
 		update(sql, CatId, PostId);
+	}
+
+	@Override
+	public void delete(long postId) throws SQLException, Exception {
+		String sql = "DELETE FROM tblPOSTGROUP WHERE PostID = ?";
+		update(sql, postId);
+
 	}
 
 	@Override

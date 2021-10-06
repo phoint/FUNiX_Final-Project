@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import edu.funix.Utils.PageInfo;
+import edu.funix.Utils.PageType;
 import edu.funix.common.IUserService;
-import edu.funix.common.PageInfo;
-import edu.funix.common.PageType;
 import edu.funix.common.imp.UserService;
 
 /**

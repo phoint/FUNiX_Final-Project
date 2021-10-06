@@ -10,8 +10,7 @@ import edu.funix.model.UserModel;
 
 public class UserService implements IUserService {
 	private IUserDAO userDAO;
-	
-	
+
 	public UserService() {
 		userDAO = new UserDAO();
 	}
@@ -39,7 +38,7 @@ public class UserService implements IUserService {
 	@Override
 	public void edit(UserModel user) throws SQLException, Exception {
 		userDAO.edit(user);
-		
+
 	}
 
 	@Override
@@ -50,5 +49,22 @@ public class UserService implements IUserService {
 	@Override
 	public void permanentDelete(long id) throws SQLException, Exception {
 		userDAO.permanentDelete(id);
+	}
+
+	@Override
+	public UserModel checkLogin(String username, String password) throws SQLException, Exception {
+		UserModel user = new UserModel();
+//		String emailRegex = "[a-z0-9]+[_a-z0-9\\.-]*[a-z0-9]+@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})";
+		String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
+		if (!password.matches(pwdRegex)) {
+			user.setLoginMessage("Password must be at least 8 character, one uppercase and one number");
+		} else {
+			user = userDAO.checkLogin(username, password);
+			if (user == null) {
+				user = new UserModel();
+				user.setLoginMessage("Invalid Username or Password");
+			}
+		}
+		return user;
 	}
 }

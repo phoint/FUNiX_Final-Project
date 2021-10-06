@@ -55,6 +55,13 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO{
 		update(sql, id);
 	}
 
+	@Override
+	public UserModel checkLogin(String username, String password) throws SQLException, Exception {
+		String sql = "SELECT * FROM tblUSER WHERE Username = ? AND Pwd = ?";
+		List<UserModel> validUser = query(sql, new UserMapper(), username, password);
+		return validUser.isEmpty() ? null : validUser.get(0);
+	}
+
 	
 
 }

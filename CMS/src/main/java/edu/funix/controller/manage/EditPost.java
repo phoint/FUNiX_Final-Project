@@ -12,9 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import edu.funix.Utils.PageInfo;
+import edu.funix.Utils.PageType;
+import edu.funix.common.IPostGroupService;
 import edu.funix.common.IPostService;
-import edu.funix.common.PageInfo;
-import edu.funix.common.PageType;
+import edu.funix.common.imp.PostGroupService;
 import edu.funix.common.imp.PostService;
 import edu.funix.model.PostModel;
 
@@ -25,12 +27,14 @@ import edu.funix.model.PostModel;
 public class EditPost extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private IPostService postService;
+	private IPostGroupService postGroupService;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
 	public EditPost() {
 		postService = new PostService();
+		postGroupService = new PostGroupService();
 	}
 
 	/**
@@ -68,8 +72,10 @@ public class EditPost extends HttpServlet {
 		try {
 			PostModel post = new PostModel();
 			BeanUtils.populate(post, request.getParameterMap());
+			String[] catIds = request.getParameterValues("categories-edited");
 			//TODO: Problem with Parameter mapping and could not set value for parameter in sql query
 			postService.edit(post);
+			postGroupService.updateCategory(post.getId(), catIds);
 			post = postService.findPostById(post.getId());
 			request.setAttribute("p", post);
 			request.setAttribute("message", "Success");

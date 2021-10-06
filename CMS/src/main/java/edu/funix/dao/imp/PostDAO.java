@@ -16,6 +16,17 @@ public class PostDAO extends AbstractDAO<PostModel> implements IPostDAO {
 	}
 
 	@Override
+	public List<PostModel> findAll(long offset, long limit) throws SQLException, Exception {
+		StringBuilder sql = new StringBuilder("SELECT TOP(?) * FROM ");
+		sql.append("(SELECT *, ROW_NUMBER() OVER (ORDER BY CreateDate DESC) AS RowNumber ");
+		sql.append("FROM tblPOST) AS Pagable ");
+		sql.append("WHERE RowNumber > ?");
+		return query(sql.toString(), new PostMapper(), limit, offset);
+	}
+
+
+
+	@Override
 	public PostModel findPostById(long postId) throws SQLException, Exception {
 		String sql = "SELECT * FROM tblPOST WHERE PostID = ?";
 		return query(sql, new PostMapper(), postId).get(0);

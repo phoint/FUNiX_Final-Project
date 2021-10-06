@@ -12,9 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import edu.funix.Utils.PageInfo;
+import edu.funix.Utils.PageType;
+import edu.funix.common.ICategoryService;
+import edu.funix.common.IPostGroupService;
 import edu.funix.common.IPostService;
-import edu.funix.common.PageInfo;
-import edu.funix.common.PageType;
+import edu.funix.common.imp.CategoryService;
+import edu.funix.common.imp.PostGroupService;
 import edu.funix.common.imp.PostService;
 import edu.funix.model.PostModel;
 
@@ -24,18 +28,33 @@ import edu.funix.model.PostModel;
 @WebServlet("/NewPost")
 public class NewPost extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private IPostService postService; 
+	private IPostService postService;
+	private ICategoryService categoryService;
+	private IPostGroupService postGroupService;
     /**
      * @see HttpServlet#HttpServlet()
      */
     public NewPost() {
         postService = new PostService();
+        categoryService = new CategoryService();
+        postGroupService = new PostGroupService();
     }
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		PostModel post = new PostModel();
+		try {
+			post.setCategories(categoryService.findAll());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		request.setAttribute("p", post);
 		PageInfo.PrepareAndForward(request, response, PageType.NEW_POST);
 	}
 
@@ -49,6 +68,8 @@ public class NewPost extends HttpServlet {
 			PostModel post = new PostModel();
 			BeanUtils.populate(post, request.getParameterMap());
 			Long id = postService.save(post);
+			String[] catIds = request.getParameterValues("new-categories");
+			postGroupService.updateCategory(id, catIds);
 			post = postService.findPostById(id);
 			request.setAttribute("p", post);
 			request.setAttribute("message", "Success");

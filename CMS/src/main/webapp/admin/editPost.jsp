@@ -6,13 +6,16 @@
 	<a href="" class="btn btn-sm btn-outline-primary mb-3">Add New</a>
 </div>
 <form action="<c:url value="Edit"/>" method="post">
-  <input type="hidden" name="id" value="${p.id}">
+	<input type="hidden" name="id" value="${p.id}">
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-8">
 				<input type="text" class="form-control form-control-lg" name="title"
 					placeholder="Add Title" value="${p.title}">
-				<c:if test="${not empty p.postUrl}"><span><strong>Permalink: </strong></span><input type="text" name="postUrl" value="${p.postUrl}"/></c:if>
+				<c:if test="${not empty p.postUrl}">
+					<span><strong>Permalink: </strong></span>
+					<input type="text" name="postUrl" value="${p.postUrl}" />
+				</c:if>
 				<div class="mt-3">
 					<textarea name="content" id="editor" cols="30" rows="10">${p.content}</textarea>
 					<script>
@@ -24,8 +27,8 @@
            </script>
 				</div>
 				<div class="mt-3">
-				  <h6>Excerpt</h6>
-				  <textarea class="form-control" name="excerpt" id="excerpt" rows="4">${p.excerpt}</textarea>
+					<h6>Excerpt</h6>
+					<textarea class="form-control" name="excerpt" id="excerpt" rows="4">${p.excerpt}</textarea>
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -39,25 +42,32 @@
 								Thái</label> <select
 								class="form-control form-control-sm w-auto d-inline-block"
 								name="postStatus" id="postStatus">
-								<option value="2" <c:if test="${p.postStatus == 2}">selected</c:if>>Waiting</option>
-								<option value="1" <c:if test="${p.postStatus == 1}">selected</c:if>>Published</option>
-								<option value="3" <c:if test="${p.postStatus == 3}">selected</c:if>>Private</option>
-								<option value="0" <c:if test="${p.postStatus == 0}">selected</c:if>>Draft</option>
+								<option value="2"
+									<c:if test="${p.postStatus == 2}">selected</c:if>>Waiting</option>
+								<option value="1"
+									<c:if test="${p.postStatus == 1}">selected</c:if>>Published</option>
+								<option value="3"
+									<c:if test="${p.postStatus == 3}">selected</c:if>>Private</option>
+								<option value="0"
+									<c:if test="${p.postStatus == 0}">selected</c:if>>Draft</option>
 							</select>
 						</div>
 						<div class="form-group my-1">
 							<span class="mr-1" data-feather="calendar"></span><label for="">Ngày
 								đăng</label> <input
 								class="form-control form-control-sm w-auto d-inline-block"
-								type="date" name="publishDate" id="publishDate" value="${p.publishDate}">
+								type="date" name="publishDate" id="publishDate"
+								value="${p.publishDate}">
 						</div>
 						<div class="form-group my-1">
 							<span class="mr-1" data-feather="eye"></span><label for="">Hiển
 								thị</label> <select
 								class="form-control form-control-sm w-auto d-inline-block"
 								name="isVisible" id="isVisible">
-								<option value="1" <c:if test="${p.isVisible gt 0}">selected</c:if>>Public</option>
-								<option value="0" <c:if test="${p.isVisible eq 0}">selected</c:if>>Private</option>
+								<option value="1"
+									<c:if test="${p.isVisible gt 0}">selected</c:if>>Public</option>
+								<option value="0"
+									<c:if test="${p.isVisible eq 0}">selected</c:if>>Private</option>
 							</select>
 						</div>
 						<div class="d-flex flex-row-reverse">
@@ -70,27 +80,14 @@
 						<h5>Categories</h5>
 					</div>
 					<div class="card-body">
-						<div class="form-check">
-							<input class="form-check-input" type="checkbox" value="1"
-								id="defaultCheck1"> 
-							<label class="form-check-label" 
-							       for="defaultCheck1"> Covid-19 </label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="checkbox" value="2"
-								id="defaultCheck1"> <label class="form-check-label"
-								for="defaultCheck1"> Trẻ Em </label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="checkbox" value="3"
-								id="defaultCheck1"> <label class="form-check-label"
-								for="defaultCheck1"> Lao Động Nghèo </label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="checkbox" value="4"
-								id="defaultCheck1"> <label class="form-check-label"
-								for="defaultCheck1"> Bệnh Hiểm Nghèo </label>
-						</div>
+						<c:forEach items="${p.categories}" var="category">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox"
+									name="categories-edited" value="${category.id}"
+									<c:if test="${category.used}">checked</c:if>> <label
+									class="form-check-label">${category.name}</label>
+							</div>
+						</c:forEach>
 						<a href="#new-category" data-toggle="collapse" role="button"
 							aria-expanded="false" aria-controls="new-category">+ Add new
 							category</a>
