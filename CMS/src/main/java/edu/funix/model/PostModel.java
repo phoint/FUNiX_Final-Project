@@ -15,6 +15,7 @@ public class PostModel extends AbstractModel<PostModel> {
 	private String feature;
 	private UserModel author;
 	private List<CategoryModel> categories;
+	private List<CommentModel> comments;
 
 	public PostModel() {
 		super();
@@ -102,4 +103,12 @@ public class PostModel extends AbstractModel<PostModel> {
 		this.feature = feature;
 	}
 
+	public List<CommentModel> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<CommentModel> comments) {
+		this.comments = comments;
+	}
+	
 }
