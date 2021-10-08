@@ -16,7 +16,7 @@ public class CustomConfigLoader implements ConfigLoader {
     public Config loadConfig() throws Exception {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         Path configPath = Paths.get(System.getProperty("user.dir"), "ckfinder.yml");
-
+        System.out.println(configPath);
         return mapper.readValue(Files.newInputStream(configPath), CustomConfig.class);
     }
 }

@@ -3,7 +3,12 @@ package edu.funix.config;
 import com.cksource.ckfinder.config.Config;
 
 public class CustomConfig extends Config {
-    public boolean isEnabled() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+		public boolean isEnabled() {
         return enabled;
     }
 
@@ -11,5 +16,5 @@ public class CustomConfig extends Config {
         this.enabled = enabled;
     }
 
-    private boolean enabled = false;
+    private boolean enabled = true;
 }

@@ -9,7 +9,7 @@
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-8">
-        <input type="hidden" value="1" name="createdBy"/>
+				<input type="hidden" value="1" name="createdBy" />
 				<div class="form-group">
 					<input type="text" class="form-control form-control-lg"
 						name="title" placeholder="Add Title">
@@ -19,17 +19,11 @@
 					<textarea class="form-control" name="content" id="editor" cols="30"
 						rows="10"></textarea>
 					<script>
-             ClassicEditor
-             .create( document.querySelector( '#editor' ),  {
-            	    ckfinder: {
-            	        uploadUrl: 'http://localhost:8080/ckfinder/connector?command=QuickUpload&type=Files&currentFolder=/'
-            	      },
-            	      toolbar: [ 'ckfinder', 'imageUpload', '|', 'heading', '|', 'bold', 'italic', '|', 'undo', 'redo' ]
-            	    } )
-             .catch( error => {
-                            console.error( error );
-                        } );
-             
+					ClassicEditor
+			        .create( document.querySelector( '#editor' ))
+			        .catch( function( error ) {
+			            console.error( error );
+			        } );
            </script>
 				</div>
 				<div class="mt-3">
@@ -84,13 +78,13 @@
 					</div>
 					<div class="card-body">
 						<c:forEach items="${p.categories}" var="category">
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox"
-                  name="new-categories" value="${category.id}"
-                  <c:if test="${category.used}">checked</c:if>> <label
-                  class="form-check-label">${category.name}</label>
-              </div>
-            </c:forEach>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox"
+									name="new-categories" value="${category.id}"
+									<c:if test="${category.used}">checked</c:if>> <label
+									class="form-check-label">${category.name}</label>
+							</div>
+						</c:forEach>
 						<!-- <a href="#new-category" data-toggle="collapse" role="button"
 							aria-expanded="false" aria-controls="new-category">+ Add new
 							category</a>
