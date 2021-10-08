@@ -39,7 +39,7 @@ public class Login extends HttpServlet {
 	 *      response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		PageInfo.WebPrepareAndForward(request, response, PageType.LOGIN);
+		PageInfo.Login(request, response, PageType.LOGIN);
 	}
 
 	/**
@@ -67,14 +67,14 @@ public class Login extends HttpServlet {
 				if (validUser.getLoginMessage() == null) {
 					SessionUtil.add(request, "loginUser", validUser);
 					if (validUser.isRole()) {
-						response.sendRedirect(request.getContextPath() + "/admin-posts");
+						response.sendRedirect(request.getContextPath() + "/admin/posts");
 					} else {
 						//TODO Page for login has role user
 						System.out.println("Home Page");
 					}
 				} else {
 					request.setAttribute("loginUser", validUser);
-					PageInfo.WebPrepareAndForward(request, response, PageType.LOGIN);
+					PageInfo.Login(request, response, PageType.LOGIN);
 				}
 			}
 

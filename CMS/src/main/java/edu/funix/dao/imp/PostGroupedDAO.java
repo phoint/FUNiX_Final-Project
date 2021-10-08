@@ -53,4 +53,10 @@ public class PostGroupedDAO extends AbstractDAO<PostGroupedModel> implements IPo
 
 	}
 
+	@Override
+	public Long totalPostByCategory(long CatId) throws SQLException, Exception {
+		String sql = "SELECT count(*) FROM tblPOSTGROUP GROUP BY CatID Having CatID = ?";
+		return count(sql, CatId);
+	}
+
 }

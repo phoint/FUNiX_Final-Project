@@ -14,19 +14,29 @@ import edu.funix.model.PostModel;
 
 public class CategoryService implements ICategoryService {
 	ICategoryDAO categoryDAO;
+	IPostGroupedDAO postGroupDAO;
 
 	public CategoryService() {
 		categoryDAO = new CategoryDAO();
+		postGroupDAO = new PostGroupedDAO();
 	}
 
 	@Override
 	public List<CategoryModel> findAll() throws SQLException, Exception {
-		return categoryDAO.findAll();
+		List<CategoryModel> categories = categoryDAO.findAll();
+		for (CategoryModel category : categories) {
+			category.setTotalPost(postGroupDAO.totalPostByCategory(category.getId()));
+		}
+		return categories;
 	}
 	
 	@Override
 	public List<CategoryModel> findAll(long offset, long limit) throws SQLException, Exception {
-		return categoryDAO.findAll(offset, limit);
+		List<CategoryModel> categories = categoryDAO.findAll(offset, limit);
+		for (CategoryModel category : categories) {
+			category.setTotalPost(postGroupDAO.totalPostByCategory(category.getId()));
+		}
+		return categories;
 	}
 
 	@Override
@@ -47,6 +57,13 @@ public class CategoryService implements ICategoryService {
 	@Override
 	public void delete(long id) throws SQLException, Exception {
 		categoryDAO.delete(id);
+	}
+	
+	@Override
+	public void multiDelete(String[] ids) throws NumberFormatException, SQLException, Exception {
+		for (int i = 0; i < ids.length; i++) {
+			categoryDAO.delete(Long.parseLong(ids[i]));
+		}
 	}
 	
 	@Override

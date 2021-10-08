@@ -21,7 +21,7 @@ import edu.funix.model.CategoryModel;
 /**
  * Servlet implementation class EditCategory
  */
-@WebServlet("/EditCategory")
+@WebServlet("/admin/edit-category")
 public class EditCategory extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ICategoryService categoryService;
@@ -63,14 +63,14 @@ public class EditCategory extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
+		CategoryModel category = new CategoryModel();
+	
 		try {
-			CategoryModel category = new CategoryModel();
 			BeanUtils.populate(category, request.getParameterMap());
 			if (category.getDesc().equals("")) {
 				category.setDesc(null);
 			}
 			categoryService.edit(category);
-			request.setAttribute("category", category);
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -84,6 +84,7 @@ public class EditCategory extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		request.setAttribute("category", category);
 		request.setAttribute("message", "Success");
 		PageInfo.PrepareAndForward(request, response, PageType.EDIT_CATEGORY);
 	}

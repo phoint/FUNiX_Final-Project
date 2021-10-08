@@ -23,7 +23,7 @@ import edu.funix.model.PostModel;
 /**
  * Servlet implementation class Edit
  */
-@WebServlet("/Edit")
+@WebServlet("/admin/edit-post")
 public class EditPost extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private IPostService postService;

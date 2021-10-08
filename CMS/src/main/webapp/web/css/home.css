@@ -1,0 +1,109 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-size: 16px;
+  font-family: 'Barlow', sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Yeseva One', cursive;
+}
+
+#user-login {
+  font-size: 1.5em;
+  color:#ffedd3;
+}
+
+/* Header & banner */
+header {
+  z-index: 3;
+}
+header a {
+  color: whitesmoke !important;
+}
+
+.banner {
+  background-image: url("./images/lede.jpg");
+}
+
+/* Post listing section */
+.post-properties {
+  border: 1px solid #ff5c58;
+  border-radius: 5px;
+  padding: 0 5px;
+  margin-top: 5px;
+}
+
+.post-properties:hover {
+  background-color: #fe8f8f;
+  border-color: #fe8f8f;
+}
+
+.post-properties:hover .category-display {
+  color: whitesmoke;
+}
+
+.author {
+  font-family: 'Yeseva One', cursive;
+  color: #333333;
+}
+
+.category-display {
+  font-family: 'Goldman', cursive;
+  color: #ff5c58;
+  font-size: 13px;
+}
+
+.feature-img {
+  height: 40vh;
+  max-height: 250px;
+  overflow: hidden;
+}
+
+.post-listing-img {
+  object-fit: cover;
+  width: 100%;
+  height: 40vh;
+  transition: 0.5s ease-in-out;
+}
+
+.post-item:hover .post-listing-img {
+  height: 42vh;
+  transition: 0.5s ease-in-out;
+}
+
+.post-item:hover h3 {
+  color: #fe8f8f;
+}
+
+/* Post Detail */
+.post-detail .feature-img {
+  height: 66vw;
+  max-height: 600px;
+  overflow: hidden;
+
+}
+
+.post-detail .post-listing-img {
+  object-fit: cover;
+  width: 100%;
+  height: 66vw;
+  max-height: 600px;
+}
+.heading-container {
+  margin-top: 150px;
+}
+.content {
+  margin: 50px 0;
+}
+
+
+
+/* footer section */
+.mail-subcription {
+  background-color: #ffedd3;
+}
+

@@ -5,7 +5,7 @@
 	<h2 class="d-inline-flex mr-3">Edit Post</h2>
 	<a href="<c:url value="NewPost"/>" class="btn btn-sm btn-outline-primary mb-3">Add New</a>
 </div>
-<form action="<c:url value="Edit"/>" method="post">
+<form action="<c:url value="edit-post"/>" method="post">
 	<input type="hidden" name="id" value="${p.id}">
 	<div class="container-fluid">
 		<div class="row">

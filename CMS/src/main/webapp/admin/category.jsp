@@ -7,7 +7,7 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-lg-4">
-			<form method="post" action="<c:url value="admin-categories"/>">
+			<form method="post" action="categories">
 				<div class="form-group row">
 					<label class="col-lg-3 col-form-label" for="name">Name</label>
 					<div class="col-lg-9">
@@ -41,11 +41,10 @@
 		<div class="col-lg-8 mt-5 mt-lg-0">
 			<div class="wrap my-1">
 				<div class="d-inline-flex mr-2">
-					<form class="form-inline" action="" method="post">
-						<select class="form-control form-control-sm mx-1" name="" id="">
+					<form class="form-inline" action="categories" method="post" id="multiselect">
+						<select class="form-control form-control-sm mx-1" name="action">
 							<option>Bulk actions</option>
-							<option>Delete</option>
-							<option>Edit</option>
+							<option value="delete">Delete</option>
 						</select>
 						<button type="submit" class="btn btn-sm btn-outline-primary mx-1">Submit</button>
 					</form>
@@ -55,7 +54,7 @@
 				<table class="table table-striped table-sm">
 					<thead>
 						<tr>
-							<th><input type="checkbox" name="" id=""></th>
+							<th><input type="checkbox" id="select-all"></th>
 							<th>Name</th>
 							<th>Description</th>
 							<th>Slug</th>
@@ -65,20 +64,20 @@
 					<tbody>
 						<c:forEach items="${categories.listResult}" var="cat">
 							<tr>
-								<td><input type="checkbox" name="" id=""></td>
+								<td><input type="checkbox" name="id" class="select-item" value="${cat.id}" form="multiselect"></td>
 								<td>
 									<div>${cat.name}</div>
 									<div>
-										<a href="<c:url value="EditCategory?id=${cat.id}"/>">Edit</a>
+										<a href="<c:url value="edit-category?id=${cat.id}"/>">Edit</a>
 										<a
-											href="<c:url value="admin-categories?id=${cat.id}&action=delete"/>"
+											href="<c:url value="categories?id=${cat.id}&action=delete"/>"
 											class="ml-2">Delete</a>
 									</div>
 								</td>
 								<td>${empty cat.desc ? "-
 											" :cat.desc}</td>
 								<td>${cat.url}</td>
-								<td>totalPost</td>
+								<td>${cat.totalPost}</td>
 							</tr>
 						</c:forEach>
 						<tr>

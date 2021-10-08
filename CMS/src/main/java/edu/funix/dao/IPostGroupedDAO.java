@@ -13,5 +13,6 @@ public interface IPostGroupedDAO extends GenericDAO<PostGroupedModel> {
 	void save(long CatId, long PostId) throws SQLException, Exception;
 	void delete(long PostId) throws SQLException, Exception;
 	void delete(long CatId, long PostId) throws SQLException, Exception;
+	Long totalPostByCategory(long CatId) throws SQLException, Exception;
 
 }

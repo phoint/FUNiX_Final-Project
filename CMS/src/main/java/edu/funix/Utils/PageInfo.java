@@ -17,23 +17,31 @@ public class PageInfo {
 		pageRoute.put(PageType.EDIT_USER, new PageInfo("Edit User", "edituser.jsp", null));
 		pageRoute.put(PageType.CATEGORY_MANAGEMENT_PAGE, new PageInfo("Categories Management", "category.jsp", null));
 		pageRoute.put(PageType.EDIT_CATEGORY, new PageInfo("Edit Category", "edit-category.jsp", null));
-		pageRoute.put(PageType.POST_MANAGEMENT_PAGE, new PageInfo("Post Management", "postManager.jsp", null));
+		pageRoute.put(PageType.POST_MANAGEMENT_PAGE, new PageInfo("Post Management", "posts.jsp", null));
 		pageRoute.put(PageType.NEW_POST, new PageInfo("New Post", "newPost.jsp", null));
 		pageRoute.put(PageType.EDIT_POST, new PageInfo("Edit Post", "editPost.jsp", null));		
 		pageRoute.put(PageType.LOGIN, new PageInfo("Login", "login.jsp", null));		
+		pageRoute.put(PageType.HOMEPAGE, new PageInfo("Home", "home.jsp", null));		
+		pageRoute.put(PageType.POST_DETAIL, new PageInfo("Post", "post.jsp", null));		
 	}
 	
 	public static void PrepareAndForward(HttpServletRequest request, HttpServletResponse response, PageType pageType) 
 			throws ServletException, IOException {
 		PageInfo page = pageRoute.get(pageType);
 		request.setAttribute("pageInfo", page);
-		request.getRequestDispatcher("/admin/layout.jsp").forward(request, response);
+		request.getRequestDispatcher("layout.jsp").forward(request, response);
 	}
 	public static void WebPrepareAndForward(HttpServletRequest request, HttpServletResponse response, PageType pageType) 
 			throws ServletException, IOException {
 		PageInfo page = pageRoute.get(pageType);
 		request.setAttribute("pageInfo", page);
-		request.getRequestDispatcher("/web/layout.jsp").forward(request, response);
+		request.getRequestDispatcher("web/layout.jsp").forward(request, response);
+	}
+	public static void Login(HttpServletRequest request, HttpServletResponse response, PageType pageType) 
+			throws ServletException, IOException {
+		PageInfo page = pageRoute.get(pageType);
+		request.setAttribute("pageInfo", page);
+		request.getRequestDispatcher("web/login.jsp").forward(request, response);
 	}
 	
 	

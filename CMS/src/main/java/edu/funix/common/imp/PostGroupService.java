@@ -39,4 +39,9 @@ public class PostGroupService implements IPostGroupService {
 			}
 		}
 	}
+
+	@Override
+	public Long totalPostByCategory(long CatId) throws SQLException, Exception {
+		return postGroupDAO.totalPostByCategory(CatId);
+	}
 }

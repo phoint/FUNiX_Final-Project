@@ -5,7 +5,7 @@
 	<h2 class="d-inline-flex mr-3">Add New Post</h2>
 	<!-- <a href="" class="btn btn-sm btn-outline-primary mb-3">Add New</a> -->
 </div>
-<form action="" method="post">
+<form action="new-post" method="post">
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-8">

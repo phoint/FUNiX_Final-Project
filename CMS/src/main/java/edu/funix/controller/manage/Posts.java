@@ -21,10 +21,11 @@ import edu.funix.model.PostModel;
 /**
  * Servlet implementation class PostManagement
  */
-@WebServlet("/admin-posts")
+@WebServlet("/admin/posts")
 public class Posts extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private IPostService postService;
+
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
@@ -36,15 +37,16 @@ public class Posts extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
-		String id = request.getParameter("id");
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String[] id = request.getParameterValues("id");
 		String action = request.getParameter("action");
 		PostModel model = new PostModel();
 		PageModel page = new PageModel();
 		try {
 			if (id != null && action.equals("delete")) {
-				postService.delete(Long.parseLong(id));
+				for (int i = 0; i < id.length; i++) {
+					postService.delete(Long.parseLong(id[i]));
+				}
 			}
 			BeanUtils.populate(page, request.getParameterMap());
 			model.setListResult(postService.pageRequest(page));
@@ -61,8 +63,7 @@ public class Posts extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}

@@ -8,7 +8,7 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-8">
-			<form method="post" action="<c:url value="EditCategory"/>">
+			<form method="post" action="<c:url value="edit-category"/>">
 			 <input type="hidden" name="id" value="${category.id}">
 				<div class="form-group row">
 					<label class="col-sm-3 col-form-label" for="name">Name</label>

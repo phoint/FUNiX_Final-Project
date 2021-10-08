@@ -25,7 +25,7 @@ import edu.funix.model.PostModel;
 /**
  * Servlet implementation class NewPost
  */
-@WebServlet("/NewPost")
+@WebServlet("/admin/new-post")
 public class NewPost extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private IPostService postService;

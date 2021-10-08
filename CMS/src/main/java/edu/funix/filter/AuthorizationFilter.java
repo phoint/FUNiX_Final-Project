@@ -31,7 +31,7 @@ public class AuthorizationFilter implements Filter {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		String url = request.getRequestURI();
-		if (url.startsWith("/CMS/admin")) {
+		if (url.startsWith("/CMS/admin/")) {
 			UserModel userModel = (UserModel) SessionUtil.get(request, "loginUser");
 			if (userModel != null) {
 				if (userModel.isRole()) {

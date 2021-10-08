@@ -23,7 +23,7 @@ import edu.funix.model.PostModel;
 /**
  * Servlet implementation class PostManagement
  */
-@WebServlet("/admin-categories")
+@WebServlet("/admin/categories")
 public class Categories extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private ICategoryService categoryService;
@@ -54,7 +54,7 @@ public class Categories extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		request.setAttribute("page", page);
 		request.setAttribute("categories", categories);
 		PageInfo.PrepareAndForward(request, response, PageType.CATEGORY_MANAGEMENT_PAGE);
@@ -69,14 +69,20 @@ public class Categories extends HttpServlet {
 		response.setContentType("text/html;charset=UTF-8");
 		request.setCharacterEncoding("UTF-8");
 		CategoryModel category = new CategoryModel();
+		String action = request.getParameter("action");
+		String[] ids = request.getParameterValues("id");
 		PageModel page = new PageModel();
-		
+
 		try {
-			BeanUtils.populate(category, request.getParameterMap());
-			if (category.getDesc().equals("")) {
-				category.setDesc(null);
+			if (ids != null && action.equals("delete")) {
+				categoryService.multiDelete(ids);
+			} else if (ids == null) {
+				BeanUtils.populate(category, request.getParameterMap());
+				if (category.getDesc() != null && category.getDesc().equals("")) {
+					category.setDesc(null);
+				}
+				categoryService.save(category);
 			}
-			categoryService.save(category);
 			category.setListResult(categoryService.pageRequest(page));
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
