@@ -20,6 +20,7 @@ public class PageInfo {
 		pageRoute.put(PageType.POST_MANAGEMENT_PAGE, new PageInfo("Post Management", "posts.jsp", null));
 		pageRoute.put(PageType.NEW_POST, new PageInfo("New Post", "newPost.jsp", null));
 		pageRoute.put(PageType.EDIT_POST, new PageInfo("Edit Post", "editPost.jsp", null));		
+		pageRoute.put(PageType.COMMENT_MANAGEMENT_PAGE, new PageInfo("Comments", "comment.jsp", null));		
 		pageRoute.put(PageType.LOGIN, new PageInfo("Login", "login.jsp", null));		
 		pageRoute.put(PageType.HOMEPAGE, new PageInfo("Home", "home.jsp", null));		
 		pageRoute.put(PageType.POST_DETAIL, new PageInfo("Post", "post.jsp", null));		

@@ -3,7 +3,7 @@ package edu.funix.model;
 import java.util.List;
 
 public class CommentModel extends AbstractModel<CommentModel> {
-	private String ComContent;
+	private String comContent;
 	private Long submitTo;
 	private Long replyTo;
 	private Boolean confirm;
@@ -13,10 +13,10 @@ public class CommentModel extends AbstractModel<CommentModel> {
 		super();
 	}
 	public String getComContent() {
-		return ComContent;
+		return comContent;
 	}
 	public void setComContent(String comContent) {
-		ComContent = comContent;
+		this.comContent = comContent;
 	}
 	public Long getSubmitTo() {
 		return submitTo;
