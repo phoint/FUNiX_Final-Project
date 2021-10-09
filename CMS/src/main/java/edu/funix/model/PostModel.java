@@ -1,114 +1,238 @@
+/*
+ * @(#) PostModel.java 1.0 2021/09/06
+ * 
+ * Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ * Everyone is permitted to copy and distribute verbatim copies
+ * of this license document, but changing it is not allowed.
+ */
 package edu.funix.model;
 
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represent a post
+ * 
+ * @author Phoi Nguyen
+ * @version 1.0 06 September 2021
+ */
 public class PostModel extends AbstractModel<PostModel> {
-	private String title;
-	private String excerpt;
-	private String content;
-	private String postUrl;
-	private Date publishDate;
-	private int postStatus;
-	private int isVisible;
-	private String feature;
-	private UserModel author;
-	private List<CategoryModel> categories;
-	private List<CommentModel> comments;
+    private String title;
+    private String excerpt;
+    private String content;
+    private String postUrl;
+    private Date publishDate;
+    private int postStatus;
+    private int isVisible;
+    /** Represent a feature image of post */
+    private String feature;
+    private UserModel author;
+    private List<CategoryModel> categories;
+    private List<CommentModel> comments;
 
-	public PostModel() {
-		super();
-		author = new UserModel();
-		categories = new ArrayList<CategoryModel>();
-	}
+    /** Create a post */
+    public PostModel() {
+	super();
+	author = new UserModel();
+	categories = new ArrayList<CategoryModel>();
+    }
 
-	public AbstractModel<UserModel> getAuthor() {
-		return author;
-	}
+    /**
+     * Gets the author created the post
+     * 
+     * @return An instance representing author of post
+     */
+    public UserModel getAuthor() {
+	return author;
+    }
 
-	public void setAuthor(UserModel author) {
-		this.author = author;
-	}
+    /**
+     * Sets the author
+     * 
+     * @param author An instance containing the author of post
+     */
+    public void setAuthor(UserModel author) {
+	this.author = author;
+    }
 
-	public List<CategoryModel> getCategories() {
-		return categories;
-	}
+    /**
+     * Gets the list of category instances grouping the post
+     * 
+     * @return A list representing category instances
+     */
+    public List<CategoryModel> getCategories() {
+	return categories;
+    }
 
-	public void setCategories(List<CategoryModel> categories) {
-		this.categories = categories;
-	}
+    /**
+     * Sets the list of category instances
+     * 
+     * @param categories A list of category instance
+     */
+    public void setCategories(List<CategoryModel> categories) {
+	this.categories = categories;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    /**
+     * Gets the post's title
+     * 
+     * @return A string representing the post's title
+     */
+    public String getTitle() {
+	return title;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    /**
+     * Sets the post's title
+     * 
+     * @param title A string containing the post's title
+     */
+    public void setTitle(String title) {
+	this.title = title;
+    }
 
-	public String getExcerpt() {
-		return excerpt;
-	}
+    /**
+     * Gets the post's excerpt
+     * 
+     * @return A string representing the post's excerpt
+     */
+    public String getExcerpt() {
+	return excerpt;
+    }
 
-	public void setExcerpt(String excerpt) {
-		this.excerpt = excerpt;
-	}
+    /**
+     * Sets the post's excerpt
+     * 
+     * @param excerpt A string containing the post excerpt
+     */
+    public void setExcerpt(String excerpt) {
+	this.excerpt = excerpt;
+    }
 
-	public String getContent() {
-		return content;
-	}
+    /**
+     * Gets the post's content
+     * 
+     * @return A string representing the post's content
+     */
+    public String getContent() {
+	return content;
+    }
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+    /**
+     * Sets the post's content
+     * 
+     * @param content A string containing the post's content
+     */
+    public void setContent(String content) {
+	this.content = content;
+    }
 
-	public String getPostUrl() {
-		return postUrl;
-	}
+    /**
+     * Gets the post's url
+     * 
+     * @return A string representing the post's url
+     */
+    public String getPostUrl() {
+	return postUrl;
+    }
 
-	public void setPostUrl(String postUrl) {
-		this.postUrl = postUrl;
-	}
+    /**
+     * Sets the post's url
+     * 
+     * @param postUrl A string containing the post's url
+     */
+    public void setPostUrl(String postUrl) {
+	this.postUrl = postUrl;
+    }
 
-	public Date getPublishDate() {
-		return publishDate;
-	}
+    /**
+     * Gets the post's published date
+     * 
+     * @return a date representing the post's published date
+     */
+    public Date getPublishDate() {
+	return publishDate;
+    }
 
-	public void setPublishDate(Date publishDate) {
-		this.publishDate = publishDate;
-	}
+    /**
+     * Sets the post's published date
+     * 
+     * @param publishDate A date containing the post's published date
+     */
+    public void setPublishDate(Date publishDate) {
+	this.publishDate = publishDate;
+    }
 
-	public int getPostStatus() {
-		return postStatus;
-	}
+    /**
+     * Gets the post's status
+     * 
+     * @return An integer representing post's status code
+     */
+    public int getPostStatus() {
+	return postStatus;
+    }
 
-	public void setPostStatus(int postStatus) {
-		this.postStatus = postStatus;
-	}
+    /**
+     * Sets the post's status
+     * 
+     * @param postStatus An integer containing the post's status code
+     */
+    public void setPostStatus(int postStatus) {
+	this.postStatus = postStatus;
+    }
 
-	public int getIsVisible() {
-		return isVisible;
-	}
+    /**
+     * Gets the post's visibility
+     * 
+     * @return An integer representing the post's visibility code
+     */
+    public int getIsVisible() {
+	return isVisible;
+    }
 
-	public void setIsVisible(int isVisible) {
-		this.isVisible = isVisible;
-	}
+    /**
+     * Sets the post's visibility
+     * 
+     * @param isVisible An integer containing the post's visibility code
+     */
+    public void setIsVisible(int isVisible) {
+	this.isVisible = isVisible;
+    }
 
-	public String getFeature() {
-		return feature;
-	}
+    /**
+     * Gets the post's feature image
+     * 
+     * @return A string representing the url of post's feature image
+     */
+    public String getFeature() {
+	return feature;
+    }
 
-	public void setFeature(String feature) {
-		this.feature = feature;
-	}
+    /**
+     * Sets the post's feature image
+     * 
+     * @param feature A string containing the url of post's feature image
+     */
+    public void setFeature(String feature) {
+	this.feature = feature;
+    }
 
-	public List<CommentModel> getComments() {
-		return comments;
-	}
+    /**
+     * Gets the post's comments
+     * 
+     * @return A list of instances representing the post's comment
+     */
+    public List<CommentModel> getComments() {
+	return comments;
+    }
 
-	public void setComments(List<CommentModel> comments) {
-		this.comments = comments;
-	}
-	
+    /**
+     * Sets the post's comments
+     * 
+     * @param comments A list of instances containing the post's comment
+     */
+    public void setComments(List<CommentModel> comments) {
+	this.comments = comments;
+    }
 }
