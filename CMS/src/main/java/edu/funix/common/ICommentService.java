@@ -8,4 +8,6 @@ import edu.funix.model.CommentModel;
 public interface ICommentService {
 	List<CommentModel> findAll() throws SQLException, Exception;
 	List<CommentModel> findAllInPost(long id) throws SQLException, Exception;
+	List<CommentModel> findAllParent(long id) throws SQLException, Exception;
+	List<CommentModel> findAllReply(long id) throws SQLException, Exception;
 }

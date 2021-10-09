@@ -37,8 +37,8 @@
 								<div class="media-body">
 									<div class="row">
 										<div class="col-8">
-											<h6 class="m-0">Maria Smantha</h6>
-											<span class="p-0">- 2 hours ago</span>
+											<h6 class="m-0">${comment.author.username}</h6>
+											<span class="p-0">- ${comment.createdDate }</span>
 										</div>
 										<div class="col-4">
 											<div class="pull-right reply text-right">
@@ -54,8 +54,8 @@
 												alt="Bootstrap Media Another Preview"
 												src="http://placeimg.com/300/300/any" /></a>
 											<div class="media-body">
-												<h6 class="m-0">Simona Disa</h6>
-												<span>- 3 hours ago</span>
+												<h6 class="m-0">${reply.author.username}</h6>
+												<span>- ${reply.createdDate}</span>
 												<p>${reply.comContent}</p>
 											</div>
 										</div>

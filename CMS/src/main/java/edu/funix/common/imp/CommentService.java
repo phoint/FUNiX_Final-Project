@@ -5,28 +5,59 @@ import java.util.List;
 
 import edu.funix.common.ICommentService;
 import edu.funix.dao.ICommentDAO;
+import edu.funix.dao.IPostDAO;
+import edu.funix.dao.IUserDAO;
 import edu.funix.dao.imp.CommentDAO;
+import edu.funix.dao.imp.PostDAO;
+import edu.funix.dao.imp.UserDAO;
 import edu.funix.model.CommentModel;
 
 public class CommentService implements ICommentService {
 	private ICommentDAO commentDAO;
+	private IUserDAO userDAO;
+	private IPostDAO postDAO;
 	
 	
 
 	public CommentService() {
 		commentDAO = new CommentDAO();
+		userDAO = new UserDAO();
+		postDAO = new PostDAO();
 	}
 
 	@Override
 	public List<CommentModel> findAll() throws SQLException, Exception {
-		return commentDAO.findAll();
+		List<CommentModel> comments = commentDAO.findAll();
+		for (CommentModel comment : comments) {
+			comment.setAuthor(userDAO.findUserById(comment.getCreatedBy()));
+			comment.setResponseIn(postDAO.findPostById(comment.getSubmitTo()));
+		}
+		return comments;
+	}
+
+	@Override
+	public List<CommentModel> findAllParent(long id) throws SQLException, Exception {
+		List<CommentModel> comments = commentDAO.findAllParent(id);
+		for (CommentModel comment : comments) {
+			comment.setAuthor(userDAO.findUserById(comment.getCreatedBy()));
+		}
+		return comments;
+	}
+
+	@Override
+	public List<CommentModel> findAllReply(long id) throws SQLException, Exception {
+		List<CommentModel> comments = commentDAO.findAllReply(id);
+		for (CommentModel comment : comments) {
+			comment.setAuthor(userDAO.findUserById(comment.getCreatedBy()));
+		}
+		return comments;
 	}
 	
 	@Override
 	public List<CommentModel> findAllInPost(long id) throws SQLException, Exception {
-		List<CommentModel> comments = commentDAO.findAllParent(id);
+		List<CommentModel> comments = findAllParent(id);
 		for (CommentModel comment : comments) {
-			comment.setReplies(commentDAO.findAllReply(comment.getId()));
+			comment.setReplies(findAllReply(comment.getId()));
 		}
 		return comments.isEmpty() ? null : comments;
 	}

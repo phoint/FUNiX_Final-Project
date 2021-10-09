@@ -8,6 +8,8 @@ public class CommentModel extends AbstractModel<CommentModel> {
 	private Long replyTo;
 	private Boolean confirm;
 	private List<CommentModel> replies;
+	private UserModel author;
+	private PostModel responseIn;
 	
 	public CommentModel() {
 		super();
@@ -41,6 +43,19 @@ public class CommentModel extends AbstractModel<CommentModel> {
 	}
 	public void setReplies(List<CommentModel> replies) {
 		this.replies = replies;
+	}
+	public UserModel getAuthor() {
+		return author;
+	}
+	public void setAuthor(UserModel author) {
+		this.author = author;
+	}
+	
+	public PostModel getResponseIn() {
+		return responseIn;
+	}
+	public void setResponseIn(PostModel responseIn) {
+		this.responseIn = responseIn;
 	}
 	
 }

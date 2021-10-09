@@ -33,7 +33,7 @@
 				<tr>
 					<td><input type="checkbox" name="id" class="select-item" value="${comment.id}" form="multiselect"></td>
 					<td>
-						<div>${comment.createdBy}</div>
+						<div>${comment.author.username}</div>
 					</td>
 					<td>${comment.comContent}
 						<div>
@@ -42,7 +42,7 @@
 								href="<c:url value="comments"/>">Delete</a>
 						</div>
 					</td>
-					<td>${comment.submitTo }</td>
+					<td class="text-truncate">${comment.responseIn.title}</td>
 					<td>${comment.createdDate}</td>
 				</tr>
 			</c:forEach>
