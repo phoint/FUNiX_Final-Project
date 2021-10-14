@@ -11,6 +11,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.Part;
+
 /**
  * Represent a post
  * 
@@ -26,7 +28,10 @@ public class PostModel extends AbstractModel<PostModel> {
     private int postStatus;
     private int isVisible;
     /** Represent a feature image of post */
-    private String feature;
+    private Long feature;
+    /** Represent an image inserted to post */
+    private Part imageUpload;
+    private MediaModel image;
     private UserModel author;
     private List<CategoryModel> categories;
     private List<CommentModel> comments;
@@ -205,7 +210,7 @@ public class PostModel extends AbstractModel<PostModel> {
      * 
      * @return A string representing the url of post's feature image
      */
-    public String getFeature() {
+    public Long getFeature() {
 	return feature;
     }
 
@@ -214,7 +219,7 @@ public class PostModel extends AbstractModel<PostModel> {
      * 
      * @param feature A string containing the url of post's feature image
      */
-    public void setFeature(String feature) {
+    public void setFeature(Long feature) {
 	this.feature = feature;
     }
 
@@ -235,4 +240,41 @@ public class PostModel extends AbstractModel<PostModel> {
     public void setComments(List<CommentModel> comments) {
 	this.comments = comments;
     }
+
+    /**
+     * Gets the image uploaded from UI
+     * 
+     * @return An instance representing the image uploaded
+     */
+    public Part getImageUpload() {
+	return imageUpload;
+    }
+
+    /**
+     * Sets the image uploaded from UI
+     * 
+     * @param imageUpload An Part containing the image uploaded
+     */
+    public void setImageUpload(Part imageUpload) {
+	this.imageUpload = imageUpload;
+    }
+
+    /**
+     * Gets image's information
+     * 
+     * @return An instance representing the image's attribute
+     */
+    public MediaModel getImage() {
+	return image;
+    }
+
+    /**
+     * Sets image's information
+     * 
+     * @param image An instance containing image's attribute
+     */
+    public void setImage(MediaModel image) {
+	this.image = image;
+    }
+
 }

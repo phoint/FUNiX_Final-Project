@@ -31,13 +31,13 @@
 							href="#"> <span data-feather="home"></span> Dashboard <span
 								class="sr-only">(current)</span>
 						</a></li>
-						<li class="nav-item"><a class="nav-link text-light" href="#">
+						<li class="nav-item"><a class="nav-link text-light" href="<c:url value="posts"/>">
 								<span data-feather="file"></span> Post
 						</a></li>
-						<li class="nav-item"><a class="nav-link text-light" href="#">
+						<li class="nav-item"><a class="nav-link text-light" href="<c:url value="categories"/>">
 								<span data-feather="shopping-cart"></span> Category
 						</a></li>
-						<li class="nav-item"><a class="nav-link text-light" href="#">
+						<li class="nav-item"><a class="nav-link text-light" href="<c:url value="users"/>">
 								<span data-feather="users"></span> User
 						</a></li>
 						<li class="nav-item"><a class="nav-link text-light" href="#">

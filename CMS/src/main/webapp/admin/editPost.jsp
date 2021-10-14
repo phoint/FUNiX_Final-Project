@@ -3,10 +3,19 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <div class="page-header">
 	<h2 class="d-inline-flex mr-3">Edit Post</h2>
-	<a href="<c:url value="NewPost"/>" class="btn btn-sm btn-outline-primary mb-3">Add New</a>
+	<a href="<c:url value="new-post"/>"
+		class="btn btn-sm btn-outline-primary mb-3">Add New</a>
 </div>
-<form action="<c:url value="edit-post"/>" method="post">
-	<input type="hidden" name="id" value="${p.id}">
+<c:if test="${not empty message}">
+	<div id="message" class="alert alert-success">${message}</div>
+</c:if>
+<c:if test="${not empty error}">
+	<div id="error" class="alert alert-danger">${error}</div>
+</c:if>
+<form action="<c:url value="edit-post"/>" method="post"
+	enctype="multipart/form-data">
+	<input type="hidden" name="id" value="${p.id}"> <input
+		type="hidden" value="${sessionScope.loginUser.id}" name="createdBy" />
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-8">
@@ -88,7 +97,7 @@
 									class="form-check-label">${category.name}</label>
 							</div>
 						</c:forEach>
-						<a href="#new-category" data-toggle="collapse" role="button"
+						<!-- <a href="#new-category" data-toggle="collapse" role="button"
 							aria-expanded="false" aria-controls="new-category">+ Add new
 							category</a>
 						<div class="collapse" id="new-category">
@@ -97,6 +106,7 @@
 							</div>
 							<input class="btn btn-secondary" type="button" value="submit">
 						</div>
+						 -->
 					</div>
 				</div>
 				<div class="card mb-4">
@@ -104,14 +114,15 @@
 						<h5>Feature Image</h5>
 					</div>
 					<div class="card-body">
-						<a href="#new-feature-img" data-toggle="collapse" role="button"
+						<img alt="" src="${p.image.url}" width=150px height=150px> <a
+							href="#new-feature-img" data-toggle="collapse" role="button"
 							aria-expanded="false" aria-controls="new-feature-img">Set
 							feature image</a>
 						<div class="collapse" id="new-feature-img">
 							<div class="form-group">
-								<input class="form-control form-control-sm" type="text">
+								<input class="form-control form-control-sm" type="file"
+									name="feature-image">
 							</div>
-							<input class="btn btn-secondary" type="button" value="submit">
 						</div>
 					</div>
 				</div>

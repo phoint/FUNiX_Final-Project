@@ -1,4 +1,4 @@
-package edu.funix.listener;
+package edu.funix.ckfinder.listener;
 
 import com.cksource.ckfinder.config.Config;
 import com.cksource.ckfinder.event.LoadConfigEvent;

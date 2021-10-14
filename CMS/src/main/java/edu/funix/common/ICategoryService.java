@@ -5,7 +5,6 @@ import java.util.List;
 
 import edu.funix.model.CategoryModel;
 import edu.funix.model.PageModel;
-import edu.funix.model.PostModel;
 
 public interface ICategoryService {
 	List<CategoryModel> findAll() throws SQLException, Exception;

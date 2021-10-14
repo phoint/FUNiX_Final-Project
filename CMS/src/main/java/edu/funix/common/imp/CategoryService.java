@@ -10,7 +10,6 @@ import edu.funix.dao.imp.CategoryDAO;
 import edu.funix.dao.imp.PostGroupedDAO;
 import edu.funix.model.CategoryModel;
 import edu.funix.model.PageModel;
-import edu.funix.model.PostModel;
 
 public class CategoryService implements ICategoryService {
 	ICategoryDAO categoryDAO;

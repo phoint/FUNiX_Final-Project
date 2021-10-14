@@ -6,7 +6,6 @@ import java.util.List;
 import edu.funix.common.IUserService;
 import edu.funix.dao.IUserDAO;
 import edu.funix.dao.imp.UserDAO;
-import edu.funix.model.CategoryModel;
 import edu.funix.model.PageModel;
 import edu.funix.model.UserModel;
 

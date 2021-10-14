@@ -5,22 +5,29 @@
 	<h2 class="d-inline-flex mr-3">Add New Post</h2>
 	<!-- <a href="" class="btn btn-sm btn-outline-primary mb-3">Add New</a> -->
 </div>
-<form action="new-post" method="post">
+<c:if test="${not empty message}">
+	<div id="message" class="alert alert-success">${message}</div>
+</c:if>
+<c:if test="${not empty error}">
+	<div id="error" class="alert alert-danger">${error}</div>
+</c:if>
+<form action="new-post" method="post" enctype="multipart/form-data">
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-8">
-				<input type="hidden" value="1" name="createdBy" />
+				<input type="hidden" value="${sessionScope.loginUser.id}"
+					name="createdBy" />
 				<div class="form-group">
 					<input type="text" class="form-control form-control-lg"
-						name="title" placeholder="Add Title">
+						name="title" placeholder="Add Title" value="${p.title}">
 				</div>
-				<label>Permalink: </label><input type="text" name="postUrl">
+				<label>Permalink: </label><input type="text" name="postUrl"
+					value="${p.postUrl}">
 				<div class="mt-3">
 					<textarea class="form-control" name="content" id="editor" cols="30"
-						rows="10"></textarea>
+						rows="10">${p.content}</textarea>
 					<script>
-					ClassicEditor
-			        .create( document.querySelector( '#editor' ))
+					ClassicEditor.create( document.querySelector( '#editor' )).then()
 			        .catch( function( error ) {
 			            console.error( error );
 			        } );
@@ -56,7 +63,8 @@
 							<span class="mr-1" data-feather="calendar"></span><label for="">Ngày
 								đăng</label> <input
 								class="form-control form-control-sm w-auto d-inline-block"
-								type="date" name="publishDate" id="publishDate">
+								type="date" name="publishDate" id="publishDate"
+								value="${p.publishDate}">
 						</div>
 						<div class="form-group my-1">
 							<span class="mr-1" data-feather="eye"></span><label for="">Hiển
@@ -69,6 +77,9 @@
 						</div>
 						<div class="d-flex flex-row-reverse">
 							<button class="btn btn-primary" type="submit">Save</button>
+							<div class="row mr-3 align-items-center">
+						  <div class="col"><a href="<c:url value="posts"/>" onclick="return confirm('Are you sure?');">Cancle</a></div>
+						  </div>
 						</div>
 					</div>
 				</div>
@@ -101,19 +112,21 @@
 						<h5>Feature Image</h5>
 					</div>
 					<div class="card-body">
+						<c:if test="${not empty p.image}">
+							<img alt="" src="${p.image.url}" width=150px height=150px>
+						</c:if>
 						<a href="#new-feature-img" data-toggle="collapse" role="button"
 							aria-expanded="false" aria-controls="new-feature-img">Set
 							feature image</a>
 						<div class="collapse" id="new-feature-img">
 							<div class="form-group">
-								<input class="form-control form-control-sm" type="text">
+								<input class="form-control form-control-sm" type="file"
+									name="feature-image">
 							</div>
-							<input class="btn btn-secondary" type="button" value="submit">
 						</div>
 					</div>
 				</div>
 			</div>
-
 		</div>
 	</div>
 </form>

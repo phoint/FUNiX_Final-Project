@@ -19,7 +19,7 @@
 
 		<init-param>
 			<param-name>scan-path</param-name>
-			<param-value>edu.funix</param-value>
+			<param-value>edu.funix.ckfinder</param-value>
 		</init-param>
 		<multipart-config>
 			<location>/tmp</location>
@@ -37,4 +37,8 @@
 		<filter-name>AccessFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	
+	<listener>
+	 <listener-class>edu.funix.ckfinder.listener.LoadConfigListener</listener-class>
+	</listener>
 </web-app>

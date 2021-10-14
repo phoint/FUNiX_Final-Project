@@ -19,7 +19,7 @@ import edu.funix.model.UserModel;
 /**
  * Servlet implementation class Users
  */
-@WebServlet("/Users")
+@WebServlet("/admin/users")
 public class Users extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private IUserService userService;

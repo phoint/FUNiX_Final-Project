@@ -80,7 +80,7 @@
           <h6>Đăng ký nhận tin mới mỗi ngày</h6>
           <form action="" method="post">
             <div class="input-group ">
-              <input class="form-control" type="mail" name="" placeholder="Email Address" aria-label="Recipient's " aria-describedby="my-addon">
+              <input class="form-control" type="email" name="" placeholder="Email Address" aria-label="Recipient's " aria-describedby="my-addon">
               <div class="input-group-append">
                 <input class="btn btn-outline-primary" type="button" value="Submit">
               </div>

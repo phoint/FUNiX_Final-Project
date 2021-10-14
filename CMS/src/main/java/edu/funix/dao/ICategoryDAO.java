@@ -4,7 +4,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import edu.funix.model.CategoryModel;
-import edu.funix.model.PageModel;
 
 public interface ICategoryDAO extends GenericDAO<CategoryModel> {
 	

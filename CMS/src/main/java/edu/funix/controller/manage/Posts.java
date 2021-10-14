@@ -13,7 +13,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
 import edu.funix.common.IPostService;
-import edu.funix.common.imp.PageRequest;
 import edu.funix.common.imp.PostService;
 import edu.funix.model.PageModel;
 import edu.funix.model.PostModel;
@@ -23,49 +22,86 @@ import edu.funix.model.PostModel;
  */
 @WebServlet("/admin/posts")
 public class Posts extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private IPostService postService;
+    private static final long serialVersionUID = 1L;
+    private IPostService postService;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public Posts() {
+	postService = new PostService();
+    }
+
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	    throws ServletException, IOException {
+	response.setContentType("text/html; charset=UTF-8");
+	request.setCharacterEncoding("UTF-8");
+	/* Gets all id selected from view's form check box */
+	String[] id = request.getParameterValues("id");
+	String action = request.getParameter("action");
+	/* Gets the title search key from view's form input */
+	String searchKey = request.getParameter("searchKey");
+	PostModel post = new PostModel();
+	PageModel page = new PageModel();
+	/* message and error showing the result of process */
+	String message = null;
+	String error = null;
+
+	/*
+	 * Sets the search key to null if return empty string. This process help the
+	 * service calling the right DAO's method
 	 */
-	public Posts() {
-		postService = new PostService();
+	if (searchKey != null && searchKey.trim().equals("")) {
+	    searchKey = null;
 	}
-
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String[] id = request.getParameterValues("id");
-		String action = request.getParameter("action");
-		PostModel model = new PostModel();
-		PageModel page = new PageModel();
-		try {
-			if (id != null && action.equals("delete")) {
-				for (int i = 0; i < id.length; i++) {
-					postService.delete(Long.parseLong(id[i]));
-				}
-			}
-			BeanUtils.populate(page, request.getParameterMap());
-			model.setListResult(postService.pageRequest(page));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	try {
+	    /* Check parameter for deleting feature */
+	    if (id != null && action.equals("delete")) {
+		for (int i = 0; i < id.length; i++) {
+		    postService.delete(Long.parseLong(id[i]));
 		}
-		request.setAttribute("posts", model);
-		request.setAttribute("page", page);
-		PageInfo.PrepareAndForward(request, response, PageType.POST_MANAGEMENT_PAGE);
+		message = "delete success!";
+	    }
+	    /* Check parameter for deleting all items */
+	    if (action != null && action.equals("deleteAll")) {
+		postService.deleteAll();
+		message = "All items deleted!";
+	    }
+	    BeanUtils.populate(page, request.getParameterMap());
+
+	    /* Calls the service depend on search term */
+	    if (searchKey != null) {
+		post.setListResult(postService.search(page, searchKey));
+	    } else {
+		post.setListResult(postService.findAll(page));
+	    }
+	} catch (Exception e) {
+	    /* something go wrong */
+	    error = "something wrong, try later!";
+	    e.printStackTrace();
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+	/* Forward to Post view */
+	request.setAttribute("message", message);
+	request.setAttribute("error", error);
+	request.setAttribute("searchKey", searchKey);
+	request.setAttribute("posts", post);
+	request.setAttribute("page", page);
+	PageInfo.PrepareAndForward(request, response, PageType.POST_MANAGEMENT_PAGE);
+    }
+
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	    throws ServletException, IOException {
+	/* Do everything the same doGet method */
+	doGet(request, response);
+    }
 
 }

@@ -48,7 +48,7 @@ public class Home extends HttpServlet {
 				return;
 			}
 			BeanUtils.populate(page, request.getParameterMap());
-			post.setListResult(postService.pageRequest(page));
+			post.setListResult(postService.findAll(page));
 		} catch (IllegalAccessException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,7 +1,5 @@
-enabled: true # Change this value to "true" to enable the application
-
-licenseName: ~
-licenseKey: ~
+licenseName: ''
+licenseKey: ''
 roleSessionAttribute: 'CKFinder_UserRole'
 serveStaticResources: true
 checkSizeAfterScaling: true

@@ -3,7 +3,6 @@ package edu.funix.common;
 import java.sql.SQLException;
 import java.util.List;
 
-import edu.funix.model.CategoryModel;
 import edu.funix.model.PageModel;
 import edu.funix.model.UserModel;
 

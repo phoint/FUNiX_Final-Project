@@ -18,7 +18,6 @@ import edu.funix.common.ICategoryService;
 import edu.funix.common.imp.CategoryService;
 import edu.funix.model.CategoryModel;
 import edu.funix.model.PageModel;
-import edu.funix.model.PostModel;
 
 /**
  * Servlet implementation class PostManagement
