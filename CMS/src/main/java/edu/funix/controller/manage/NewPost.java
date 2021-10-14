@@ -94,6 +94,8 @@ public class NewPost extends HttpServlet {
 
 	/* Gets image's attribute upload */
 	Part imageUpload = request.getPart("feature-image");
+	String uploadFolder = getServletContext().getRealPath("/images");
+	String contextPath = getServletContext().getContextPath();
 
 	/* Mapping parameter's value to post's model */
 	try {
@@ -109,7 +111,7 @@ public class NewPost extends HttpServlet {
 
 	    /* Checks image's attribute. If presented, sets the upload's info */
 	    if (imageUpload != null) {
-		post.setImage(mediaService.getUploadPath(request, imageUpload));
+		post.setImage(mediaService.getUploadPath(uploadFolder, contextPath, imageUpload));
 	    }
 
 	    /* Inserts new post's row in database's post table */

@@ -10,5 +10,5 @@ import edu.funix.model.MediaModel;
 
 public interface IMediaService {
     Long save(MediaModel media) throws SQLException, Exception;
-    MediaModel getUploadPath(HttpServletRequest request, Part part) throws IOException;
+    MediaModel getUploadPath(String uploadFolder, String contextPath, Part part) throws IOException;
 }

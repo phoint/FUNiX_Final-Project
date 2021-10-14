@@ -24,10 +24,8 @@ public class MediaService implements IMediaService {
     }
 
     @Override
-    public MediaModel getUploadPath(HttpServletRequest request, Part part) throws IOException {
+    public MediaModel getUploadPath(String uploadFolder, String contextPath , Part part) throws IOException {
 	MediaModel media = new MediaModel();
-	String uploadFolder = request.getServletContext().getRealPath("/images");
-	String contextPath = request.getServletContext().getContextPath();
 	Path uploadPath = Paths.get(uploadFolder);
 	String fileName = Path.of(part.getSubmittedFileName()).getFileName().toString();
 	if (!Files.exists(uploadPath)) {

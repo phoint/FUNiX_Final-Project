@@ -13,22 +13,6 @@
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 
-	<servlet>
-		<servlet-name>CKFinder</servlet-name>
-		<servlet-class>com.cksource.ckfinder.servlet.CKFinderServlet</servlet-class>
-
-		<init-param>
-			<param-name>scan-path</param-name>
-			<param-value>edu.funix.ckfinder</param-value>
-		</init-param>
-		<multipart-config>
-			<location>/tmp</location>
-			<max-file-size>5242880</max-file-size><!--5MB -->
-			<max-request-size>20971520</max-request-size><!--20MB -->
-			<file-size-threshold>0</file-size-threshold>
-		</multipart-config>
-	</servlet>
-
 	<filter>
 		<filter-name>AccessFilter</filter-name>
 		<filter-class>edu.funix.filter.AuthorizationFilter</filter-class>

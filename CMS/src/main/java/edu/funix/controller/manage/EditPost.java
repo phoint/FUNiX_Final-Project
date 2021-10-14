@@ -98,6 +98,8 @@ public class EditPost extends HttpServlet {
 
 	/* Gets image's attribute upload */
 	Part imageUpload = request.getPart("feature-image");
+	String uploadFolder = getServletContext().getRealPath("/images");
+	String contextPath = getServletContext().getContextPath();
 
 	/* Gets the categories's changing */
 	String[] catIds = request.getParameterValues("categories-edited");
@@ -112,7 +114,7 @@ public class EditPost extends HttpServlet {
 	try {
 	    /* Checks image's attribute. If presented, sets the upload's info */
 	    if (imageUpload != null) {
-		post.setImage(mediaService.getUploadPath(request, imageUpload));
+		post.setImage(mediaService.getUploadPath(uploadFolder, contextPath, imageUpload));
 	    }
 	    Long id = post.getId();
 
