@@ -68,4 +68,6 @@ public interface GenericDAO<T> {
      * @return A list representing model's attribute
      */
     <T> List<T> call(String sql, RowMapper<T> rowMapper, Object... parameters) throws SQLException, Exception;
+    
+    boolean checkUpdate(String sql, Object... parameters) throws SQLException, Exception;
 }

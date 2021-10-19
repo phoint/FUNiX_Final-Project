@@ -38,11 +38,11 @@ public class AuthorizationFilter implements Filter {
 					chain.doFilter(request, response);
 				} else if (!userModel.isRole()) {
 					// TODO alerting access permission page for admin
-					response.sendRedirect(request.getContextPath() + "/Login");
+					response.sendRedirect(request.getContextPath() + "/login");
 				}
 			} else {
 				// TODO alerting access permission page for login user
-				response.sendRedirect(request.getContextPath() + "/Login");
+				response.sendRedirect(request.getContextPath() + "/login");
 			}
 		} else {
 			chain.doFilter(request, response);

@@ -10,6 +10,7 @@ import edu.funix.common.IPageableService;
 import edu.funix.common.IUserService;
 import edu.funix.dao.IUserDAO;
 import edu.funix.dao.imp.UserDAO;
+import edu.funix.domain.ChangePasswordForm;
 import edu.funix.model.PageModel;
 import edu.funix.model.UserModel;
 
@@ -74,10 +75,20 @@ public class UserService implements IUserService {
 	} else {
 	    user = userDAO.checkLogin(username, password);
 	    if (user == null) {
-		user = new UserModel();
-		user.setLoginMessage("Invalid Username or Password");
+		throw new Exception("Invalid Username or Password");
 	    }
 	}
 	return user;
+    }
+
+    @Override
+    public void changePassword(ChangePasswordForm newPwd) throws SQLException, Exception {
+	UserModel user = null;
+	user = userDAO.checkLogin(newPwd.getUsername(), newPwd.getCurrPassword());
+	if (user != null) {
+	    userDAO.changePassword(newPwd.getUsername(), newPwd.getPassword());
+	} else {
+	    throw new Exception("Current password is incorrect");
+	}
     }
 }

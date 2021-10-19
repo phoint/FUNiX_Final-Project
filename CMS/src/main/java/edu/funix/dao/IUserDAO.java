@@ -16,4 +16,5 @@ public interface IUserDAO extends GenericDAO<UserModel> {
 	Long getTotalItems() throws SQLException, Exception;
 	UserModel checkLogin(String username, String password) throws SQLException, Exception;
 	List<UserModel> findAll(PageModel page) throws SQLException, Exception;
+	void changePassword(String username, String newPassword) throws SQLException, Exception;
 }

@@ -221,4 +221,23 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 	return totalItems;
     }
 
+    @Override
+    public boolean checkUpdate(String sql, Object... parameters) throws SQLException, Exception {
+	int result;
+	try (Connection conn = dbObject.getConnection()) {
+	    try (CallableStatement stm = conn.prepareCall(sql)) {
+		conn.setAutoCommit(false);
+		setParameter(stm, parameters);
+		result = stm.executeUpdate();
+		conn.commit();
+	    } catch (SQLException e) {
+		conn.rollback();
+		throw new SQLException(e);
+	    } finally {
+		conn.setAutoCommit(true);
+	    }
+	}
+	return result == 1 ? true : false;
+    }
+
 }

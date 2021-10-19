@@ -23,6 +23,7 @@ public class PageInfo {
 		pageRoute.put(PageType.COMMENT_MANAGEMENT_PAGE, new PageInfo("Comments", "comment.jsp", null));		
 		pageRoute.put(PageType.LOGIN, new PageInfo("Login", "login.jsp", null));		
 		pageRoute.put(PageType.REGISTER, new PageInfo("Register", "register.jsp", null));		
+		pageRoute.put(PageType.PASSWORD_CHANGE, new PageInfo("Password Change", "changePwd.jsp", null));		
 		pageRoute.put(PageType.HOMEPAGE, new PageInfo("Home", "home.jsp", null));		
 		pageRoute.put(PageType.POST_DETAIL, new PageInfo("Post", "post.jsp", null));		
 	}

@@ -3,6 +3,8 @@ package edu.funix.Utils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import edu.funix.model.UserModel;
+
 public class SessionUtil {
 	public static void add(HttpServletRequest request, String name, Object value) {
 		HttpSession session = request.getSession();
@@ -24,8 +26,8 @@ public class SessionUtil {
 	}
 	
 	public static String getLoginedUsername(HttpServletRequest request) {
-		Object username = get(request, "username");
-		return username == null ? null : username.toString();
+		UserModel username = (UserModel) get(request, "loginUser");
+		return username == null ? null : username.getUsername();
 	}
 
 }

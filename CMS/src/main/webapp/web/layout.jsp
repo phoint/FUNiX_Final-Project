@@ -58,9 +58,9 @@
 							<div
 								class="dropdown-menu dropdown-menu-left dropdown-menu-lg-right bg-transparent border-white text-lg-right"
 								aria-labelledby="navbarDropdown">
-								<a class="dropdown-item" href="#">Login</a> <a
-									class="dropdown-item" href="#">Register</a>
-								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="login">Login</a> 
+								<a class="dropdown-item" href="register">Register</a>
+								<a class="dropdown-item" href="login?action=logout">Logout</a>						
 								<a class="dropdown-item" href="#">Subcribe</a>
 							</div>
 						</div>

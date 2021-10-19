@@ -22,7 +22,7 @@ import edu.funix.model.UserModel;
 /**
  * Servlet implementation class Login
  */
-@WebServlet("/Login")
+@WebServlet("/login")
 public class Login extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private IUserService userService;
@@ -40,6 +40,10 @@ public class Login extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
+	String action = request.getParameter("action");
+	if (action != null && action.equals("logout")) {
+	    SessionUtil.invalidate(request);
+	}
 	PageInfo.Login(request, response, PageType.LOGIN);
     }
 
@@ -50,6 +54,8 @@ public class Login extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
 	String action = request.getParameter("action");
+	String message = null;
+	String error = null;
 	UserModel loginUser = new UserModel();
 	UserModel validUser = null;
 	if (action != null && action.equals("dologin")) {
@@ -63,8 +69,7 @@ public class Login extends HttpServlet {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 	    } catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		error = e.getMessage();
 	    }
 	    if (validUser != null) {
 		SessionUtil.add(request, "loginUser", validUser);
@@ -75,7 +80,7 @@ public class Login extends HttpServlet {
 		    response.sendRedirect(request.getContextPath());
 		}
 	    } else {
-		request.setAttribute("loginUser", validUser);
+		request.setAttribute("error", error);
 		PageInfo.Login(request, response, PageType.LOGIN);
 	    }
 	}

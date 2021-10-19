@@ -11,27 +11,24 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 
-import edu.funix.Utils.Mailer;
 import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
-import edu.funix.Utils.PasswordUtils;
+import edu.funix.Utils.SessionUtil;
 import edu.funix.common.IUserService;
 import edu.funix.common.imp.UserService;
-import edu.funix.controller.manage.NewUser;
-import edu.funix.model.UserModel;
+import edu.funix.domain.ChangePasswordForm;
 
 /**
- * Servlet implementation class Register
+ * Servlet implementation class PasswordChange
  */
-@WebServlet("/register")
-public class Register extends HttpServlet {
+@WebServlet("/password-change")
+public class PasswordChange extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private IUserService userService;
-
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Register() {
+    public PasswordChange() {
 	userService = new UserService();
     }
 
@@ -41,7 +38,7 @@ public class Register extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
-	PageInfo.Login(request, response, PageType.REGISTER);
+	PageInfo.Login(request, response, PageType.PASSWORD_CHANGE);
     }
 
     /**
@@ -50,23 +47,27 @@ public class Register extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
-	UserModel newUser = new UserModel();
+	ChangePasswordForm newPwd = new ChangePasswordForm();
+	String error = null;
+	String message = null;
 	try {
-	    BeanUtils.populate(newUser, request.getParameterMap());
+	    BeanUtils.populate(newPwd, request.getParameterMap());
 	} catch (IllegalAccessException | InvocationTargetException e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
-	String password = PasswordUtils.generate(10);
-	newUser.setPassword(password);
+	newPwd.setUsername(SessionUtil.getLoginedUsername(request));
 	try {
-	    userService.save(newUser);
-	    Mailer.getTemplate(password);
-	    Mailer.send(newUser.getEmail(), "Hello New User", Mailer.getTemplate(password));
+	    userService.changePassword(newPwd);
+	    SessionUtil.invalidate(request);
+	    message = "Password changed!";
 	} catch (Exception e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    error = e.getMessage();
 	}
+	request.setAttribute("error", error);
+	request.setAttribute("message", message);
 	PageInfo.Login(request, response, PageType.LOGIN);
+	
     }
+
 }

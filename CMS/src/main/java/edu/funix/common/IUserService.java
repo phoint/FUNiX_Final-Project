@@ -3,6 +3,7 @@ package edu.funix.common;
 import java.sql.SQLException;
 import java.util.List;
 
+import edu.funix.domain.ChangePasswordForm;
 import edu.funix.model.PageModel;
 import edu.funix.model.UserModel;
 
@@ -24,4 +25,6 @@ public interface IUserService {
     Long getTotalItems() throws SQLException, Exception;
 
     UserModel checkLogin(String username, String password) throws SQLException, Exception;
+    
+    void changePassword(ChangePasswordForm newPwd) throws SQLException, Exception;
 }

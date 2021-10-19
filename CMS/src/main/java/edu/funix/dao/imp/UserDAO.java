@@ -75,4 +75,12 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
 	return validUser.isEmpty() ? null : validUser.get(0);
     }
 
+    @Override
+    public void changePassword(String username, String newPassword) throws SQLException, Exception {
+	String sql = "UPDATE tblUSER SET Pwd = HASHBYTES('SHA2_256', ?) WHERE Username = ?";
+	update(sql, username, newPassword);
+    }
+    
+    
+
 }
