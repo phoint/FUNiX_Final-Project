@@ -18,10 +18,14 @@
 			</select>
 			<button type="submit" class="btn btn-sm btn-outline-primary mx-1">Submit</button>
 		</form>
-	</div>
-	<!-- <div class="d-inline-flex">
-		<form class="form-inline" action="" method="post">
-			<select class="form-control form-control-sm mx-1" name="" id="">
+		<form class="form-inline" action="<c:url value="posts"/>" method="get">
+			<select class="form-control form-control-sm mx-1" name="category" id="category-filter">
+				<option>Category</option>
+				<c:forEach items="${posts.categories}" var="cat">
+				<option value="${cat.id}" <c:if test="${cat.id eq category}">selected</c:if>>${cat.name}</option>
+				</c:forEach>
+			</select> 
+			<!--<select class="form-control form-control-sm mx-1" name="" id="">
 				<option>All Date</option>
 				<option>Delete</option>
 				<option>Edit</option>
@@ -29,14 +33,10 @@
 				<option>All Date</option>
 				<option>Delete</option>
 				<option>Edit</option>
-			</select> <select class="form-control form-control-sm mx-1" name="" id="">
-				<option>All Date</option>
-				<option>Delete</option>
-				<option>Edit</option>
-			</select>
+			</select> -->
 			<button type="submit" class="btn btn-sm btn-outline-primary mx-1">Submit</button>
-		</form>
-	</div>  -->
+		</form> 
+	</div>  
 	<div class="d-inline-flex mr-2">
 		<form class="form-inline" action="posts" method="get">
 			<input class="form-control form-control-sm" type="text" name="searchKey"

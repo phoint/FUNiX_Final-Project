@@ -17,14 +17,14 @@
 					<div class="col post-item">
 						<div class="feature-img">
 							<a href="<c:url value="/?p=${post.id}"/>"> <img
-								class="post-listing-img img-fluid" src="images/lede.jpg" alt="">
+								class="post-listing-img img-fluid" src="${post.image.url}" alt="">
 							</a>
 						</div>
 						<c:forEach items="${post.categories}" var="category">
 							<c:if test="${category.used}">
 								<div class="post-properties d-inline-flex py-1 mr-2">
 									<a class="category-display text-decoration-none"
-										href="">${category.name}</a>
+										href="<c:url value="?category=${category.id}"/>">${category.name}</a>
 								</div>
 							</c:if>
 						</c:forEach>
@@ -44,6 +44,7 @@
 			<form action="<c:url value="/"/>" id="pagination-info" method="get">
 				<input type="hidden" name="maxItem" id="maxItem" /> <input
 					type="hidden" name="currentPage" id="currentPage" />
+					<input type="hidden" name="category" id="category"/>
 			</form>
 			<div class="col-md-3 sidebar">
 				<h4>Danh mục</h4>

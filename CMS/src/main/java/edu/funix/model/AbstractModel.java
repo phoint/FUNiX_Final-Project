@@ -23,11 +23,30 @@ public class AbstractModel<T> {
     private Date modifiedDate;
     private long createdBy;
     private long modifiedBy;
+    private PageModel pagination;
     /** Represents a list of generic object */
     private List<T> listResult = new ArrayList<>();
 
     /** Create an abstract object */
     public AbstractModel() {
+    }
+
+    /**
+     * Gets the pagination's information
+     * 
+     * @return A PageModel representing the pagination's information
+     */
+    public PageModel getPage() {
+	return pagination;
+    }
+
+    /**
+     * Sets the pagination's information
+     * 
+     * @param pagination A PageModel containing the pagination's information
+     */
+    public void setPage(PageModel pagination) {
+	this.pagination = pagination;
     }
 
     /**

@@ -3,6 +3,7 @@ package edu.funix.dao;
 import java.sql.SQLException;
 import java.util.List;
 
+import edu.funix.model.PageModel;
 import edu.funix.model.UserModel;
 
 public interface IUserDAO extends GenericDAO<UserModel> {
@@ -14,5 +15,5 @@ public interface IUserDAO extends GenericDAO<UserModel> {
 	void permanentDelete(long id) throws SQLException, Exception;
 	Long getTotalItems() throws SQLException, Exception;
 	UserModel checkLogin(String username, String password) throws SQLException, Exception;
-	List<UserModel> findAll(long offset, long limit) throws SQLException, Exception;
+	List<UserModel> findAll(PageModel page) throws SQLException, Exception;
 }

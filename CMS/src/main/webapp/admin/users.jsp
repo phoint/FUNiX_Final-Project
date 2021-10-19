@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div class="page-header">
 	<h2 class="d-inline-flex mr-3">Post</h2>
-	<a href="<c:url value="NewUser"/>"
+	<a href="<c:url value="new-user"/>"
 		class="btn btn-sm btn-outline-primary mb-3">Add New</a>
 	<!-- <div class="alert alert-success" role="alert">${message}</div> -->
 </div>
@@ -38,8 +38,8 @@
 					<td>
 						<div>${user.username}</div>
 						<div>
-							<a href="<c:url value="EditUser?id=${user.id}"/>">Edit</a> <a
-								href="<c:url value="Users?id=${user.id}&action=delete"/>"
+							<a href="<c:url value="edit-user?id=${user.id}"/>">Edit</a> <a
+								href="<c:url value="users?id=${user.id}&action=delete"/>"
 								class="ml-2">Delete</a>
 						</div>
 					</td>

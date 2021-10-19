@@ -9,7 +9,7 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-8 col-lg-6">
-			<form action="<c:url value="NewUser"/>" method="post">
+			<form action="<c:url value="new-user"/>" method="post">
 				<div class="form-group row">
 					<label for="username"
 						class="col-4 col-form-label col-form-label-sm">Username</label>

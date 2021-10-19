@@ -81,6 +81,27 @@ public class PostService implements IPostService {
 	}
 	return postList;
     }
+    
+    /**
+     * Gets a list of post instances grouped by a category
+     * 
+     * @param CatID A Long containing category's id
+     * @param page  A PageModel containing pagination info
+     * @return A list representing the post instances in category
+     * @throws Exception 
+     * @throws SQLException 
+     */
+    @Override
+    public List<PostModel> categoryGroup(Long CatID, PageModel page) throws SQLException, Exception {
+	page = paging.pageRequest(page, postGroupService.totalPostByCategory(CatID));
+	List<PostModel> postList = postDAO.categoryGroup(CatID, page);
+	for (PostModel post : postList) {
+	    post.setCategories(postGroupService.findCategoryInUse(post.getId()));
+	    post.setAuthor(userDAO.findUserById(post.getCreatedBy()));
+	    post.setImage(mediaDAO.findById(post.getFeature()));
+	}
+	return postList;
+    }
 
     /**
      * Finds a post with id matching

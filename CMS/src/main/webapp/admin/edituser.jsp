@@ -9,21 +9,21 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-8 col-lg-6">
-			<form action="<c:url value="EditUser"/>" method="post">
-        <input type="hidden" name="id" value="${user.id}">
+			<form action="<c:url value="edit-user"/>" method="post" onsubmit="return confirm('Do you really want to delete item(s)?');">
+        <input type="hidden" name="id" value="${requestScope.user.id}">
 				<div class="form-group row">
 					<label for="username"
 						class="col-4 col-form-label col-form-label-sm">Username</label>
 					<div class="col-8">
 						<input class="form-control form-control-sm" type="text"
-							name="username" id="username" value="${user.username}">
+							name="username" id="username" value="${requestScope.user.username}">
 					</div>
 				</div>
 				<div class="form-group row">
 					<label for="email" class="col-4 col-form-label">Email</label>
 					<div class="col-8">
 						<input class="form-control form-control-sm" type="email"
-							name="email" id="email" value="${user.email}">
+							name="email" id="email" value="${requestScope.user.email}">
 					</div>
 				</div>
 				<div class="form-group row">
@@ -31,14 +31,14 @@
 						Name</label>
 					<div class="col-8">
 						<input class="form-control form-control-sm" type="text"
-							name="displayName" id="displayName" value="${user.displayName}">
+							name="displayName" id="displayName" value="${requestScope.user.displayName}">
 					</div>
 				</div>
 				<div class="form-group row">
 					<label for="password" class="col-4 col-form-label">Password</label>
 					<div class="col-8">
 						<input class="form-control form-control-sm" type="password"
-							name="password" id="password" value="${user.password}">
+							name="password" id="password" value="${requestScope.user.password}">
 					</div>
 				</div>
 				<div class="form-group row">
@@ -46,8 +46,8 @@
 					<div class="col-auto">
 						<select id="my-select" class="form-control form-control-sm"
 							name="role">
-							<option value="true" ${user.role ? "selected" : ""}>Admin</option>
-							<option value="false" ${not user.role ? "selected" : ""}>User</option>
+							<option value="true" ${requestScope.user.role ? "selected" : ""}>Admin</option>
+							<option value="false" ${not requestScope.user.role ? "selected" : ""}>User</option>
 						</select>
 					</div>
 				</div>

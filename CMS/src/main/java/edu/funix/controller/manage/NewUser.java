@@ -21,7 +21,7 @@ import edu.funix.model.UserModel;
 /**
  * Servlet implementation class NewUser
  */
-@WebServlet("/NewUser")
+@WebServlet("/admin/new-user")
 public class NewUser extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private IUserService userService;
@@ -64,7 +64,7 @@ public class NewUser extends HttpServlet {
 		}
 		
 		request.setAttribute("message", message);
-		PageInfo.PrepareAndForward(request, response, PageType.USER_MANAGEMENT_PAGE);
+		response.sendRedirect(request.getContextPath() + "/admin/users");
 	}
 
 }

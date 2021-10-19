@@ -7,6 +7,15 @@ public class UserModel extends AbstractModel<UserModel> {
 	private String displayName;
 	private boolean role;
 	private String loginMessage;
+	private String hashPwd;
+
+	public String getHashPwd() {
+	    return hashPwd;
+	}
+
+	public void setHashPwd(String hashPwd) {
+	    this.hashPwd = hashPwd;
+	}
 
 	public String getLoginMessage() {
 		return loginMessage;

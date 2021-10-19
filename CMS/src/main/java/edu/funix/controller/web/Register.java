@@ -2,7 +2,6 @@ package edu.funix.controller.web;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,25 +11,26 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import edu.funix.Utils.Mailer;
 import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
-import edu.funix.Utils.SessionUtil;
+import edu.funix.Utils.PasswordUtils;
 import edu.funix.common.IUserService;
 import edu.funix.common.imp.UserService;
+import edu.funix.controller.manage.NewUser;
 import edu.funix.model.UserModel;
 
 /**
- * Servlet implementation class Login
+ * Servlet implementation class Register
  */
-@WebServlet("/Login")
-public class Login extends HttpServlet {
+@WebServlet("/register")
+public class Register extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private IUserService userService;
-
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Login() {
+    public Register() {
 	userService = new UserService();
     }
 
@@ -40,7 +40,29 @@ public class Login extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
-	PageInfo.Login(request, response, PageType.LOGIN);
+	String action = request.getParameter("action");
+	UserModel newUser = new UserModel();
+	if (action != null && action.equals("register")) {
+	    try {
+		BeanUtils.populate(newUser, request.getParameterMap());
+	    } catch (IllegalAccessException | InvocationTargetException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
+	    String password = PasswordUtils.generate(10);
+	    newUser.setPassword(password);
+	    try {
+		userService.save(newUser);
+		Mailer.getTemplate(password);
+		Mailer.send(newUser.getEmail(), "Hello New User", Mailer.getTemplate(password));
+	    } catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
+	    PageInfo.Login(request, response, PageType.LOGIN);
+	    return;
+	}
+	PageInfo.Login(request, response, PageType.REGISTER);
     }
 
     /**
@@ -49,37 +71,8 @@ public class Login extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
-	String action = request.getParameter("action");
-	UserModel loginUser = new UserModel();
-	UserModel validUser = null;
-	if (action != null && action.equals("dologin")) {
-	    try {
-		BeanUtils.populate(loginUser, request.getParameterMap());
-		validUser = userService.checkLogin(loginUser.getUsername(), loginUser.getPassword());
-	    } catch (IllegalAccessException | InvocationTargetException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    } catch (SQLException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    } catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	    }
-	    if (validUser != null) {
-		SessionUtil.add(request, "loginUser", validUser);
-		if (validUser.isRole()) {
-		    response.sendRedirect(request.getContextPath() + "/admin/posts");
-		} else  {
-		    // TODO Page for login has role user
-		    response.sendRedirect(request.getContextPath());
-		}
-	    } else {
-		request.setAttribute("loginUser", validUser);
-		PageInfo.Login(request, response, PageType.LOGIN);
-	    }
-	}
-
+	// TODO Auto-generated method stub
+	doGet(request, response);
     }
 
 }

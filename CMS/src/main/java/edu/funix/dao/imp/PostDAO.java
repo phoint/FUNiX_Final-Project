@@ -54,7 +54,20 @@ public class PostDAO extends AbstractDAO<PostModel> implements IPostDAO {
 	    return query(sql.toString(), new PostMapper(), page.getOffset() + 1, page.getLimit());
 	}
     }
-
+    
+    /**
+     * Gets a list of post instances grouped by a category
+     * 
+     * @param CatID A Long containing category's id
+     * @param page  An instance of PageModel containing the paging's attribute
+     * @return A list representing the post instances in category
+     */
+    @Override
+    public List<PostModel> categoryGroup(Long CatID, PageModel page) throws SQLException, Exception {
+	String sql = "{CALL CategoryGroup(?,?,?)}";
+	return call(sql, new PostMapper(), CatID, page.getLimit(), page.getOffset());
+    }
+    
     /**
      * Gets a list of post instances has title matching search key
      * 

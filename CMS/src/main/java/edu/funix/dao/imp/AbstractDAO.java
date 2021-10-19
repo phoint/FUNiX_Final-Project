@@ -7,6 +7,7 @@
  */
 package edu.funix.dao.imp;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -52,6 +53,38 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 	List<T> items = new ArrayList<>();
 	try (Connection conn = dbObject.getConnection()) {
 	    try (PreparedStatement stm = conn.prepareStatement(sql)) {
+		conn.setAutoCommit(false);
+		setParameter(stm, parameters);
+		try (ResultSet result = stm.executeQuery()) {
+		    while (result.next()) {
+			items.add(rowMapper.mapRow(result));
+		    }
+		}
+		conn.commit();
+	    } catch (SQLException e) {
+		conn.rollback();
+		throw new SQLException(e);
+	    } finally {
+		conn.setAutoCommit(true);
+	    }
+	}
+	return items;
+    }
+
+    /**
+     * Call a stored procedure in database for getting data
+     * 
+     * @param <T>        A generic class containing a generic model
+     * @param sql        A String containing a query for callable statement
+     * @param rowMapper  An instance containing a mapper with generic class
+     * @param parameters None or many instances containing the conditions
+     * @return A list representing model's attribute
+     */
+    @Override
+    public <T> List<T> call(String sql, RowMapper<T> rowMapper, Object... parameters) throws SQLException, Exception {
+	List<T> items = new ArrayList<>();
+	try (Connection conn = dbObject.getConnection()) {
+	    try (CallableStatement stm = conn.prepareCall(sql)) {
 		conn.setAutoCommit(false);
 		setParameter(stm, parameters);
 		try (ResultSet result = stm.executeQuery()) {

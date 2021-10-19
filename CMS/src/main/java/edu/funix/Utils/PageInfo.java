@@ -22,6 +22,7 @@ public class PageInfo {
 		pageRoute.put(PageType.EDIT_POST, new PageInfo("Edit Post", "editPost.jsp", null));		
 		pageRoute.put(PageType.COMMENT_MANAGEMENT_PAGE, new PageInfo("Comments", "comment.jsp", null));		
 		pageRoute.put(PageType.LOGIN, new PageInfo("Login", "login.jsp", null));		
+		pageRoute.put(PageType.REGISTER, new PageInfo("Register", "register.jsp", null));		
 		pageRoute.put(PageType.HOMEPAGE, new PageInfo("Home", "home.jsp", null));		
 		pageRoute.put(PageType.POST_DETAIL, new PageInfo("Post", "post.jsp", null));		
 	}
@@ -42,7 +43,7 @@ public class PageInfo {
 			throws ServletException, IOException {
 		PageInfo page = pageRoute.get(pageType);
 		request.setAttribute("pageInfo", page);
-		request.getRequestDispatcher("web/login.jsp").forward(request, response);
+		request.getRequestDispatcher("web/entry.jsp").forward(request, response);
 	}
 	
 	

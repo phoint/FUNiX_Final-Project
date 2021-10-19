@@ -7,6 +7,7 @@
  */
 package edu.funix.dao;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import edu.funix.model.mapper.RowMapper;
@@ -56,4 +57,15 @@ public interface GenericDAO<T> {
      * @return A Long representing the number of data rows
      */
     Long count(String sql, Object... parameters) throws Exception;
+
+    /**
+     * Call a stored procedure in database for getting data
+     * 
+     * @param <T>        A generic class containing a generic model
+     * @param sql        A String containing a query for callable statement
+     * @param rowMapper  An instance containing a mapper with generic class
+     * @param parameters None or many instances containing the conditions
+     * @return A list representing model's attribute
+     */
+    <T> List<T> call(String sql, RowMapper<T> rowMapper, Object... parameters) throws SQLException, Exception;
 }

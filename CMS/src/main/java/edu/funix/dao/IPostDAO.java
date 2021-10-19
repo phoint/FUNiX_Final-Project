@@ -38,6 +38,15 @@ public interface IPostDAO extends GenericDAO<PostModel> {
     List<PostModel> findAll(PageModel page) throws SQLException, Exception;
 
     /**
+     * Gets a list of post instances grouped by a category
+     * 
+     * @param CatID A Long containing category's id
+     * @param page  An instance of PageModel containing the paging's attribute
+     * @return A list representing the post instances
+     */
+    List<PostModel> categoryGroup(Long CatID, PageModel page) throws SQLException, Exception;
+
+    /**
      * Gets a list of post instances has title matching search key
      * 
      * @param page      An instance of PageModel containing the paging's attribute

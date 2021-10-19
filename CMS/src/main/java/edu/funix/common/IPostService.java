@@ -31,6 +31,15 @@ public interface IPostService {
     List<PostModel> findAll(PageModel page) throws SQLException, Exception;
 
     /**
+     * Gets a list of post instances grouped by a category
+     * 
+     * @param CatID A Long containing category's id
+     * @param page  A PageModel containing pagination info
+     * @return A list representing the post instances in category
+     */
+    List<PostModel> categoryGroup(Long CatID, PageModel page) throws SQLException, Exception;
+
+    /**
      * Finds all post items have title matching search key display on one page
      * 
      * @param page      A PageModel containing pagination info

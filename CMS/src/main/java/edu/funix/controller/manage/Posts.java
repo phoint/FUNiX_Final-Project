@@ -12,7 +12,9 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
+import edu.funix.common.ICategoryService;
 import edu.funix.common.IPostService;
+import edu.funix.common.imp.CategoryService;
 import edu.funix.common.imp.PostService;
 import edu.funix.model.PageModel;
 import edu.funix.model.PostModel;
@@ -24,12 +26,14 @@ import edu.funix.model.PostModel;
 public class Posts extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private IPostService postService;
+    private ICategoryService categoryService;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public Posts() {
 	postService = new PostService();
+	categoryService = new CategoryService();
     }
 
     /**
@@ -43,6 +47,7 @@ public class Posts extends HttpServlet {
 	/* Gets all id selected from view's form check box */
 	String[] id = request.getParameterValues("id");
 	String action = request.getParameter("action");
+	String category = request.getParameter("category");
 	/* Gets the title search key from view's form input */
 	String searchKey = request.getParameter("searchKey");
 	PostModel post = new PostModel();
@@ -72,9 +77,13 @@ public class Posts extends HttpServlet {
 		message = "All items deleted!";
 	    }
 	    BeanUtils.populate(page, request.getParameterMap());
+	    post.setCategories(categoryService.findAll());
 
-	    /* Calls the service depend on search term */
-	    if (searchKey != null) {
+	    /* check the category' id for displaying posts in group */
+	    if (category != null && !category.trim().equals("")) {
+		post.setListResult(postService.categoryGroup(Long.parseLong(category), page));
+	    } else if (searchKey != null) {
+		/* Calls the service depend on search term */
 		post.setListResult(postService.search(page, searchKey));
 	    } else {
 		post.setListResult(postService.findAll(page));
@@ -88,6 +97,7 @@ public class Posts extends HttpServlet {
 	/* Forward to Post view */
 	request.setAttribute("message", message);
 	request.setAttribute("error", error);
+	request.setAttribute("category", category);
 	request.setAttribute("searchKey", searchKey);
 	request.setAttribute("posts", post);
 	request.setAttribute("page", page);

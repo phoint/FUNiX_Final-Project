@@ -7,7 +7,6 @@ import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Part;
 
 import edu.funix.common.IMediaService;
