@@ -24,78 +24,80 @@ import edu.funix.model.PageModel;
  */
 @WebServlet("/admin/categories")
 public class Categories extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private ICategoryService categoryService;
+    private static final long serialVersionUID = 1L;
+    private ICategoryService categoryService;
 
-	/**
-	 * @see HttpServlet#HttpServlet()
-	 */
-	public Categories() {
-		categoryService = new CategoryService();
+    /**
+     * @see HttpServlet#HttpServlet()
+     */
+    public Categories() {
+	categoryService = new CategoryService();
+    }
+
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	    throws ServletException, IOException {
+	String[] id = request.getParameterValues("id");
+	String action = request.getParameter("action");
+	CategoryModel categories = new CategoryModel();
+	PageModel page = new PageModel();
+	try {
+	    if (id != null && action.equals("delete")) {
+		categoryService.delete(id);
+	    }
+	    BeanUtils.populate(page, request.getParameterMap());
+	    categories.setListResult(categoryService.findAll(page));
+	} catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String id = request.getParameter("id");
-		String action = request.getParameter("action");
-		CategoryModel categories = new CategoryModel();
-		PageModel page = new PageModel();
-		try {
-			if (id != null && action.equals("delete")) {
-				categoryService.delete(Long.parseLong(id));
-			}
-			BeanUtils.populate(page, request.getParameterMap());
-			categories.setListResult(categoryService.pageRequest(page));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	request.setAttribute("page", page);
+	request.setAttribute("categories", categories);
+	PageInfo.PrepareAndForward(request, response, PageType.CATEGORY_MANAGEMENT_PAGE);
+
+    }
+
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	    throws ServletException, IOException {
+	response.setContentType("text/html;charset=UTF-8");
+	request.setCharacterEncoding("UTF-8");
+	CategoryModel category = new CategoryModel();
+	String action = request.getParameter("action");
+	String[] ids = request.getParameterValues("id");
+	PageModel page = new PageModel();
+
+	try {
+	    if (ids != null && action.equals("delete")) {
+		categoryService.delete(ids);
+	    } else if (ids == null) {
+		BeanUtils.populate(category, request.getParameterMap());
+		if (category.getDesc() != null && category.getDesc().equals("")) {
+		    category.setDesc(null);
 		}
-
-		request.setAttribute("page", page);
-		request.setAttribute("categories", categories);
-		PageInfo.PrepareAndForward(request, response, PageType.CATEGORY_MANAGEMENT_PAGE);
-
+		categoryService.save(category);
+	    }
+	    category.setListResult(categoryService.findAll(page));
+	} catch (IllegalAccessException | InvocationTargetException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (SQLException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	} catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
-	 *      response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html;charset=UTF-8");
-		request.setCharacterEncoding("UTF-8");
-		CategoryModel category = new CategoryModel();
-		String action = request.getParameter("action");
-		String[] ids = request.getParameterValues("id");
-		PageModel page = new PageModel();
-
-		try {
-			if (ids != null && action.equals("delete")) {
-				categoryService.multiDelete(ids);
-			} else if (ids == null) {
-				BeanUtils.populate(category, request.getParameterMap());
-				if (category.getDesc() != null && category.getDesc().equals("")) {
-					category.setDesc(null);
-				}
-				categoryService.save(category);
-			}
-			category.setListResult(categoryService.pageRequest(page));
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		request.setAttribute("message", "Success");
-		request.setAttribute("categories", category);
-		request.setAttribute("page", page);
-		PageInfo.PrepareAndForward(request, response, PageType.CATEGORY_MANAGEMENT_PAGE);
-	}
+	request.setAttribute("message", "Success");
+	request.setAttribute("categories", category);
+	request.setAttribute("page", page);
+	PageInfo.PrepareAndForward(request, response, PageType.CATEGORY_MANAGEMENT_PAGE);
+    }
 }

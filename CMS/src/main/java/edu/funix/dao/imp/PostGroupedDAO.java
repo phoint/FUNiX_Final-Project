@@ -46,9 +46,9 @@ public class PostGroupedDAO extends AbstractDAO<PostGroupedModel> implements IPo
     }
 
     @Override
-    public void delete(long CatId, long PostId) throws SQLException, Exception {
-	String sql = "DELETE FROM tblPOSTGROUP WHERE CatID = ? AND PostID = ?";
-	update(sql, CatId, PostId);
+    public void deleteCategory(long CatId) throws SQLException, Exception {
+	String sql = "UPDATE tblPOSTGROUP SET CatID = DEFAULT WHERE CatID = ?";
+	update(sql, CatId);
 
     }
 
@@ -61,7 +61,8 @@ public class PostGroupedDAO extends AbstractDAO<PostGroupedModel> implements IPo
     @Override
     public Long totalPostByCategory(long CatId) throws SQLException, Exception {
 	String sql = "SELECT count(*) FROM tblPOSTGROUP GROUP BY CatID Having CatID = ?";
-	return count(sql, CatId);
+	Long total = count(sql, CatId);
+	return total == null ? 0 : total;
     }
 
     @Override

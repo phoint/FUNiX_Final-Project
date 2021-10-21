@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import edu.funix.model.CategoryModel;
+import edu.funix.model.PageModel;
 
 public interface ICategoryDAO extends GenericDAO<CategoryModel> {
 	
@@ -19,7 +20,7 @@ public interface ICategoryDAO extends GenericDAO<CategoryModel> {
 
 	void delete(long id) throws SQLException, Exception;
 
-	List<CategoryModel> findAll(long offset, long limit) throws SQLException, Exception;
+	List<CategoryModel> findAll(PageModel page) throws SQLException, Exception;
 
 	Long getTotalItems() throws SQLException, Exception;
 }

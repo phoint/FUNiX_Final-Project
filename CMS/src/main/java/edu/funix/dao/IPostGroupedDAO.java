@@ -20,7 +20,7 @@ public interface IPostGroupedDAO extends GenericDAO<PostGroupedModel> {
 
     void delete(Object[] PostId) throws SQLException, Exception;
 
-    void delete(long CatId, long PostId) throws SQLException, Exception;
+    void deleteCategory(long CatId) throws SQLException, Exception;
 
     void deleteAll() throws SQLException, Exception;
 
