@@ -40,21 +40,52 @@ public class Categories extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
+	/* All categories' id selected for action */
 	String[] id = request.getParameterValues("id");
 	String action = request.getParameter("action");
+	/* Search term for querying categories */
+	String searchKey = request.getParameter("searchKey");
 	CategoryModel categories = new CategoryModel();
 	PageModel page = new PageModel();
+	/* Message and error return on process */
+	String message = null;
+	String error = null;
+	
+	/* Delete a category has matching id */
 	try {
 	    if (id != null && action.equals("delete")) {
 		categoryService.delete(id);
 	    }
-	    BeanUtils.populate(page, request.getParameterMap());
-	    categories.setListResult(categoryService.findAll(page));
 	} catch (Exception e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
-
+	
+	/* Mapping parameter to PageModel */
+	try {
+	    BeanUtils.populate(page, request.getParameterMap());
+	} catch (IllegalAccessException | InvocationTargetException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	if (searchKey != null && searchKey.trim().equals("")) {
+	    searchKey = null;
+	}
+	/* Display a category list base on search term and pagination */
+	try {
+	    if (searchKey != null) {
+		categories.setListResult(categoryService.search(page, searchKey));
+	    } else {		
+		categories.setListResult(categoryService.findAll(page));
+	    }
+	} catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	
+	request.setAttribute("error", error);
+	request.setAttribute("message", message);
+	request.setAttribute("searchKey", searchKey);
 	request.setAttribute("page", page);
 	request.setAttribute("categories", categories);
 	PageInfo.PrepareAndForward(request, response, PageType.CATEGORY_MANAGEMENT_PAGE);

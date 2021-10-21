@@ -12,6 +12,7 @@ import edu.funix.dao.imp.PostGroupedDAO;
 import edu.funix.model.CategoryModel;
 import edu.funix.model.PageModel;
 import edu.funix.model.PostGroupedModel;
+import edu.funix.model.PostModel;
 
 public class CategoryService implements ICategoryService {
     ICategoryDAO categoryDAO;
@@ -43,6 +44,16 @@ public class CategoryService implements ICategoryService {
 	return categories;
     }
 
+    @Override
+    public List<CategoryModel> search(PageModel page, String searchKey) throws SQLException, Exception {
+	page = paging.pageRequest(page, categoryDAO.getTotalItems(searchKey));
+	List<CategoryModel> categories = categoryDAO.search(page, searchKey);
+	for (CategoryModel category : categories) {
+	    category.setTotalPost(postGroupDAO.totalPostByCategory(category.getId()));
+	}
+	return categories;
+    }
+    
     @Override
     public CategoryModel findCategoryById(int id) throws SQLException, Exception {
 	return categoryDAO.findCategoryById(id);

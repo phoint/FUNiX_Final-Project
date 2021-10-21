@@ -1,6 +1,7 @@
 package edu.funix.controller.manage;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -48,7 +49,7 @@ public class Posts extends HttpServlet {
 	String[] id = request.getParameterValues("id");
 	String action = request.getParameter("action");
 	String category = request.getParameter("category");
-	/* Gets the title search key from view's form input */
+	/* Gets the title search key from form input */
 	String searchKey = request.getParameter("searchKey");
 	PostModel post = new PostModel();
 	PageModel page = new PageModel();
@@ -76,21 +77,31 @@ public class Posts extends HttpServlet {
 		postService.deleteAll();
 		message = "All items deleted!";
 	    }
-	    BeanUtils.populate(page, request.getParameterMap());
-	    post.setCategories(categoryService.findAll());
-
-	    /* check the category' id for displaying posts in group */
-	    if (category != null && !category.trim().equals("")) {
-		post.setListResult(postService.categoryGroup(Long.parseLong(category), page));
-	    } else if (searchKey != null) {
-		/* Calls the service depend on search term */
-		post.setListResult(postService.search(page, searchKey));
-	    } else {
-		post.setListResult(postService.findAll(page));
-	    }
 	} catch (Exception e) {
 	    /* something go wrong */
-	    error = "something wrong, try later!";
+	    error = "Delete fail";
+	    e.printStackTrace();
+	}
+	try {
+	    BeanUtils.populate(page, request.getParameterMap());
+	} catch (IllegalAccessException | InvocationTargetException e) {
+	    error = "Something wrong, try later!";
+	    e.printStackTrace();
+	}
+	
+	try {
+	    /* check the category' id for displaying posts in group */
+	    if (category != null && !category.trim().equals("")) {
+	        post.setListResult(postService.categoryGroup(Long.parseLong(category), page));
+	    } else if (searchKey != null) {
+		/* Display posts base on search term and pagination */
+	        post.setListResult(postService.search(page, searchKey));
+	    } else {
+		/* Display all post base on pagination  */
+	        post.setListResult(postService.findAll(page));
+	    }
+	} catch (Exception e) {
+	    error = "Something wrong, try later!";
 	    e.printStackTrace();
 	}
 

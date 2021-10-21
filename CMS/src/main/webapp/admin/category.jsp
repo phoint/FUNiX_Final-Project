@@ -6,6 +6,14 @@
 </div>
 <div class="container-fluid">
 	<div class="row">
+		<c:if test="${not empty message}">
+			<div id="message" class="alert alert-success">${message}</div>
+		</c:if>
+		<c:if test="${not empty error}">
+			<div id="error" class="alert alert-danger">${error}</div>
+		</c:if>
+	</div>
+	<div class="row">
 		<div class="col-lg-4">
 			<form method="post" action="categories">
 				<div class="form-group row">
@@ -41,12 +49,20 @@
 		<div class="col-lg-8 mt-5 mt-lg-0">
 			<div class="wrap my-1">
 				<div class="d-inline-flex mr-2">
-					<form class="form-inline" action="categories" method="post" id="multiselect">
+					<form class="form-inline" action="categories" method="post"
+						id="multiselect">
 						<select class="form-control form-control-sm mx-1" name="action">
 							<option>Bulk actions</option>
 							<option value="delete">Delete</option>
 						</select>
 						<button type="submit" class="btn btn-sm btn-outline-primary mx-1">Submit</button>
+					</form>
+				</div>
+				<div class="d-inline-flex mr-2">
+					<form class="form-inline" action="categories" method="get">
+						<input class="form-control form-control-sm" type="text"
+							name="searchKey" value="${searchKey}" placeholder="Search...">
+						<button type="submit" class="btn btn-sm btn-outline-primary mx-1">Search</button>
 					</form>
 				</div>
 			</div>
@@ -64,7 +80,8 @@
 					<tbody>
 						<c:forEach items="${categories.listResult}" var="cat">
 							<tr>
-								<td><input type="checkbox" name="id" class="select-item" value="${cat.id}" form="multiselect"></td>
+								<td><input type="checkbox" name="id" class="select-item"
+									value="${cat.id}" form="multiselect"></td>
 								<td>
 									<div>${cat.name}</div>
 									<div>
@@ -97,8 +114,8 @@
 						<ul class="pagination" id="pagination"></ul>
 					</nav>
 				</div>
-				<form action="<c:url value="/admin-categories"/>" id="pagination-info"
-					method="get">
+				<form action="<c:url value="/admin-categories"/>"
+					id="pagination-info" method="get">
 					<input type="hidden" name="maxItem" id="maxItem" /> <input
 						type="hidden" name="currentPage" id="currentPage" />
 				</form>

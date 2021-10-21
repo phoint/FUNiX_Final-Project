@@ -8,6 +8,8 @@ import edu.funix.model.PageModel;
 
 public interface ICategoryService {
     List<CategoryModel> findAll() throws SQLException, Exception;
+    
+    List<CategoryModel> search(PageModel page, String searchKey) throws SQLException, Exception;
 
     CategoryModel findCategoryById(int id) throws SQLException, Exception;
 

@@ -9,6 +9,8 @@ import edu.funix.model.PageModel;
 public interface ICategoryDAO extends GenericDAO<CategoryModel> {
 	
 	List<CategoryModel> findAll() throws SQLException, Exception;
+	
+	List<CategoryModel> search(PageModel page, String searchKey) throws SQLException, Exception;
 
 	CategoryModel findCategoryById(long id) throws SQLException, Exception;
 
@@ -23,4 +25,6 @@ public interface ICategoryDAO extends GenericDAO<CategoryModel> {
 	List<CategoryModel> findAll(PageModel page) throws SQLException, Exception;
 
 	Long getTotalItems() throws SQLException, Exception;
+
+	Long getTotalItems(String searchKey) throws SQLException, Exception;
 }

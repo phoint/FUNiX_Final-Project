@@ -29,11 +29,32 @@ public class CategoryDAO extends AbstractDAO<CategoryModel> implements ICategory
 	    return query(sql.toString(), new CategoryMapper(), page.getOffset() + 1, page.getLimit());
 	}
     }
+    
+    @Override
+    public List<CategoryModel> search(PageModel page, String searchKey) throws SQLException, Exception {
+	StringBuilder sql = new StringBuilder("SELECT * FROM ");
+	String key = "%" + searchKey + "%";
+	sql.append("(SELECT *, ROW_NUMBER() OVER (ORDER BY CatName DESC) AS RowNumber "
+		+ "FROM tblCATEGORY WHERE CatName LIKE ?) AS Pagable ");
+	if (page.getTotalPage() == 1) {
+	    return query(sql.toString(), new CategoryMapper(), key);
+	} else {
+	    sql.append("WHERE RowNumber BETWEEN ? AND ?");
+	    return query(sql.toString(), new CategoryMapper(), key, page.getOffset() + 1, page.getLimit());
+	}
+    }
 
     @Override
     public Long getTotalItems() throws SQLException, Exception {
 	String sql = "SELECT count(*) FROM tblCATEGORY";
 	return count(sql);
+    }
+    
+    @Override
+    public Long getTotalItems(String searchKey) throws SQLException, Exception {
+	String key = "%" + searchKey + "%";
+        String sql = "SELECT count(*) FROM tblCATEGORY WHERE CatName LIKE ?";
+        return count(sql, key);
     }
 
     @Override
