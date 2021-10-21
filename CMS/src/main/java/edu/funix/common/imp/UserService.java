@@ -1,10 +1,7 @@
 package edu.funix.common.imp;
 
-import java.security.MessageDigest;
 import java.sql.SQLException;
 import java.util.List;
-
-import javax.xml.bind.DatatypeConverter;
 
 import edu.funix.common.IPageableService;
 import edu.funix.common.IUserService;
@@ -32,6 +29,11 @@ public class UserService implements IUserService {
     public List<UserModel> findAll(PageModel page) throws SQLException, Exception {
 	page = paging.pageRequest(page, getTotalItems());
 	return userDAO.findAll(page);
+    }
+    
+    @Override
+    public UserModel findByEmail(String email) throws SQLException, Exception {
+        return userDAO.findByEmail(email);
     }
 
     @Override
@@ -68,10 +70,12 @@ public class UserService implements IUserService {
     @Override
     public UserModel checkLogin(String username, String password) throws SQLException, Exception {
 	UserModel user = new UserModel();
-//		String emailRegex = "[a-z0-9]+[_a-z0-9\\.-]*[a-z0-9]+@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})";
+//	String emailRegex = "[a-z0-9]+[_a-z0-9\\.-]*[a-z0-9]+@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})";
+	/* Regex Pattern for safe password */
 	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
+	/* Checks the safe password satisfy with pattern or not */
 	if (!password.matches(pwdRegex)) {
-	    user.setLoginMessage("Password must be at least 8 character, one uppercase and one number");
+	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
 	} else {
 	    user = userDAO.checkLogin(username, password);
 	    if (user == null) {
@@ -84,11 +88,18 @@ public class UserService implements IUserService {
     @Override
     public void changePassword(ChangePasswordForm newPwd) throws SQLException, Exception {
 	UserModel user = null;
-	user = userDAO.checkLogin(newPwd.getUsername(), newPwd.getCurrPassword());
-	if (user != null) {
-	    userDAO.changePassword(newPwd.getUsername(), newPwd.getPassword());
+	/* Regex Pattern for safe password */
+	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
+	/* Checks the safe password satisfy with pattern or not */
+	if (!newPwd.getPassword().matches(pwdRegex)) {
+	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
 	} else {
-	    throw new Exception("Current password is incorrect");
+	    user = userDAO.checkLogin(newPwd.getUsername(), newPwd.getCurrPassword());
+	    if (user != null) {
+		userDAO.changePassword(user.getId(), newPwd.getConfirmPassword());
+	    } else {
+		throw new Exception("Current password is incorrect");
+	    }
 	}
     }
 }

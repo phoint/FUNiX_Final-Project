@@ -2,7 +2,6 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<body>
 <div class="form-signin">
 	<form id="login-form" class="p-4 border bg-white" action="<c:url value="login"/>" method="post" novalidate>
 		<h1 class="h3 mb-3 text-center">Log In</h1>

@@ -127,8 +127,6 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 		stm.setDate(index, (Date) parameter);
 	    } else if (parameter == null) {
 		stm.setNull(index, 0);
-	    } else if (parameter instanceof Object[]) {
-		stm.setObject(index, parameter, 4);
 	    }
 	}
     }

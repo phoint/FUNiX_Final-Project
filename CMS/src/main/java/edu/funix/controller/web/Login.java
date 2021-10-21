@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import edu.funix.Utils.Mailer;
 import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
+import edu.funix.Utils.PasswordUtils;
 import edu.funix.Utils.SessionUtil;
 import edu.funix.common.IUserService;
 import edu.funix.common.imp.UserService;
@@ -43,8 +45,14 @@ public class Login extends HttpServlet {
 	String action = request.getParameter("action");
 	if (action != null && action.equals("logout")) {
 	    SessionUtil.invalidate(request);
+	    response.sendRedirect(request.getContextPath());
+	    return;
 	}
-	PageInfo.Login(request, response, PageType.LOGIN);
+	if (action != null && action.equals("resetPwd")) {
+	    PageInfo.login(request, response, PageType.FORGOT_PASSWORD);
+	    return;
+	}
+	PageInfo.login(request, response, PageType.LOGIN);
     }
 
     /**
@@ -75,14 +83,40 @@ public class Login extends HttpServlet {
 		SessionUtil.add(request, "loginUser", validUser);
 		if (validUser.isRole()) {
 		    response.sendRedirect(request.getContextPath() + "/admin/posts");
-		} else  {
+		} else {
 		    // TODO Page for login has role user
 		    response.sendRedirect(request.getContextPath());
 		}
 	    } else {
 		request.setAttribute("error", error);
-		PageInfo.Login(request, response, PageType.LOGIN);
+		PageInfo.login(request, response, PageType.LOGIN);
 	    }
+	} else if (action != null && action.equals("resetPwd")) {
+	    String email = request.getParameter("userMail");
+	    UserModel user = null;
+	    try {
+		user = userService.findByEmail(email);
+	    } catch (Exception e) {
+		error = e.getMessage();
+		e.printStackTrace();
+	    }
+	    if (user != null) {
+		user.setPassword(PasswordUtils.generate(10));
+		try {
+		    userService.edit(user);
+		    Mailer.getTemplate(user.getPassword());
+		    Mailer.send(user.getEmail(), "Reset Password", Mailer.getTemplate(user.getPassword()));
+		    message = "New password send";
+		} catch (Exception e) {
+		    error = e.getMessage();
+		    e.printStackTrace();
+		}
+	    } else {
+		error = "Email is not exist!";
+	    }
+	    request.setAttribute("message", message);
+	    request.setAttribute("error", error);
+	    PageInfo.login(request, response, PageType.LOGIN);
 	}
 
     }

@@ -21,7 +21,7 @@ import edu.funix.domain.ChangePasswordForm;
 /**
  * Servlet implementation class PasswordChange
  */
-@WebServlet("/password-change")
+@WebServlet("/account/password-change")
 public class PasswordChange extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private IUserService userService;
@@ -38,7 +38,7 @@ public class PasswordChange extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
-	PageInfo.Login(request, response, PageType.PASSWORD_CHANGE);
+	PageInfo.account(request, response, PageType.PASSWORD_CHANGE);
     }
 
     /**
@@ -66,7 +66,7 @@ public class PasswordChange extends HttpServlet {
 	}
 	request.setAttribute("error", error);
 	request.setAttribute("message", message);
-	PageInfo.Login(request, response, PageType.LOGIN);
+	PageInfo.account(request, response, PageType.PASSWORD_CHANGE);
 	
     }
 

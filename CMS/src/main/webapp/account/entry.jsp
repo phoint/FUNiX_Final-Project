@@ -21,7 +21,7 @@
     href="https://fonts.googleapis.com/css2?family=Barlow:wght@100;300;400;700&
     family=Yeseva+One&family=Goldman&display=swap"
     rel="stylesheet">
-<link rel="stylesheet" href="<c:url value="web/css/login.css"/>">
+<link rel="stylesheet" href="<c:url value="css/login.css"/>">
 
 <script
   src="https://cdn.ckeditor.com/ckeditor5/29.2.0/classic/ckeditor.js"></script>
@@ -33,6 +33,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
-  <script src="<c:url value="web/js/scripts.js"/>"></script>
+  <script src="<c:url value="js/scripts.js"/>"></script>
 </body>
 </html>

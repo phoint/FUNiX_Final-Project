@@ -17,41 +17,49 @@ import edu.funix.model.UserModel;
 
 public class AuthorizationFilter implements Filter {
 
-	private ServletContext context;
+    private ServletContext context;
 
-	@Override
-	public void destroy() {
-		// TODO Auto-generated method stub
+    @Override
+    public void destroy() {
+	// TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
+    @Override
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
 	    throws IOException, ServletException {
-		HttpServletRequest request = (HttpServletRequest) servletRequest;
-		HttpServletResponse response = (HttpServletResponse) servletResponse;
-		String url = request.getRequestURI();
-		if (url.startsWith("/CMS/admin/")) {
-			UserModel userModel = (UserModel) SessionUtil.get(request, "loginUser");
-			if (userModel != null) {
-				if (userModel.isRole()) {
-					chain.doFilter(request, response);
-				} else if (!userModel.isRole()) {
-					// TODO alerting access permission page for admin
-					response.sendRedirect(request.getContextPath() + "/login");
-				}
-			} else {
-				// TODO alerting access permission page for login user
-				response.sendRedirect(request.getContextPath() + "/login");
-			}
-		} else {
-			chain.doFilter(request, response);
+	HttpServletRequest request = (HttpServletRequest) servletRequest;
+	HttpServletResponse response = (HttpServletResponse) servletResponse;
+	String url = request.getRequestURI();
+	if (url.startsWith("/CMS/admin/")) {
+	    UserModel userModel = (UserModel) SessionUtil.get(request, "loginUser");
+	    if (userModel != null) {
+		if (userModel.isRole()) {
+		    chain.doFilter(request, response);
+		} else if (!userModel.isRole()) {
+		    // TODO alerting access permission page for admin
+		    response.sendRedirect(request.getContextPath() + "/login");
 		}
+	    } else {
+		// TODO alerting access permission page for login user
+		response.sendRedirect(request.getContextPath() + "/login");
+	    }
+	} else if (url.startsWith("/CMS/account")) {
+	    UserModel userModel = (UserModel) SessionUtil.get(request, "loginUser");
+	    if (userModel != null) {
+		chain.doFilter(request, response);
+	    } else {
+		// TODO alerting access permission page for login user
+		response.sendRedirect(request.getContextPath() + "/login");
+	    }
+	} else {
+	    chain.doFilter(request, response);
 	}
+    }
 
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-		this.context = filterConfig.getServletContext();
-	}
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+	this.context = filterConfig.getServletContext();
+    }
 
 }

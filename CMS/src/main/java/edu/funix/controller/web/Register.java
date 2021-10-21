@@ -36,15 +36,22 @@ public class Register extends HttpServlet {
     }
 
     /**
+     * Forward to the register page
+     * 
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
      *      response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
-	PageInfo.Login(request, response, PageType.REGISTER);
+	PageInfo.login(request, response, PageType.REGISTER);
     }
 
     /**
+     * Create a user's account with information from register form. The password
+     * will be generated and send to user by mail. User log in with that password
+     * and username created for first time. After logging in, the user could change
+     * the password.
+     * 
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
      *      response)
      */
@@ -57,16 +64,17 @@ public class Register extends HttpServlet {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
+	/* Auto generate a safe password has length = 10 */
 	String password = PasswordUtils.generate(10);
 	newUser.setPassword(password);
 	try {
 	    userService.save(newUser);
-	    Mailer.getTemplate(password);
+	    /* Send the password to user by mail */
 	    Mailer.send(newUser.getEmail(), "Hello New User", Mailer.getTemplate(password));
 	} catch (Exception e) {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
-	PageInfo.Login(request, response, PageType.LOGIN);
+	PageInfo.login(request, response, PageType.LOGIN);
     }
 }

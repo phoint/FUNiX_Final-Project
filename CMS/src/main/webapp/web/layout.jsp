@@ -26,7 +26,7 @@
 		<div class="container position-relative">
 			<div class="row">
 				<nav
-					class="navbar navbar-expand-lg navbar-light w-100 position-absolute z-99">
+					class="navbar navbar-expand-lg navbar-dark bg-dark w-100 rounded position-absolute">
 					<a class="navbar-brand" href="#">Navbar</a>
 					<button class="navbar-toggler" type="button" data-toggle="collapse"
 						data-target="#navbarSupportedContent"
@@ -56,12 +56,18 @@
 								class="far fa-user ml-sm-3"></i>
 							</a>
 							<div
-								class="dropdown-menu dropdown-menu-left dropdown-menu-lg-right bg-transparent border-white text-lg-right"
+								class="dropdown-menu dropdown-menu-left dropdown-menu-lg-right bg-dark text-lg-right"
 								aria-labelledby="navbarDropdown">
+								<c:if test="${empty loginUser}">
 								<a class="dropdown-item" href="login">Login</a> 
-								<a class="dropdown-item" href="register">Register</a>
-								<a class="dropdown-item" href="login?action=logout">Logout</a>						
+								<a class="dropdown-item" href="register">Register</a> 
 								<a class="dropdown-item" href="#">Subcribe</a>
+								<a class="dropdown-item" href="login?action=resetPwd">Forgot Password</a>
+								</c:if>
+								<c:if test="${not empty loginUser}">								
+								<a class="dropdown-item" href="account/password-change">Change Password</a>
+								<a class="dropdown-item" href="login?action=logout">Logout</a>
+								</c:if>
 							</div>
 						</div>
 					</div>
@@ -69,56 +75,63 @@
 			</div>
 		</div>
 	</header>
-	<main role="main" class="col">
+	<main role="main">
 		<jsp:include page="${pageInfo.contentUrl}"></jsp:include>
 	</main>
-  <footer>
-    <div class="container-fluid">
-      <div class="mail-subcription row justify-content-center py-5">
-        <div class="col-md-4 col-sm-6 text-center">
-          <h2>Newsleter</h2>
-          <h6>Đăng ký nhận tin mới mỗi ngày</h6>
-          <form action="" method="post">
-            <div class="input-group ">
-              <input class="form-control" type="email" name="" placeholder="Email Address" aria-label="Recipient's " aria-describedby="my-addon">
-              <div class="input-group-append">
-                <input class="btn btn-outline-primary" type="button" value="Submit">
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <div class="row">
-        <small>All Rights Reserved © 2021</small>
-      </div>
-    </div>
-  </footer>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
-  <script src="<c:url value="vendor/jquery.twbsPagination.min.js"/>"></script>
-  <script type="text/javascript">
-    var maxItem = 10;
-    var totalPage = ${page.totalPage};
-    var currentPage = ${page.currentPage};
-    $(function() {
-      window.pagObj = $('#pagination').twbsPagination({
-        totalPages : totalPage,
-        visiblePages : 3,
-        startPage : currentPage,
-        onPageClick : function(event, page) {
-          console.info(page + ' (from options)');
-        }
-      }).on('page', function(event, page) {
-        console.info(page + ' (from event listening)');
-        $('#currentPage').val(page);
-        $('#maxItem').val(10);
-        $('#pagination-info').submit();
-      });
-    });
-  </script>
+	<footer>
+		<div class="container-fluid">
+			<div class="mail-subcription row justify-content-center py-5">
+				<div class="col-md-4 col-sm-6 text-center">
+					<h2>Newsleter</h2>
+					<h6>Đăng ký nhận tin mới mỗi ngày</h6>
+					<form action="" method="post">
+						<div class="input-group ">
+							<input class="form-control" type="email" name=""
+								placeholder="Email Address" aria-label="Recipient's "
+								aria-describedby="my-addon">
+							<div class="input-group-append">
+								<input class="btn btn-outline-primary" type="button"
+									value="Submit">
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				<small>All Rights Reserved © 2021</small>
+			</div>
+		</div>
+	</footer>
+	<script
+		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+	<script src="<c:url value="vendor/jquery.twbsPagination.min.js"/>"></script>
+	<script type="text/javascript">
+		var maxItem = 10;
+		var totalPage = ${page.totalPage};
+		var currentPage = ${page.currentPage};
+		$(function() {
+			window.pagObj = $('#pagination').twbsPagination({
+				totalPages : totalPage,
+				visiblePages : 3,
+				startPage : currentPage,
+				onPageClick : function(event, page) {
+					console.info(page + ' (from options)');
+				}
+			}).on('page', function(event, page) {
+				console.info(page + ' (from event listening)');
+				$('#currentPage').val(page);
+				$('#maxItem').val(10);
+				$('#pagination-info').submit();
+			});
+		});
+	</script>
 </body>
 </html>
