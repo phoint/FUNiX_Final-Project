@@ -91,9 +91,8 @@
 	   <a onclick="return confirm('Are you sure? Any change can not be undone');" href="<c:url value="posts?action=deleteAll"/>">Delete All</a>
 	</div>
 	<form action="<c:url value="posts"/>" id="pagination-info" method="get">
-		<input class="form-control form-control-sm" type="hidden" name="searchKey"
-			value="${searchKey}"> <input type="hidden" name="maxItem"
-			id="maxItem" /> <input type="hidden" name="currentPage"
-			id="currentPage" />
+		<input type="hidden" name="searchKey" value="${searchKey}"> 
+		<input type="hidden" name="maxItem" id="maxItem" /> 
+		<input type="hidden" name="currentPage" id="currentPage" />
 	</form>
 </div>

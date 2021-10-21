@@ -19,12 +19,12 @@ public class UserModel extends AbstractModel<UserModel> {
     private String password;
     private String displayName;
     private boolean role;
-    private String loginMessage;
-    private String hashPwd;
+    private long totalPost;
 
     public UserModel() {
+	super();
     }
-    
+
     public UserModel(String email, String username, String password, String displayName, boolean role) {
 	super();
 	this.email = email;
@@ -32,22 +32,6 @@ public class UserModel extends AbstractModel<UserModel> {
 	this.password = password;
 	this.displayName = displayName;
 	this.role = role;
-    }
-
-    public String getHashPwd() {
-	return hashPwd;
-    }
-
-    public void setHashPwd(String hashPwd) {
-	this.hashPwd = hashPwd;
-    }
-
-    public String getLoginMessage() {
-	return loginMessage;
-    }
-
-    public void setLoginMessage(String loginMessage) {
-	this.loginMessage = loginMessage;
     }
 
     public String getEmail() {
@@ -88,5 +72,13 @@ public class UserModel extends AbstractModel<UserModel> {
 
     public void setRole(boolean role) {
 	this.role = role;
+    }
+
+    public long getTotalPost() {
+	return totalPost;
+    }
+
+    public void setTotalPost(long totalPost) {
+	this.totalPost = totalPost;
     }
 }

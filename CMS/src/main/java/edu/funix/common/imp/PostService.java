@@ -58,7 +58,7 @@ public class PostService implements IPostService {
 	List<PostModel> postList = postDAO.findAll();
 	for (PostModel post : postList) {
 	    post.setCategories(postGroupService.findCategoryInUse(post.getId()));
-	    post.setAuthor(userDAO.findUserById(post.getCreatedBy()));
+	    post.setAuthor(userDAO.findBy(post.getCreatedBy()));
 	    post.setImage(mediaDAO.findById(post.getFeature()));
 	}
 	return postList;
@@ -76,7 +76,7 @@ public class PostService implements IPostService {
 	List<PostModel> postList = postDAO.findAll(page);
 	for (PostModel post : postList) {
 	    post.setCategories(postGroupService.findCategoryInUse(post.getId()));
-	    post.setAuthor(userDAO.findUserById(post.getCreatedBy()));
+	    post.setAuthor(userDAO.findBy(post.getCreatedBy()));
 	    post.setImage(mediaDAO.findById(post.getFeature()));
 	}
 	return postList;
@@ -97,7 +97,7 @@ public class PostService implements IPostService {
 	List<PostModel> postList = postDAO.categoryGroup(CatID, page);
 	for (PostModel post : postList) {
 	    post.setCategories(postGroupService.findCategoryInUse(post.getId()));
-	    post.setAuthor(userDAO.findUserById(post.getCreatedBy()));
+	    post.setAuthor(userDAO.findBy(post.getCreatedBy()));
 	    post.setImage(mediaDAO.findById(post.getFeature()));
 	}
 	return postList;
@@ -113,7 +113,7 @@ public class PostService implements IPostService {
     public PostModel findPostById(long postId) throws SQLException, Exception {
 	PostModel post = postDAO.findPostById(postId);
 	post.setCategories(postGroupService.findCategoryInUse(post.getId()));
-	post.setAuthor(userDAO.findUserById(post.getCreatedBy()));
+	post.setAuthor(userDAO.findBy(post.getCreatedBy()));
 	post.setComments(commentService.findAllInPost(post.getId()));
 	post.setImage(mediaDAO.findById(post.getFeature()));
 	return post;
@@ -195,7 +195,7 @@ public class PostService implements IPostService {
 	List<PostModel> postList = postDAO.search(page, searchKey);
 	for (PostModel post : postList) {
 	    post.setCategories(postGroupService.findCategoryInUse(post.getId()));
-	    post.setAuthor(userDAO.findUserById(post.getCreatedBy()));
+	    post.setAuthor(userDAO.findBy(post.getCreatedBy()));
 	    post.setImage(mediaDAO.findById(post.getFeature()));
 	}
 	return postList;

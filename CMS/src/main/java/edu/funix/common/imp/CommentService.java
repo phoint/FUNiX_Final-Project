@@ -29,7 +29,7 @@ public class CommentService implements ICommentService {
 	public List<CommentModel> findAll() throws SQLException, Exception {
 		List<CommentModel> comments = commentDAO.findAll();
 		for (CommentModel comment : comments) {
-			comment.setAuthor(userDAO.findUserById(comment.getCreatedBy()));
+			comment.setAuthor(userDAO.findBy(comment.getCreatedBy()));
 			comment.setResponseIn(postDAO.findPostById(comment.getSubmitTo()));
 		}
 		return comments;
@@ -39,7 +39,7 @@ public class CommentService implements ICommentService {
 	public List<CommentModel> findAllParent(long id) throws SQLException, Exception {
 		List<CommentModel> comments = commentDAO.findAllParent(id);
 		for (CommentModel comment : comments) {
-			comment.setAuthor(userDAO.findUserById(comment.getCreatedBy()));
+			comment.setAuthor(userDAO.findBy(comment.getCreatedBy()));
 		}
 		return comments;
 	}
@@ -48,7 +48,7 @@ public class CommentService implements ICommentService {
 	public List<CommentModel> findAllReply(long id) throws SQLException, Exception {
 		List<CommentModel> comments = commentDAO.findAllReply(id);
 		for (CommentModel comment : comments) {
-			comment.setAuthor(userDAO.findUserById(comment.getCreatedBy()));
+			comment.setAuthor(userDAO.findBy(comment.getCreatedBy()));
 		}
 		return comments;
 	}

@@ -53,13 +53,27 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
     }
 
     @Override
-    public UserModel findUserById(long id) throws SQLException, Exception {
+    public List<UserModel> searchBy(PageModel page, String searchKey) throws SQLException, Exception {
+	StringBuilder sql = new StringBuilder("SELECT * FROM ");
+	String key = "%" + searchKey + "%";
+	sql.append("(SELECT *, ROW_NUMBER() OVER (ORDER BY Username ASC) AS RowNumber "
+		+ "FROM tblUSER WHERE Username LIKE ?) AS Pagable ");
+	if (page.getTotalPage() == 1) {
+	    return query(sql.toString(), new UserMapper(), key);
+	} else {
+	    sql.append("WHERE RowNumber BETWEEN ? AND ?");
+	    return query(sql.toString(), new UserMapper(), key, page.getOffset() + 1, page.getLimit());
+	}
+    }
+
+    @Override
+    public UserModel findBy(long id) throws SQLException, Exception {
 	String sql = "SELECT * FROM tblUSER WHERE UserID = ?";
 	return query(sql, new UserMapper(), id).get(0);
     }
 
     @Override
-    public UserModel findByEmail(String email) throws SQLException, Exception {
+    public UserModel findBy(String email) throws SQLException, Exception {
 	String sql = "SELECT * FROM tblUSER WHERE UserMail = ?";
 	List<UserModel> users = query(sql, new UserMapper(), email);
 	return users.isEmpty() ? null : users.get(0);
@@ -84,6 +98,13 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
     public Long getTotalItems() throws SQLException, Exception {
 	String sql = "SELECT count(*) FROM tblUSER";
 	return count(sql);
+    }
+    
+    @Override
+    public Long getTotalItems(String username) throws SQLException, Exception {
+        String sql = "SELECT count(*) FROM tblUSER WHERE username LIKE ?";
+        String key = "%" + username + "%";
+        return count(sql, key);
     }
 
     @Override

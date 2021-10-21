@@ -146,14 +146,20 @@ public class PostDAO extends AbstractDAO<PostModel> implements IPostDAO {
     /**
      * Gets the total of post in post table have title matching search key
      * 
-     * @param searchKey A String containing keyword searching
+     * @param postTitle A String containing keyword searching
      * @return A Long representing the total of post meet the conditions
      */
     @Override
-    public Long getTotalItems(String searchKey) throws SQLException, Exception {
+    public Long getTotalItems(String postTitle) throws SQLException, Exception {
 	String sql = "SELECT count(*) FROM tblPOST WHERE PostTitle LIKE ?";
-	String key = "%" + searchKey + "%";
+	String key = "%" + postTitle + "%";
 	return count(sql, key);
+    }
+    
+    @Override
+    public Long getTotalItems(long userID) throws SQLException, Exception {
+        String sql = "SELECT count(*) FROM tblPOST WHERE Author = ?";
+        return count(sql, userID);
     }
 
     /**

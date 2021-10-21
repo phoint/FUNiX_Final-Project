@@ -94,6 +94,16 @@ public interface IPostDAO extends GenericDAO<PostModel> {
     Long getTotalItems(String searchKey) throws SQLException, Exception;
 
     /**
+     * Gets the total of posts created by one user
+     * 
+     * @param userID A long containing the user's id
+     * @return A Long representing the total of posts
+     * @throws SQLException
+     * @throws Exception
+     */
+    Long getTotalItems(long userID) throws SQLException, Exception;
+
+    /**
      * Delete an existing row from post table has an id matched
      * 
      * @param id A long containing the post's id

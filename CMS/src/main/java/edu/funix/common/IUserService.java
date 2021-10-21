@@ -46,6 +46,17 @@ public interface IUserService {
     List<UserModel> findAll(PageModel page) throws SQLException, Exception;
 
     /**
+     * Finds all users have username matching search key display on one page
+     * 
+     * @param page      A PageModel containing pagination information
+     * @param searchKey A String containing search key
+     * @return A List representing all users matching search key on one page
+     * @throws Exception 
+     * @throws SQLException 
+     */
+    List<UserModel> search(PageModel page, String searchKey) throws SQLException, Exception;
+
+    /**
      * Gets user by an existed id
      * 
      * @param id A Long containing user's id
@@ -97,15 +108,6 @@ public interface IUserService {
 
     // TODO: Separate soft delete with hard delete user's account
     void permanentDelete(long id) throws SQLException, Exception;
-
-    /**
-     * Gets the total of users in database
-     * 
-     * @return A Long representing the total of users
-     * @throws SQLException
-     * @throws Exception
-     */
-    Long getTotalItems() throws SQLException, Exception;
 
     /**
      * Checks existed user's account for logging in system

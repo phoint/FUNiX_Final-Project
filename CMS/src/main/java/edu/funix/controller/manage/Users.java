@@ -39,20 +39,40 @@ public class Users extends HttpServlet {
 	    throws ServletException, IOException {
 	String id = request.getParameter("id");
 	String action = request.getParameter("action");
+	String searchKey = request.getParameter("searchKey");
 	UserModel users = new UserModel();
 	PageModel page = new PageModel();
+	String message = null;
+	String error = null;
+
+	/*
+	 * Sets the search key to null if return empty string. This process help the
+	 * service calling the right DAO's method
+	 */
+	if (searchKey != null && searchKey.trim().equals("")) {
+	    searchKey = null;
+	}
 	try {
+	    /* Check parameter for deleting feature */
 	    if (id != null && action.equals("delete")) {
 		userService.permanentDelete(Long.parseLong(id));
+		message = "Delete success";
 	    }
 	    BeanUtils.populate(page, request.getParameterMap());
-	    users.setListResult(userService.findAll(page));
+	    /* Finds the users base on search term */
+	    if (searchKey != null) {
+		users.setListResult(userService.search(page, searchKey));
+	    } else {
+		users.setListResult(userService.findAll(page));
+	    }
 	} catch (Exception e) {
-	    // TODO Auto-generated catch block
+	    error = e.getMessage();
 	    e.printStackTrace();
 	}
 	request.setAttribute("page", page);
 	request.setAttribute("users", users);
+	request.setAttribute("message", message);
+	request.setAttribute("error", error);
 	PageInfo.PrepareAndForward(request, response, PageType.USER_MANAGEMENT_PAGE);
     }
 

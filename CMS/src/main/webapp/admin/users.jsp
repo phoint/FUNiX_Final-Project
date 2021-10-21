@@ -7,17 +7,26 @@
 		class="btn btn-sm btn-outline-primary mb-3">Add New</a>
 	<!-- <div class="alert alert-success" role="alert">${message}</div> -->
 </div>
+  <c:if test="${not empty message}"><div id="message" class="alert alert-success">${message}</div></c:if>
+  <c:if test="${not empty error}"><div id="error" class="alert alert-danger">${error}</div></c:if>
 <div class="wrap my-1">
 	<div class="d-inline-flex mr-2">
-		<form class="form-inline" action="" method="post">
-			<select class="form-control form-control-sm mx-1" name="" id="">
-				<option>Bulk actions</option>
-				<option>Delete</option>
-				<option>Edit</option>
-			</select>
-			<button type="submit" class="btn btn-sm btn-outline-primary mx-1">Submit</button>
-		</form>
+		<form class="form-inline" action="users" method="post"
+      id="multiselect" onsubmit="return confirm('Do you really want to delete item(s)?');">
+      <select class="form-control form-control-sm mx-1" name="action">
+        <option>Bulk actions</option>
+        <option value="delete">Delete</option>
+      </select>
+      <button type="submit" class="btn btn-sm btn-outline-primary mx-1">Submit</button>
+    </form>
 	</div>
+	<div class="d-inline-flex mr-2">
+    <form class="form-inline" action="users" method="get">
+      <input class="form-control form-control-sm" type="text" name="searchKey"
+        value="${searchKey}" placeholder="Search...">
+      <button type="submit" class="btn btn-sm btn-outline-primary mx-1">Search</button>
+    </form>
+  </div>
 </div>
 <div class="table-responsive">
 	<table class="table table-striped table-sm">
@@ -34,35 +43,25 @@
 		<tbody>
 			<c:forEach items="${users.listResult}" var="user">
 				<tr>
-					<td><input type="checkbox" name="" id=""></td>
+					<td>
+				    <input type="checkbox" name="id" class="select-item"
+            value="${user.id}" form="multiselect">
+          </td>
 					<td>
 						<div>${user.username}</div>
 						<div>
-							<a href="<c:url value="edit-user?id=${user.id}"/>">Edit</a> <a
-								href="<c:url value="users?id=${user.id}&action=delete"/>"
-								class="ml-2">Delete</a>
+							<a href="<c:url value="edit-user?id=${user.id}"/>">Edit</a> 
+							<a href="<c:url value="users?id=${user.id}&action=delete"/>"
+							   class="ml-2" onclick="return confirm('Are you sure?');">Delete
+              </a>
 						</div>
 					</td>
 					<td>${user.displayName }</td>
 					<td>${user.email}</td>
 					<td>${user.role ? "admin" : "user"}</td>
-					<td>postCount</td>
+					<td>${user.totalPost}</td>
 				</tr>
 			</c:forEach>
-			<tr>
-				<td><input type="checkbox" name="" id=""></td>
-				<td>
-					<div>title</div>
-					<div>edit</div>
-				</td>
-				<td>data</td>
-				<td>placeholder</td>
-				<td>text</td>
-				<td>
-					<div>status</div>
-					<div>date</div>
-				</td>
-			</tr>
 		</tbody>
 	</table>
 	<div class="container justify-content-center">
@@ -70,8 +69,9 @@
 			<ul class="pagination" id="pagination"></ul>
 		</nav>
 	</div>
-	<form action="<c:url value="/PostManagement"/>" id="pagination-info">
-		<input type="hidden" name="maxItem" id="maxItem" /> <input
-			type="hidden" name="currentPage" id="currentPage" />
+	<form action="<c:url value="users"/>" id="pagination-info">
+    <input type="hidden" name="searchKey" value="${searchKey}"> 
+    <input type="hidden" name="maxItem" id="maxItem" /> 
+    <input type="hidden" name="currentPage" id="currentPage" />
 	</form>
 </div>

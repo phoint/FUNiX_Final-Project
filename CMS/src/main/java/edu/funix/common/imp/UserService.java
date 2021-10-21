@@ -5,7 +5,9 @@ import java.util.List;
 
 import edu.funix.common.IPageableService;
 import edu.funix.common.IUserService;
+import edu.funix.dao.IPostDAO;
 import edu.funix.dao.IUserDAO;
+import edu.funix.dao.imp.PostDAO;
 import edu.funix.dao.imp.UserDAO;
 import edu.funix.domain.ChangePasswordForm;
 import edu.funix.model.PageModel;
@@ -13,27 +15,47 @@ import edu.funix.model.UserModel;
 
 public class UserService implements IUserService {
     private IUserDAO userDAO;
+    private IPostDAO postDAO;
     private IPageableService paging;
 
     public UserService() {
 	userDAO = new UserDAO();
 	paging = new PageableService();
+	postDAO = new PostDAO();
     }
 
     @Override
     public List<UserModel> findAll() throws SQLException, Exception {
-	return userDAO.findAll();
+	List<UserModel> users = userDAO.findAll();
+	for (UserModel user : users) {
+	    user.setTotalPost(postDAO.getTotalItems(user.getId()));
+	}
+	return users;
     }
 
     @Override
     public List<UserModel> findAll(PageModel page) throws SQLException, Exception {
-	page = paging.pageRequest(page, getTotalItems());
-	return userDAO.findAll(page);
+	page = paging.pageRequest(page, userDAO.getTotalItems());
+	List<UserModel> users = userDAO.findAll(page);
+	for (UserModel user : users) {
+	    user.setTotalPost(postDAO.getTotalItems(user.getId()));
+	}
+	return users;
     }
-    
+
+    @Override
+    public List<UserModel> search(PageModel page, String searchKey) throws SQLException, Exception {
+	page = paging.pageRequest(page, userDAO.getTotalItems(searchKey));
+	List<UserModel> users = userDAO.searchBy(page, searchKey);
+	for (UserModel user : users) {
+	    user.setTotalPost(postDAO.getTotalItems(user.getId()));
+	}
+	return users;
+    }
+
     @Override
     public UserModel findByEmail(String email) throws SQLException, Exception {
-        return userDAO.findByEmail(email);
+	return userDAO.findBy(email);
     }
 
     @Override
@@ -42,13 +64,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Long getTotalItems() throws SQLException, Exception {
-	return userDAO.getTotalItems();
-    }
-
-    @Override
     public UserModel findUserById(long id) throws SQLException, Exception {
-	return userDAO.findUserById(id);
+	return userDAO.findBy(id);
     }
 
     @Override

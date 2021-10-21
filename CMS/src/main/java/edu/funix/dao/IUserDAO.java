@@ -40,7 +40,7 @@ public interface IUserDAO extends GenericDAO<UserModel> {
      * @throws Exception
      * @see UserModel
      */
-    UserModel findUserById(long id) throws SQLException, Exception;
+    UserModel findBy(long id) throws SQLException, Exception;
 
     /**
      * Gets user by an existed email
@@ -51,7 +51,7 @@ public interface IUserDAO extends GenericDAO<UserModel> {
      * @throws Exception
      * @see UserModel
      */
-    UserModel findByEmail(String email) throws SQLException, Exception;
+    UserModel findBy(String email) throws SQLException, Exception;
 
     /**
      * Save a new user account with basic information
@@ -94,6 +94,16 @@ public interface IUserDAO extends GenericDAO<UserModel> {
     Long getTotalItems() throws SQLException, Exception;
 
     /**
+     * Gets total of users has username matching
+     * 
+     * @param username A String containing username
+     * @return A Long representing the total items
+     * @throws Exception 
+     * @throws SQLException 
+     */
+    Long getTotalItems(String username) throws SQLException, Exception;
+
+    /**
      * Checks existed user's account for logging in system
      * 
      * @param username A String containing the account's username
@@ -118,6 +128,18 @@ public interface IUserDAO extends GenericDAO<UserModel> {
      * @see PageModel
      */
     List<UserModel> findAll(PageModel page) throws SQLException, Exception;
+
+    /**
+     * Gets all user has username matching search key. The PageModel's attribute
+     * determine the offset and limit the total items return to list.
+     * 
+     * @param page     A PageModel containing pagination information
+     * @param username A String containing search key
+     * @return A List representing the users matching search key on one page
+     * @throws SQLException
+     * @throws Exception
+     */
+    List<UserModel> searchBy(PageModel page, String searchKey) throws SQLException, Exception;
 
     /**
      * Updates new password for user has id matching
