@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
+import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,10 +15,15 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
+import edu.funix.Utils.SessionUtil;
+import edu.funix.common.ICommentService;
 import edu.funix.common.IPostService;
+import edu.funix.common.imp.CommentService;
 import edu.funix.common.imp.PostService;
+import edu.funix.model.CommentModel;
 import edu.funix.model.PageModel;
 import edu.funix.model.PostModel;
+import edu.funix.model.UserModel;
 
 /**
  * Servlet implementation class Home
@@ -26,12 +32,14 @@ import edu.funix.model.PostModel;
 public class Home extends HttpServlet {
     private static final long serialVersionUID = 1L;
     IPostService postService;
+    ICommentService commentService;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public Home() {
 	postService = new PostService();
+	commentService = new CommentService();
     }
 
     /**
@@ -80,6 +88,38 @@ public class Home extends HttpServlet {
 	    throws ServletException, IOException {
 	response.setContentType("text/html; charset=UTF-8");
 	request.setCharacterEncoding("UTF-8");
+	CommentModel comment = new CommentModel();
+	PostModel post = new PostModel();
+	String message = null;
+	String error = null;
+	
+	String action = request.getParameter("action");
+	if (action != null && action.equals("comment")) {
+	    try {
+		BeanUtils.populate(comment, request.getParameterMap());
+	    } catch (IllegalAccessException | InvocationTargetException e) {
+		error = e.getMessage();
+		e.printStackTrace();
+	    }
+	    if (SessionUtil.isLogin(request)) {
+		UserModel loginUser = (UserModel) SessionUtil.get(request, "loginUser");
+		comment.setCreatedBy(loginUser.getId());
+		try {
+		    commentService.save(comment);
+		} catch (Exception e) {
+		    error = "Something wrong, try later!";
+		    e.printStackTrace();
+		}
+	    }
+	}
+	try {
+	    post = postService.findPostById(comment.getSubmitTo());
+	} catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	request.setAttribute("post", post);
+	PageInfo.WebPrepareAndForward(request, response, PageType.POST_DETAIL);
     }
 
 }

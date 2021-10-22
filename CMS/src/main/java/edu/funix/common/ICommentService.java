@@ -14,5 +14,7 @@ public interface ICommentService {
 
     List<CommentModel> findAllReply(long id) throws SQLException, Exception;
     
-    Long save(CommentModel comment) throws SQLException, Exception;
+    void save(CommentModel comment) throws SQLException, Exception;
+    
+    void confirm(Long comID, boolean term) throws SQLException, Exception;
 }

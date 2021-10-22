@@ -31,6 +31,7 @@
 				<div class="row">
 					<div class="col">
 						<c:forEach items="${post.comments}" var="comment">
+						<c:if test="${comment.confirm or comment.createdBy == sessionScope.loginUser.id}">
 							<div class="media mt-4">
 								<img class="mr-3 rounded-circle" alt="Bootstrap Media Preview"
 									src="http://placeimg.com/300/300/any" />
@@ -42,7 +43,7 @@
 										</div>
 										<div class="col-4">
 											<div class="pull-right reply text-right">
-												<a href="#"><span><i class="fa fa-reply"></i>
+												<a role="button" class="reply-button"><span><i class="fa fa-reply"></i>
 														reply</span></a>
 											</div>
 										</div>
@@ -78,6 +79,7 @@
 									</c:if>
 									<!-- The replies of comment -->
 									<c:forEach items="${comment.replies}" var="reply">
+									<c:if test="${comment.confirm or comment.createdBy == sessionScope.loginUser.id}">
 										<div class="media mt-3">
 											<a class="pr-3" href="#"><img class="rounded-circle"
 												alt="Bootstrap Media Another Preview"
@@ -88,9 +90,11 @@
 												<p>${reply.comContent}</p>
 											</div>
 										</div>
+										</c:if>
 									</c:forEach>
 								</div>
 							</div>
+							</c:if>
 						</c:forEach>
 					</div>
 				</div>

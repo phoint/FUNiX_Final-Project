@@ -61,8 +61,14 @@ public class CommentService implements ICommentService {
     }
     
     @Override
-    public Long save(CommentModel comment) throws SQLException, Exception {
-        return commentDAO.save(comment);
+    public void save(CommentModel comment) throws SQLException, Exception {
+        commentDAO.save(comment);
+    }
+    
+    @Override
+    public void confirm(Long comID, boolean term) throws SQLException, Exception {
+        commentDAO.confirm(comID, false);
+        
     }
 
 }
