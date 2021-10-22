@@ -40,6 +40,8 @@ public class Categories extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
+	response.setContentType("text/html;charset=UTF-8");
+	request.setCharacterEncoding("UTF-8");
 	/* All categories' id selected for action */
 	String[] id = request.getParameterValues("id");
 	String action = request.getParameter("action");
@@ -57,7 +59,7 @@ public class Categories extends HttpServlet {
 		categoryService.delete(id);
 	    }
 	} catch (Exception e) {
-	    // TODO Auto-generated catch block
+	    error = e.getMessage();
 	    e.printStackTrace();
 	}
 	
@@ -65,7 +67,7 @@ public class Categories extends HttpServlet {
 	try {
 	    BeanUtils.populate(page, request.getParameterMap());
 	} catch (IllegalAccessException | InvocationTargetException e) {
-	    // TODO Auto-generated catch block
+	    error = e.getMessage();
 	    e.printStackTrace();
 	}
 	if (searchKey != null && searchKey.trim().equals("")) {
@@ -79,7 +81,7 @@ public class Categories extends HttpServlet {
 		categories.setListResult(categoryService.findAll(page));
 	    }
 	} catch (Exception e) {
-	    // TODO Auto-generated catch block
+	    error = e.getMessage();
 	    e.printStackTrace();
 	}
 	
@@ -100,10 +102,13 @@ public class Categories extends HttpServlet {
 	    throws ServletException, IOException {
 	response.setContentType("text/html;charset=UTF-8");
 	request.setCharacterEncoding("UTF-8");
-	CategoryModel category = new CategoryModel();
 	String action = request.getParameter("action");
 	String[] ids = request.getParameterValues("id");
 	PageModel page = new PageModel();
+	CategoryModel category = new CategoryModel();
+	/* Message and error return on process */
+	String message = null;
+	String error = null;
 
 	try {
 	    if (ids != null && action.equals("delete")) {
@@ -117,7 +122,6 @@ public class Categories extends HttpServlet {
 	    }
 	    category.setListResult(categoryService.findAll(page));
 	} catch (IllegalAccessException | InvocationTargetException e) {
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	} catch (SQLException e) {
 	    // TODO Auto-generated catch block

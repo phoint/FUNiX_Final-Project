@@ -44,16 +44,16 @@
 			<c:forEach items="${users.listResult}" var="user">
 				<tr>
 					<td>
-				    <input type="checkbox" name="id" class="select-item"
-            value="${user.id}" form="multiselect">
+				    <c:if test="${user.id != 1}"><input type="checkbox" name="id" class="select-item"
+            value="${user.id}" form="multiselect"></c:if>
           </td>
 					<td>
 						<div>${user.username}</div>
 						<div>
 							<a href="<c:url value="edit-user?id=${user.id}"/>">Edit</a> 
-							<a href="<c:url value="users?id=${user.id}&action=delete"/>"
+							<c:if test="${user.id != 1}"><a href="<c:url value="users?id=${user.id}&action=delete"/>"
 							   class="ml-2" onclick="return confirm('Are you sure?');">Delete
-              </a>
+              </a></c:if>
 						</div>
 					</td>
 					<td>${user.displayName }</td>

@@ -80,15 +80,18 @@
 					<tbody>
 						<c:forEach items="${categories.listResult}" var="cat">
 							<tr>
-								<td><input type="checkbox" name="id" class="select-item"
-									value="${cat.id}" form="multiselect"></td>
+								<td><c:if test="${cat.id != 1}"><input type="checkbox" name="id" class="select-item"
+									value="${cat.id}" form="multiselect"></c:if></td>
 								<td>
 									<div>${cat.name}</div>
+									
 									<div>
 										<a href="<c:url value="edit-category?id=${cat.id}"/>">Edit</a>
+										<c:if test="${cat.id != 1}">
 										<a
 											href="<c:url value="categories?id=${cat.id}&action=delete"/>"
 											class="ml-2">Delete</a>
+										</c:if>
 									</div>
 								</td>
 								<td>${empty cat.desc ? "-

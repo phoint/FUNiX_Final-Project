@@ -22,7 +22,7 @@ public class SessionUtil {
 	}
 	
 	public static boolean isLogin(HttpServletRequest request) {
-		return get(request, "username") != null;
+		return get(request, "loginUser") != null;
 	}
 	
 	public static String getLoginedUsername(HttpServletRequest request) {

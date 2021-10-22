@@ -11,7 +11,7 @@ public interface ICommentDAO extends GenericDAO<CommentModel> {
 	List<CommentModel> findAllReply(long id) throws SQLException, Exception;
 	void confirm(long id, boolean term) throws SQLException, Exception;
 	void delete(long id) throws SQLException, Exception;
-	void save(CommentModel comment) throws SQLException, Exception;
+	Long save(CommentModel comment) throws SQLException, Exception;
 	
 
 }

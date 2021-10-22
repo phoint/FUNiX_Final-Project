@@ -40,12 +40,12 @@ public class CommentDAO extends AbstractDAO<CommentModel> implements ICommentDAO
 	}
 
 	@Override
-	public void save(CommentModel comment) throws SQLException, Exception {
+	public Long save(CommentModel comment) throws SQLException, Exception {
 		StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO tblCOMMENT (ComContent, SubmitBy, SubmitTo, ReplyTo, Confirm) ");
 		sql.append("VALUES (?,?,?,?,?");
 		
-		update(sql.toString(), comment.getComContent(), comment.getCreatedBy(), comment.getSubmitTo(),
+		return insert(sql.toString(), comment.getComContent(), comment.getCreatedBy(), comment.getSubmitTo(),
 					comment.getReplyTo(), comment.getConfirm() ? 1: 0);
 	}
 	

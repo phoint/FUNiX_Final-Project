@@ -17,7 +17,7 @@
 	<section class="row">
 		<div class="col">
 			<div class="feature-img">
-				<img class="post-listing-img" src="images/lede.jpg" alt="">
+				<img class="post-listing-img" src="${post.image.url}" alt="">
 			</div>
 		</div>
 	</section>
@@ -48,6 +48,35 @@
 										</div>
 									</div>
 									<p>${comment.comContent}</p>
+									<!-- The reply comment box -->
+									<c:if test="${not empty sessionScope.loginUser}">
+										<div class="row reply-comment-block">
+											<div class="col">
+												<div class="bg-light p-2">
+													<form action="<c:url value="/"/>" method="POST">
+														<div class="d-flex flex-row align-items-start">
+															<img class="rounded-circle"
+																src="https://i.imgur.com/RpzrMR2.jpg" width="40">
+															<textarea class="form-control ml-1 shadow-none textarea"
+																name="comContent"></textarea>
+															<input type="hidden" name="submitTo" value="${post.id}">
+															<input type="hidden" name="replyTo" value="${comment.id}">
+															<input type="hidden" name="action" value="comment">
+															<input type="hidden" name="confirm" value="false">
+														</div>
+														<div class="mt-2 text-right">
+															<button class="btn btn-primary btn-sm shadow-none"
+																type="submit">Post comment</button>
+															<button
+																class="btn btn-outline-primary btn-sm ml-1 shadow-none reset-reply-comment"
+																type="button">Cancel</button>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+									</c:if>
+									<!-- The replies of comment -->
 									<c:forEach items="${comment.replies}" var="reply">
 										<div class="media mt-3">
 											<a class="pr-3" href="#"><img class="rounded-circle"
@@ -65,7 +94,36 @@
 						</c:forEach>
 					</div>
 				</div>
+				<!-- Post new comment -->
+				<c:if test="${not empty sessionScope.loginUser}">
+					<div class="row new-comment-block">
+						<div class="col">
+							<div class="bg-light p-2">
+								<form action="<c:url value="/"/>" method="POST">
+									<div class="d-flex flex-row align-items-start">
+										<img class="rounded-circle"
+											src="https://i.imgur.com/RpzrMR2.jpg" width="40">
+										<textarea id="new-comment"
+											class="form-control ml-1 shadow-none textarea"
+											name="comContent"></textarea>
+										<input type="hidden" name="action" value="comment"> <input
+											type="hidden" name="submitTo" value="${post.id}"> <input
+											type="hidden" name="confirm" value="false">
+									</div>
+									<div class="mt-2 text-right">
+										<button class="btn btn-primary btn-sm shadow-none"
+											type="submit">Post comment</button>
+										<button id="reset-button"
+											class="btn btn-outline-primary btn-sm ml-1 shadow-none"
+											type="button">Cancel</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</c:if>
 			</div>
+
 			<!-- End Comment section -->
 		</div>
 		<!-- Right Sidebar -->

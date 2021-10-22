@@ -113,6 +113,7 @@
 	<script
 		src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
 	<script src="<c:url value="vendor/jquery.twbsPagination.min.js"/>"></script>
+	<script src="<c:url value="web/js/scripts.js"/>"></script>
 	<script type="text/javascript">
 		var maxItem = 10;
 		var totalPage = ${page.totalPage};
