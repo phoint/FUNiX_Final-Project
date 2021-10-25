@@ -16,5 +16,7 @@ public interface ICommentService {
     
     void save(CommentModel comment) throws SQLException, Exception;
     
-    void confirm(Long comID, boolean term) throws SQLException, Exception;
+    void delete(String[] ids) throws NumberFormatException, SQLException, Exception;
+    
+    void confirm(String[] ids, boolean term) throws SQLException, Exception;
 }

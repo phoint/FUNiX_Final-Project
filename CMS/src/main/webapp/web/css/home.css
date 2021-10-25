@@ -19,7 +19,7 @@ h1,h2,h3,h4,h5,h6 {
 
 /* Header & banner */
 header .navbar {
-  z-index: 1009;
+  z-index: 9999;
 }
 
 header .navbar-collapse {
@@ -29,9 +29,6 @@ header .navbar-collapse {
 }
 header a {
   color: whitesmoke !important;
-}
-main {
-  z-index: 1000
 }
 .banner {
   background-image: url("./images/lede.jpg");

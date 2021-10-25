@@ -59,16 +59,25 @@ public class CommentService implements ICommentService {
 	}
 	return comments.isEmpty() ? null : comments;
     }
-    
+
     @Override
     public void save(CommentModel comment) throws SQLException, Exception {
-        commentDAO.save(comment);
+	commentDAO.save(comment);
     }
-    
+
     @Override
-    public void confirm(Long comID, boolean term) throws SQLException, Exception {
-        commentDAO.confirm(comID, false);
-        
+    public void delete(String[] ids) throws NumberFormatException, SQLException, Exception {
+	for (String id : ids) {
+	    commentDAO.delete(Long.parseLong(id));
+	}
+
+    }
+
+    @Override
+    public void confirm(String[] ids, boolean term) throws SQLException, Exception {
+	for (String id : ids) {
+	    commentDAO.confirm(Long.parseLong(id), term);
+	}
     }
 
 }

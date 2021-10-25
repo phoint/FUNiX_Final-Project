@@ -19,37 +19,58 @@ import edu.funix.model.CommentModel;
  */
 @WebServlet("/admin/comments")
 public class Comments extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-       private ICommentService commentService;
+    private static final long serialVersionUID = 1L;
+    private ICommentService commentService;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
     public Comments() {
-    	commentService = new CommentService();
+	commentService = new CommentService();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		CommentModel comments = new CommentModel();
-		try {
-			comments.setListResult(commentService.findAll());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	    throws ServletException, IOException {
+	// TODO Auto-generated method stub
+	CommentModel comments = new CommentModel();
+	String action = request.getParameter("action");
+	String[] ids = request.getParameterValues("id");
+	String confirmTerm = request.getParameter("confirm");
+	try {
+	    if (action != null && ids != null) {
+		if (action.equals("delete")) {
+		    commentService.delete(ids);
 		}
-		request.setAttribute("comments", comments);
-		PageInfo.PrepareAndForward(request, response, PageType.COMMENT_MANAGEMENT_PAGE);
+		if (action.equals("confirm") && confirmTerm != null) {
+		    commentService.confirm(ids, Boolean.parseBoolean(confirmTerm));
+		}
+	    }
+	} catch (Exception e1) {
+	    // TODO Auto-generated catch block
+	    e1.printStackTrace();
 	}
+	try {
+	    comments.setListResult(commentService.findAll());
+	} catch (Exception e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	request.setAttribute("comments", comments);
+	PageInfo.PrepareAndForward(request, response, PageType.COMMENT_MANAGEMENT_PAGE);
+    }
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	    throws ServletException, IOException {
+	// TODO Auto-generated method stub
+	doGet(request, response);
+    }
 
 }

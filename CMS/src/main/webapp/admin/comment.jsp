@@ -8,11 +8,12 @@
 </div>
 <div class="wrap my-1">
 	<div class="d-inline-flex mr-2">
-		<form class="form-inline" action="posts" method="post" id="multiselect">
+		<form class="form-inline" action="comments" method="post" id="multiselect">
 			<select class="form-control form-control-sm mx-1" name="action">
 				<option>Bulk actions</option>
 				<option value="delete">Delete</option>
 			</select>
+			
 			<button type="submit" class="btn btn-sm btn-outline-primary mx-1">Submit</button>
 		</form>
 	</div>
@@ -37,12 +38,16 @@
 					</td>
 					<td>${comment.comContent}
 						<div>
-							<a href="<c:url value="comments"/>">Approve</a> <a
-								class="ml-2"
-								href="<c:url value="comments"/>">Delete</a>
+						<c:if test="${!comment.confirm}">
+							<a href="<c:url value="comments?action=confirm&confirm=true&id=${comment.id}"/>">Approve</a>
+						</c:if> 
+						<c:if test="${comment.confirm}">
+							<a href="<c:url value="comments?action=confirm&confirm=false&id=${comment.id}"/>">Unapprove</a>							
+						</c:if>
+							<a href="<c:url value="comments?action=delete&id=${comment.id}"/>">Delete</a>
 						</div>
 					</td>
-					<td class="text-truncate">${comment.responseIn.title}</td>
+					<td class="text-truncate"><a href="${pageContext.request.contextPath}?p=${comment.responseIn.id}">${comment.responseIn.title}</a></td>
 					<td>${comment.createdDate}</td>
 				</tr>
 			</c:forEach>

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -16,8 +15,10 @@ import org.apache.commons.beanutils.BeanUtils;
 import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
 import edu.funix.Utils.SessionUtil;
+import edu.funix.common.ICategoryService;
 import edu.funix.common.ICommentService;
 import edu.funix.common.IPostService;
+import edu.funix.common.imp.CategoryService;
 import edu.funix.common.imp.CommentService;
 import edu.funix.common.imp.PostService;
 import edu.funix.model.CommentModel;
@@ -33,6 +34,7 @@ public class Home extends HttpServlet {
     private static final long serialVersionUID = 1L;
     IPostService postService;
     ICommentService commentService;
+    ICategoryService categoryService;
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -40,6 +42,7 @@ public class Home extends HttpServlet {
     public Home() {
 	postService = new PostService();
 	commentService = new CommentService();
+	categoryService = new CategoryService();
     }
 
     /**
@@ -60,6 +63,7 @@ public class Home extends HttpServlet {
 		return;
 	    }
 	    BeanUtils.populate(page, request.getParameterMap());
+	    post.setCategories(categoryService.findAll());
 	    if (CatId != null && !CatId.trim().equals("")) {
 		post.setListResult(postService.categoryGroup(Long.parseLong(CatId), page));
 	    } else {
@@ -92,7 +96,7 @@ public class Home extends HttpServlet {
 	PostModel post = new PostModel();
 	String message = null;
 	String error = null;
-	
+
 	String action = request.getParameter("action");
 	if (action != null && action.equals("comment")) {
 	    try {
@@ -118,8 +122,6 @@ public class Home extends HttpServlet {
 	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
-	request.setAttribute("post", post);
-	PageInfo.WebPrepareAndForward(request, response, PageType.POST_DETAIL);
+	response.sendRedirect(request.getContextPath() + "?p=" + comment.getSubmitTo());
     }
-
 }

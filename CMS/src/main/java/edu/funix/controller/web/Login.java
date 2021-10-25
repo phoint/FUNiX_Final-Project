@@ -62,6 +62,8 @@ public class Login extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
 	String action = request.getParameter("action");
+	String from = request.getParameter("from");
+	String post = request.getParameter("p");
 	String message = null;
 	String error = null;
 	UserModel loginUser = new UserModel();
@@ -81,11 +83,15 @@ public class Login extends HttpServlet {
 	    }
 	    if (validUser != null) {
 		SessionUtil.add(request, "loginUser", validUser);
-		if (validUser.isRole()) {
-		    response.sendRedirect(request.getContextPath() + "/admin/posts");
+		if (from == null || from.trim().equals("")) {
+		    if (validUser.isRole()) {
+			response.sendRedirect(request.getContextPath() + "/admin/posts");
+		    } else {
+			// TODO Page for login has role user
+			response.sendRedirect(request.getContextPath());
+		    }
 		} else {
-		    // TODO Page for login has role user
-		    response.sendRedirect(request.getContextPath());
+		    response.sendRedirect(request.getContextPath() + from);
 		}
 	    } else {
 		request.setAttribute("error", error);

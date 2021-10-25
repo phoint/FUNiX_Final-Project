@@ -46,14 +46,14 @@
 					type="hidden" name="currentPage" id="currentPage" />
 					<input type="hidden" name="category" id="category"/>
 			</form>
+		</div>
 			<div class="col-md-3 sidebar">
 				<h4>Danh mục</h4>
-				<ul>
-					<li>Giáo dục</li>
-					<li>COVID-19</li>
-					<li>Khác</li>
-				</ul>
+        <c:forEach items="${posts.categories}" var="category">
+        <div class="post-properties py-1 position-relative">
+          <a class="category-display text-decoration-none stretched-link" href="<c:url value="?category=${category.id}&title=${category.name }"/>">${category.name}</a>
+        </div>
+      </c:forEach>
 			</div>
-		</div>
 	</div>
 </div>

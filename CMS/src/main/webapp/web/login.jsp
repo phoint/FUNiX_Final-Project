@@ -12,6 +12,9 @@
         ${message}
     </div></c:if>
 		<input type="hidden" name="action" value="dologin">
+		<input type="hidden" name="from" value="${param.from}">
+		<input type="hidden" name="p" value="${param.p}">
+		
 		<div class="form-group">
 			<label for="inputUsername">Username</label> 
 			<input type="text" name="username" placeholder="Username"
