@@ -41,6 +41,13 @@ public class PageInfo {
 		request.setAttribute("pageInfo", page);
 		request.getRequestDispatcher("web/layout.jsp").forward(request, response);
 	}
+	public static void WebPrepareAndForward(HttpServletRequest request, HttpServletResponse response, PageType pageType, String title) 
+		throws ServletException, IOException {
+	    PageInfo page = pageRoute.get(pageType);
+	    page.setTitle(title);
+	    request.setAttribute("pageInfo", page);
+	    request.getRequestDispatcher("web/layout.jsp").forward(request, response);
+	}
 	public static void account(HttpServletRequest request, HttpServletResponse response, PageType pageType) 
 			throws ServletException, IOException {
 		PageInfo page = pageRoute.get(pageType);

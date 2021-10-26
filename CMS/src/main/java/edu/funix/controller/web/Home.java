@@ -59,7 +59,7 @@ public class Home extends HttpServlet {
 	    if (postId != null) {
 		post = postService.findPostById(Long.parseLong(postId));
 		request.setAttribute("post", post);
-		PageInfo.WebPrepareAndForward(request, response, PageType.POST_DETAIL);
+		PageInfo.WebPrepareAndForward(request, response, PageType.POST_DETAIL, post.getTitle());
 		return;
 	    }
 	    BeanUtils.populate(page, request.getParameterMap());
