@@ -71,15 +71,16 @@ public class Login extends HttpServlet {
 	if (action != null && action.equals("dologin")) {
 	    try {
 		BeanUtils.populate(loginUser, request.getParameterMap());
-		validUser = userService.checkLogin(loginUser.getUsername(), loginUser.getPassword());
+		validUser = userService.LoginAttempt(loginUser);
 	    } catch (IllegalAccessException | InvocationTargetException e) {
-		// TODO Auto-generated catch block
+		error = e.getMessage();
 		e.printStackTrace();
 	    } catch (SQLException e) {
-		// TODO Auto-generated catch block
+		error = e.getMessage();
 		e.printStackTrace();
 	    } catch (Exception e) {
 		error = e.getMessage();
+		e.printStackTrace();
 	    }
 	    if (validUser != null) {
 		SessionUtil.add(request, "loginUser", validUser);
@@ -87,7 +88,6 @@ public class Login extends HttpServlet {
 		    if (validUser.isRole()) {
 			response.sendRedirect(request.getContextPath() + "/admin/posts");
 		    } else {
-			// TODO Page for login has role user
 			response.sendRedirect(request.getContextPath());
 		    }
 		} else {
@@ -101,7 +101,7 @@ public class Login extends HttpServlet {
 	    String email = request.getParameter("userMail");
 	    UserModel user = null;
 	    try {
-		user = userService.findByEmail(email);
+		user = userService.findBy(email);
 	    } catch (Exception e) {
 		error = e.getMessage();
 		e.printStackTrace();

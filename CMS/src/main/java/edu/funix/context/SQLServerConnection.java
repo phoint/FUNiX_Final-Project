@@ -11,7 +11,8 @@ public class SQLServerConnection implements DBConnection {
     public Connection getConnection() throws Exception {
 	String url = "jdbc:sqlserver://" + serverName + ":" + portNumber + "\\" + instance + ";databaseName=" + dbName;
 	if (instance == null || instance.trim().isEmpty()) {
-	    url = "jdbc:sqlserver://" + serverName + ":" + portNumber + ";databaseName=" + dbName;
+	    url = "jdbc:sqlserver://" + serverName + ":" + portNumber + ";databaseName=" + dbName
+		    + ";sendTimeAsDatetime = true";
 	}
 	Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 	return DriverManager.getConnection(url, userID, password);

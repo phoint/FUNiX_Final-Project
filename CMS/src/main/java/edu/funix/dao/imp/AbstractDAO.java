@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -125,6 +126,8 @@ public class AbstractDAO<T> implements GenericDAO<T> {
 		stm.setInt(index, (Integer) parameter);
 	    } else if (parameter instanceof Date) {
 		stm.setDate(index, (Date) parameter);
+	    } else if (parameter instanceof Timestamp) {
+		stm.setTimestamp(index, (Timestamp) parameter);
 	    } else if (parameter == null) {
 		stm.setNull(index, 0);
 	    }

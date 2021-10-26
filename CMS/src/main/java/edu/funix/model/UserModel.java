@@ -7,6 +7,8 @@
  */
 package edu.funix.model;
 
+import java.sql.Timestamp;
+
 /**
  * The User model representing all attribute of a user's account created
  * 
@@ -20,6 +22,10 @@ public class UserModel extends AbstractModel<UserModel> {
     private String displayName;
     private boolean role;
     private long totalPost;
+    /* Attributes for limiting login failed attempts */
+    private boolean accountNonLocked;
+    private int failedAttempts;
+    private Timestamp lockTime;
 
     public UserModel() {
 	super();
@@ -32,6 +38,30 @@ public class UserModel extends AbstractModel<UserModel> {
 	this.password = password;
 	this.displayName = displayName;
 	this.role = role;
+    }
+
+    public boolean isAccountNonLocked() {
+	return accountNonLocked;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+	this.accountNonLocked = accountNonLocked;
+    }
+
+    public int getFailedAttempts() {
+	return failedAttempts;
+    }
+
+    public void setFailedAttempts(int failedAttempts) {
+	this.failedAttempts = failedAttempts;
+    }
+
+    public Timestamp getLockTime() {
+	return lockTime;
+    }
+
+    public void setLockTime(Timestamp lockTime) {
+	this.lockTime = lockTime;
     }
 
     public String getEmail() {

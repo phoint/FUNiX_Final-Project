@@ -74,8 +74,14 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
 
     @Override
     public UserModel findBy(String email) throws SQLException, Exception {
-	String sql = "SELECT * FROM tblUSER WHERE UserMail = ?";
-	List<UserModel> users = query(sql, new UserMapper(), email);
+	StringBuilder sql = new StringBuilder("SELECT * FROM tblUSER ");
+	String emailRegex = "[a-z0-9]+[_a-z0-9\\.-]*[a-z0-9]+@[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z]{2,4})";
+	if (email.matches(emailRegex)) {
+	    sql.append("WHERE UserMail = ?");
+	} else {
+	    sql.append("WHERE Username = ?");
+	}
+	List<UserModel> users = query(sql.toString(), new UserMapper(), email);
 	return users.isEmpty() ? null : users.get(0);
     }
 
@@ -129,6 +135,18 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
     public void changePassword(Long userID, String newPassword) throws SQLException, Exception {
 	String sql = "UPDATE tblUSER SET Pwd = HASHBYTES('SHA2_256', ?) WHERE UserID = ?";
 	update(sql, newPassword, userID);
+    }
+    
+    @Override
+    public void updateFailedAttempts(int failedAttempts, String username) throws SQLException, Exception {
+        String sql = "UPDATE tblUSER SET Failed_attempts = ? WHERE Username = ?";
+        update(sql, failedAttempts, username);
+    }
+    
+    @Override
+    public void updateLockUser(UserModel user) throws SQLException, Exception {
+	String sql = "UPDATE tblUSER SET Acc_non_locked = ?, Lock_time = ?, Failed_attempts = ? WHERE Username = ?";
+	update(sql, user.isAccountNonLocked() ? 1 : 0, user.getLockTime(), user.getFailedAttempts(), user.getUsername());
     }
 
 }

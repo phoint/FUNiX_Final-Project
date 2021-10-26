@@ -10,6 +10,9 @@ package edu.funix.common;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import edu.funix.domain.ChangePasswordForm;
 import edu.funix.model.PageModel;
 import edu.funix.model.UserModel;
@@ -51,8 +54,8 @@ public interface IUserService {
      * @param page      A PageModel containing pagination information
      * @param searchKey A String containing search key
      * @return A List representing all users matching search key on one page
-     * @throws Exception 
-     * @throws SQLException 
+     * @throws Exception
+     * @throws SQLException
      */
     List<UserModel> search(PageModel page, String searchKey) throws SQLException, Exception;
 
@@ -76,7 +79,7 @@ public interface IUserService {
      * @throws Exception
      * @see UserModel
      */
-    UserModel findByEmail(String email) throws SQLException, Exception;
+    UserModel findBy(String email) throws SQLException, Exception;
 
     /**
      * Save a new user account with basic information
@@ -130,4 +133,43 @@ public interface IUserService {
      * @throws Exception
      */
     void changePassword(ChangePasswordForm newPwd) throws SQLException, Exception;
+
+    /**
+     * Increase and update the number of login failed attempts
+     * 
+     * @param user A UserModel containing user's attributes
+     * @throws SQLException
+     * @throws Exception
+     */
+    void increaseFailedAttempts(UserModel user) throws SQLException, Exception;
+
+    /**
+     * Reset the number of login failed attempts after login success
+     * 
+     * @param username A String containing the login username
+     * @throws SQLException
+     * @throws Exception
+     */
+    void resetFailedAttempts(String username) throws SQLException, Exception;
+
+    /**
+     * Locks the user's login when getting the limited number of attempts
+     * 
+     * @param user A UserModel conataining user's attributes
+     * @throws SQLException
+     * @throws Exception
+     */
+    void lockUser(UserModel user) throws SQLException, Exception;
+
+    /**
+     * Unlock user's account after locking for a limited time
+     * 
+     * @param user A UserModel containing user's attributes
+     * @return A boolean representing the account's locking status
+     * @throws SQLException
+     * @throws Exception
+     */
+    boolean unlockWhenTimeExpired(UserModel user) throws SQLException, Exception;
+    
+    UserModel LoginAttempt(UserModel user) throws SQLException, Exception;
 }

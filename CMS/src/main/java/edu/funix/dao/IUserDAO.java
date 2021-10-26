@@ -98,8 +98,8 @@ public interface IUserDAO extends GenericDAO<UserModel> {
      * 
      * @param username A String containing username
      * @return A Long representing the total items
-     * @throws Exception 
-     * @throws SQLException 
+     * @throws Exception
+     * @throws SQLException
      */
     Long getTotalItems(String username) throws SQLException, Exception;
 
@@ -150,4 +150,23 @@ public interface IUserDAO extends GenericDAO<UserModel> {
      * @throws Exception
      */
     void changePassword(Long userId, String newPassword) throws SQLException, Exception;
+
+    /**
+     * Save the total of failed login attempts for locking account for a time
+     * 
+     * @param failedAttempts An integer containing the number of failed attempts
+     * @param username       A String containing the login username
+     * @throws SQLException
+     * @throws Exception
+     */
+    void updateFailedAttempts(int failedAttempts, String username) throws SQLException, Exception;
+
+    /**
+     * Update user's locked status when getting the limited number of attempts
+     * 
+     * @param user A UserModel containing user's attributes
+     * @throws SQLException
+     * @throws Exception
+     */
+    void updateLockUser(UserModel user) throws SQLException, Exception;
 }
