@@ -28,7 +28,7 @@ public class PostModel extends AbstractModel<PostModel> {
     private int postStatus;
     private int isVisible;
     /** Represent a feature image of post */
-    private Long feature;
+    private String feature;
     /** Represent an image inserted to post */
     private Part imageUpload;
     private MediaModel image;
@@ -210,7 +210,7 @@ public class PostModel extends AbstractModel<PostModel> {
      * 
      * @return A string representing the url of post's feature image
      */
-    public Long getFeature() {
+    public String getFeature() {
 	return feature;
     }
 
@@ -219,7 +219,7 @@ public class PostModel extends AbstractModel<PostModel> {
      * 
      * @param feature A string containing the url of post's feature image
      */
-    public void setFeature(Long feature) {
+    public void setFeature(String feature) {
 	this.feature = feature;
     }
 

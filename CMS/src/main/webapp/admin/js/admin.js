@@ -17,7 +17,7 @@ $(document).ready(function() {
   //   $('#multiselect').submit();
   //   $(this).siblings('input[type=hidden]').each().removeProp('form');
   // });
-  
+
   /** Form Validation */
   // Fetch all the forms we want to apply custom Bootstrap validation styles to
   var forms = document.getElementsByClassName('needs-validation');
@@ -31,7 +31,7 @@ $(document).ready(function() {
       form.classList.add('was-validated');
     }, false);
   });
-  
+
   /** Using feather icon */
   (function() {
     'use strict'

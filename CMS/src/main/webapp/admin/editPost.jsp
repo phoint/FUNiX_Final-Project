@@ -27,13 +27,6 @@
 				</c:if>
 				<div class="mt-3">
 					<textarea name="content" id="editor" cols="30" rows="10">${p.content}</textarea>
-					<script>
-             ClassicEditor
-             .create( document.querySelector( '#editor' ) )
-             .catch( error => {
-                            console.error( error );
-                        } );
-           </script>
 				</div>
 				<div class="mt-3">
 					<h6>Excerpt</h6>
@@ -114,20 +107,30 @@
 						<h5>Feature Image</h5>
 					</div>
 					<div class="card-body">
-						<img alt="" src="${p.image.url}" width=150px height=150px> <a
-							href="#new-feature-img" data-toggle="collapse" role="button"
-							aria-expanded="false" aria-controls="new-feature-img">Set
-							feature image</a>
-						<div class="collapse" id="new-feature-img">
-							<div class="form-group">
-								<input class="form-control form-control-sm" type="file"
-									name="feature-image">
-							</div>
-						</div>
+            <a role="button" onclick="BrowseServer();"><img id="xFilePath" alt="" src="${p.feature}" width=150px height=150px></a>
+            <a class="d-block mt-3" role="button" onclick="BrowseServer();">Set feature image</a>
+            <input id="featurePath" type="hidden" name="feature" value="">
 					</div>
 				</div>
 			</div>
-
 		</div>
 	</div>
 </form>
+<script>
+	var editor = CKEDITOR.replace('editor');
+	CKFinder.setupCKEditor(editor, '../vendor/ckfinder');
+	
+	function BrowseServer() {
+	    // You can use the "CKFinder" class to render CKFinder in a page:
+	    var finder = new CKFinder();
+	    finder.basePath = '../vendor/ckfinder';  // The path for the installation of CKFinder (default = "/ckfinder/").
+	    finder.selectActionFunction = SetFileField;
+	    finder.popup();
+	  }
+	
+	// This is a sample function which is called when a file is selected in CKFinder.
+	function SetFileField(fileUrl) {
+	  $('#xFilePath').attr('src', fileUrl);
+	  $('#featurePath').val(fileUrl);
+	}
+</script>

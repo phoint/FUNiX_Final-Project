@@ -7,7 +7,9 @@
  */
 package edu.funix.common.imp;
 
+import java.sql.Date;
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.List;
 
 import edu.funix.common.ICommentService;
@@ -59,7 +61,6 @@ public class PostService implements IPostService {
 	for (PostModel post : postList) {
 	    post.setCategories(postGroupService.findCategoryInUse(post.getId()));
 	    post.setAuthor(userDAO.findBy(post.getCreatedBy()));
-	    post.setImage(mediaDAO.findById(post.getFeature()));
 	}
 	return postList;
     }
@@ -77,7 +78,6 @@ public class PostService implements IPostService {
 	for (PostModel post : postList) {
 	    post.setCategories(postGroupService.findCategoryInUse(post.getId()));
 	    post.setAuthor(userDAO.findBy(post.getCreatedBy()));
-	    post.setImage(mediaDAO.findById(post.getFeature()));
 	}
 	return postList;
     }
@@ -98,7 +98,6 @@ public class PostService implements IPostService {
 	for (PostModel post : postList) {
 	    post.setCategories(postGroupService.findCategoryInUse(post.getId()));
 	    post.setAuthor(userDAO.findBy(post.getCreatedBy()));
-	    post.setImage(mediaDAO.findById(post.getFeature()));
 	}
 	return postList;
     }
@@ -115,7 +114,6 @@ public class PostService implements IPostService {
 	post.setCategories(postGroupService.findCategoryInUse(post.getId()));
 	post.setAuthor(userDAO.findBy(post.getCreatedBy()));
 	post.setComments(commentService.findAllInPost(post.getId()));
-	post.setImage(mediaDAO.findById(post.getFeature()));
 	return post;
     }
 
@@ -127,10 +125,6 @@ public class PostService implements IPostService {
      */
     @Override
     public Long save(PostModel postModel) throws SQLException, Exception {
-	if (postModel.getImage() != null) {
-	    postModel.getImage().setCreatedBy(postModel.getCreatedBy());
-	    postModel.setFeature(mediaDAO.save(postModel.getImage()));
-	}
 	return postDAO.save(postModel);
     }
 
@@ -162,12 +156,8 @@ public class PostService implements IPostService {
      */
     @Override
     public void edit(PostModel postModel) throws SQLException, Exception {
-	if (postModel.getImage() != null) {
-	    postModel.getImage().setCreatedBy(postModel.getCreatedBy());
-	    postModel.setFeature(mediaDAO.save(postModel.getImage()));
-	}
+	postModel.setModifiedDate(new Date(Calendar.getInstance().getTimeInMillis()));
 	postDAO.edit(postModel);
-
     }
 
     /**
@@ -196,7 +186,6 @@ public class PostService implements IPostService {
 	for (PostModel post : postList) {
 	    post.setCategories(postGroupService.findCategoryInUse(post.getId()));
 	    post.setAuthor(userDAO.findBy(post.getCreatedBy()));
-	    post.setImage(mediaDAO.findById(post.getFeature()));
 	}
 	return postList;
     }

@@ -17,7 +17,7 @@
 	<section class="row">
 		<div class="col">
 			<div class="feature-img">
-				<img class="post-listing-img" src="${post.image.url}" alt="">
+				<img class="post-listing-img" src="${post.feature}" alt="">
 			</div>
 		</div>
 	</section>

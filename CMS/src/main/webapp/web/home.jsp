@@ -17,7 +17,7 @@
 					<div class="col post-item">
 						<div class="feature-img">
 							<a href="<c:url value="/?p=${post.id}"/>"> <img
-								class="post-listing-img img-fluid" src="${post.image.url}" alt="">
+								class="post-listing-img img-fluid" src="${post.feature}" alt="">
 							</a>
 						</div>
 						<c:forEach items="${post.categories}" var="category">

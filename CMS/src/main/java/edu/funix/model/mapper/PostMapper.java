@@ -43,7 +43,7 @@ public class PostMapper implements RowMapper<PostModel> {
 	    post.setPostStatus(rs.getInt("PostStatus"));
 	    post.setIsVisible(rs.getInt("IsVisible"));
 	    post.setCreatedBy(rs.getLong("Author"));
-	    post.setFeature(rs.getLong("Feature"));
+	    post.setFeature(rs.getString("Feature"));
 	    return post;
 	} catch (SQLException e) {
 	    e.printStackTrace();

@@ -13,9 +13,10 @@
 	integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l"
 	crossorigin="anonymous">
 <link rel="stylesheet" href="<c:url value="css/admin.css"/>">
-<script
-	src="https://cdn.ckeditor.com/ckeditor5/29.2.0/classic/ckeditor.js"></script>
-<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
+<script type="text/javascript"
+	src="<c:url value="../vendor/ckeditor/ckeditor.js"/>"></script>
+<script type="text/javascript"
+	src="<c:url value="../vendor/ckfinder/ckfinder.js"/>"></script>
 </head>
 <body>
 	<div class="container-fluid">
@@ -31,17 +32,21 @@
 							href="#"> <span data-feather="home"></span> Dashboard <span
 								class="sr-only">(current)</span>
 						</a></li>
-						<li class="nav-item"><a class="nav-link text-light" href="<c:url value="posts"/>">
-								<span data-feather="file"></span> Post
+						<li class="nav-item"><a class="nav-link text-light"
+							href="<c:url value="posts"/>"> <span data-feather="file"></span>
+								Post
 						</a></li>
-						<li class="nav-item"><a class="nav-link text-light" href="<c:url value="categories"/>">
-								<span data-feather="shopping-cart"></span> Category
+						<li class="nav-item"><a class="nav-link text-light"
+							href="<c:url value="categories"/>"> <span
+								data-feather="shopping-cart"></span> Category
 						</a></li>
-						<li class="nav-item"><a class="nav-link text-light" href="<c:url value="users"/>">
-								<span data-feather="users"></span> User
+						<li class="nav-item"><a class="nav-link text-light"
+							href="<c:url value="users"/>"> <span data-feather="users"></span>
+								User
 						</a></li>
-						<li class="nav-item"><a class="nav-link text-light" href="<c:url value="comments"/>">
-								<span data-feather="bar-chart-2"></span> Comment
+						<li class="nav-item"><a class="nav-link text-light"
+							href="<c:url value="comments"/>"> <span
+								data-feather="bar-chart-2"></span> Comment
 						</a></li>
 						<li class="nav-item"><a class="nav-link text-light" href="#">
 								<span data-feather="layers"></span> Setting
