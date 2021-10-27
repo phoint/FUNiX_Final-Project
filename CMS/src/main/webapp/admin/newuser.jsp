@@ -4,7 +4,8 @@
 <div class="page-header">
 	<h2 class="d-inline-flex mr-3">New User</h2>
 	<!-- <a href="" class="btn btn-sm btn-outline-primary mb-3">Add New</a> -->
-	<p>${message}</p>
+	<c:if test="${not empty message}"><div id="message" class="alert alert-success">${message}</div></c:if>
+  <c:if test="${not empty error}"><div id="error" class="alert alert-danger">${error}</div></c:if>
 </div>
 <div class="container-fluid">
 	<div class="row">
@@ -50,9 +51,10 @@
 						</select>
 					</div>
 				</div>
-				<div class="d-flex flex-row-reverse">
+				<div class="d-flex flex-row-reverse align-items-center">
 					<input class="btn btn-primary" type="submit" name="submit"
 						value="Add New">
+				  <div class="mx-3"><a class="d-block" href="<c:url value="users"/>">Cancel</a></div>
 				</div>
 			</form>
 		</div>

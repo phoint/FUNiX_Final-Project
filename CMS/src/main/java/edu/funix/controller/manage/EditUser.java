@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 
+import edu.funix.Utils.Mailer;
 import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
+import edu.funix.Utils.PasswordUtils;
 import edu.funix.common.IUserService;
 import edu.funix.common.imp.UserService;
 import edu.funix.model.UserModel;
@@ -70,23 +72,40 @@ public class EditUser extends HttpServlet {
 	response.setContentType("text/html; charset=UTF-8");
 	request.setCharacterEncoding("UTF-8");
 	UserModel user = new UserModel();
+	String action = request.getParameter("action");
 	String message = null;
+	String error = null;
 	try {
 	    BeanUtils.populate(user, request.getParameterMap());
-	    userService.edit(user);
-	    request.setAttribute("user", userService.findUserById(user.getId()));
-	    message = "Success";
+	    if (action != null && action.equals("resetPwd")) {
+		user.setPassword(PasswordUtils.generate(10));
+		try {
+		    userService.edit(user);
+		    Mailer.getTemplate(user.getPassword());
+		    Mailer.send(user.getEmail(), "Reset Password", Mailer.getTemplate(user.getPassword()));
+		    message = "New password send";
+		    user = userService.findUserById(user.getId());
+		} catch (Exception e) {
+		    error = e.getMessage();
+		    e.printStackTrace();
+		}
+	    } else {
+		try {
+		    userService.edit(user);
+		    user = userService.findUserById(user.getId());
+		} catch (Exception e) {
+		    error = e.getMessage();
+		    e.printStackTrace();
+		}
+	    }
 	} catch (IllegalAccessException | InvocationTargetException e) {
-	    message = "Fail";
-	    e.printStackTrace();
-	} catch (SQLException e) {
-	    message = "Fail";
-	    e.printStackTrace();
-	} catch (Exception e) {
-	    message = "Fail";
+	    error = e.getMessage();
 	    e.printStackTrace();
 	}
+	
+	request.setAttribute("user", user);
 	request.setAttribute("message", message);
+	request.setAttribute("error", error);
 	PageInfo.PrepareAndForward(request, response, PageType.EDIT_USER);
     }
 

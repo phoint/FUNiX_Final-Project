@@ -23,48 +23,64 @@ import edu.funix.model.UserModel;
  */
 @WebServlet("/admin/new-user")
 public class NewUser extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private IUserService userService;
+    private static final long serialVersionUID = 1L;
+    private IUserService userService;
+
     /**
      * @see HttpServlet#HttpServlet()
      */
     public NewUser() {
-    	userService = new UserService();
+	userService = new UserService();
     }
 
-	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		PageInfo.PrepareAndForward(request, response, PageType.NEW_USER);
+    /**
+     * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+	    throws ServletException, IOException {
+	PageInfo.PrepareAndForward(request, response, PageType.NEW_USER);
+    }
+
+    /**
+     * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
+     *      response)
+     */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+	    throws ServletException, IOException {
+	response.setContentType("text/html; charset=UTF-8");
+	request.setCharacterEncoding("UTF-8");
+	UserModel user = new UserModel();
+	String message = null;
+	String error = null;
+	try {
+	    BeanUtils.populate(user, request.getParameterMap());
+	    try {
+		Long id = userService.save(user);
+		message = "Success";
+		request.setAttribute("users", userService.findAll());
+	    } catch (Exception e) {
+		if (e.getMessage().contains("UQ_tblUSER_UserMail")) {		    
+		    error = "Email is existed!";
+		} else if (e.getMessage().contains("UQ_tblUSER_Username")) {
+		    error = "Username is existed!";
+		} else {
+		    error = e.getMessage();
+		}
+		e.printStackTrace();
+	    }
+	} catch (IllegalAccessException | InvocationTargetException e) {
+	    error = e.getMessage();
+	    e.printStackTrace();
 	}
 
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html; charset=UTF-8");
-		request.setCharacterEncoding("UTF-8");
-		UserModel user = new UserModel();
-		String message = null;
-		try {
-			BeanUtils.populate(user, request.getParameterMap());
-			Long id = userService.save(user);
-			message = "Success";
-			request.setAttribute("users", userService.findAll());
-		} catch (IllegalAccessException | InvocationTargetException e) {
-			message = "Fail";
-			e.printStackTrace();
-		} catch (SQLException e) {
-			message = "Fail";
-			e.printStackTrace();
-		} catch (Exception e) {
-			message = "Fail";
-			e.printStackTrace();
-		}
-		
-		request.setAttribute("message", message);
-		response.sendRedirect(request.getContextPath() + "/admin/users");
+	request.setAttribute("message", message);
+	request.setAttribute("error", error);
+	if (error != null) {
+	    PageInfo.PrepareAndForward(request, response, PageType.NEW_USER);
+	} else {
+	    response.sendRedirect(request.getContextPath() + "/admin/users");
 	}
+    }
 
 }

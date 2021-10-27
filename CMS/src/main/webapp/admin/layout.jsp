@@ -40,7 +40,7 @@
 						<li class="nav-item"><a class="nav-link text-light" href="<c:url value="users"/>">
 								<span data-feather="users"></span> User
 						</a></li>
-						<li class="nav-item"><a class="nav-link text-light" href="#">
+						<li class="nav-item"><a class="nav-link text-light" href="<c:url value="comments"/>">
 								<span data-feather="bar-chart-2"></span> Comment
 						</a></li>
 						<li class="nav-item"><a class="nav-link text-light" href="#">

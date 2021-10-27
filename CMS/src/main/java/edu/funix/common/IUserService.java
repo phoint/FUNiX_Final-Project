@@ -110,7 +110,7 @@ public interface IUserService {
     void delete(long id);
 
     // TODO: Separate soft delete with hard delete user's account
-    void permanentDelete(long id) throws SQLException, Exception;
+    void permanentDelete(String[] ids) throws SQLException, Exception;
 
     /**
      * Checks existed user's account for logging in system

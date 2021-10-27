@@ -37,7 +37,7 @@ public class Users extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
-	String id = request.getParameter("id");
+	String[] ids = request.getParameterValues("id");
 	String action = request.getParameter("action");
 	String searchKey = request.getParameter("searchKey");
 	UserModel users = new UserModel();
@@ -54,8 +54,8 @@ public class Users extends HttpServlet {
 	}
 	try {
 	    /* Check parameter for deleting feature */
-	    if (id != null && action.equals("delete")) {
-		userService.permanentDelete(Long.parseLong(id));
+	    if (ids != null && action.equals("delete")) {
+		userService.permanentDelete(ids);
 		message = "Delete success";
 	    }
 	    BeanUtils.populate(page, request.getParameterMap());
@@ -69,6 +69,7 @@ public class Users extends HttpServlet {
 	    error = e.getMessage();
 	    e.printStackTrace();
 	}
+	request.setAttribute("searchKey", searchKey);
 	request.setAttribute("page", page);
 	request.setAttribute("users", users);
 	request.setAttribute("message", message);

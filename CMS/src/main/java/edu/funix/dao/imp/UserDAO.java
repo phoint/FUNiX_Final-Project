@@ -95,9 +95,18 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
 
     @Override
     public void edit(UserModel user) throws SQLException, Exception {
-	String sql = "UPDATE tblUSER SET UserMail = ?, Pwd = HASHBYTES('SHA2_256', ?), DisplayName = ?, "
-		+ "UserRole = ? WHERE UserID = ?";
-	update(sql, user.getEmail(), user.getPassword(), user.getDisplayName(), user.isRole() ? 1 : 0, user.getId());
+	StringBuilder sql = new StringBuilder("UPDATE tblUSER SET UserMail = ?, ");
+	if (user.getPassword() != null) {	    
+	    sql.append("Pwd = HASHBYTES('SHA2_256', ?), ");
+	    sql.append("DisplayName = ?, UserRole = ? WHERE UserID = ?");
+	} else {
+	    sql.append("DisplayName = ?, UserRole = ? WHERE UserID = ?");
+	}
+	if (user.getPassword() != null) {	    	    
+	    update(sql.toString(), user.getEmail(), user.getPassword(), user.getDisplayName(), user.isRole() ? 1 : 0, user.getId());
+	} else {
+	    update(sql.toString(), user.getEmail(), user.getDisplayName(), user.isRole() ? 1 : 0, user.getId());	    
+	}
     }
 
     @Override

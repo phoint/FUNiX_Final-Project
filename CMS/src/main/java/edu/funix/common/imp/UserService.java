@@ -65,7 +65,15 @@ public class UserService implements IUserService {
 
     @Override
     public Long save(UserModel user) throws SQLException, Exception {
-	return userDAO.save(user);
+	Long newId = null;
+	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
+	/* Checks the safe password satisfy with pattern or not */
+	if (!user.getPassword().matches(pwdRegex)) {
+	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
+	} else {
+	    newId = userDAO.save(user);
+	}
+	return newId;
     }
 
     @Override
@@ -85,8 +93,10 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void permanentDelete(long id) throws SQLException, Exception {
-	userDAO.permanentDelete(id);
+    public void permanentDelete(String[] ids) throws SQLException, Exception {
+	for (String id : ids) {	    
+	    userDAO.permanentDelete(Long.parseLong(id));
+	}
     }
 
     @Override
