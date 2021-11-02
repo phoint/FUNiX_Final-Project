@@ -50,4 +50,10 @@ public class CategoryModel extends AbstractModel<CategoryModel> {
     public void setUrl(String url) {
 	this.url = url;
     }
+
+    @Override
+    public String toString() {
+	return "CategoryModel [name=" + name + ", url=" + url + ", desc=" + desc + ", totalPost=" + totalPost
+		+ ", isUsed=" + isUsed + ", toString()=" + super.toString() + "]";
+    }
 }

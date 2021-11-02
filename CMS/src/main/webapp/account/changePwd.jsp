@@ -22,8 +22,8 @@
 		<div class="form-group">
 			<label for="inputEmail">New password</label> <input name="password"
 				type="password" id="newPwd" class="form-control"
-				placeholder="New password" required>
-			<div class="invalid-feedback">This field cannot be left blank</div>
+				placeholder="New password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d_@$!%*#?&\.]{8,}$" required>
+			<div class="invalid-feedback">Password must be at least 8 character, one uppercase and one number</div>
 		</div>
 		<div class="form-group">
 			<label for="inputEmail">Password re-type</label> <input

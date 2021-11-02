@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" debug="true">
+	<property name="LOGDIR"
+		value="${catalina.base}/wtpwebapps/CMS/logs/"></property>
+	<appender name="File"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${LOGDIR}application.log</file>
+		<encoder>
+			<pattern>%d [%thread] %-5level %-40logger{40}
+				%X{req.requestURI}?%X{req.queryString}%n %m%n</pattern>
+		</encoder>
+
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${LOGDIR}application-%d{yyyy-MM-dd}.%i.log
+			</fileNamePattern>
+			<maxFileSize>100KB</maxFileSize>
+		</rollingPolicy>
+	</appender>
+	<appender name="Console"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d [%thread] %-5level %-40logger{40}
+				%X{req.requestURI}?%X{req.queryString}%n %m%n</pattern>
+		</encoder>
+	</appender>
+	<root level="DEBUG">
+		<appender-ref ref="Console" />
+		<appender-ref ref="File" />
+	</root>
+</configuration>

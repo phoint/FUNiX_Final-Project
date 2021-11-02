@@ -16,6 +16,7 @@ public class UserMapper implements RowMapper<UserModel> {
 	    user.setUsername(rs.getString("Username"));
 	    user.setDisplayName(rs.getNString("DisplayName"));
 	    user.setFailedAttempts(rs.getInt("Failed_attempts"));
+	    user.setActive(rs.getInt("Active") == 1 ? true : false);
 	    user.setAccountNonLocked(rs.getInt("Acc_non_locked") == 1 ? true : false);
 	    user.setLockTime(rs.getTimestamp("Lock_time"));
 	    int role = rs.getInt("UserRole");

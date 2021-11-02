@@ -75,13 +75,21 @@ public interface IUserDAO extends GenericDAO<UserModel> {
     void edit(UserModel user) throws SQLException, Exception;
 
     /**
-     * Delete a user has id matching
+     * Update the user's status to inactive but do not delete from database
      * 
      * @param id A long containing user's id
+     * @throws Exception
+     * @throws SQLException
      */
-    void delete(long id);
+    void delete(long id) throws SQLException, Exception;
 
-    // TODO: Separate soft delete with hard delete user's account
+    /**
+     * Delete a user has id matching from database
+     * 
+     * @param id A long containing user's id
+     * @throws SQLException
+     * @throws Exception
+     */
     void permanentDelete(long id) throws SQLException, Exception;
 
     /**

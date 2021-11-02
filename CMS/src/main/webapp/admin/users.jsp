@@ -38,7 +38,7 @@
 	<table class="table table-striped table-sm">
 		<thead>
 			<tr>
-				<th><input type="checkbox" name="" id=""></th>
+				<th><input type="checkbox" id="select-all"></th>
 				<th>Username</th>
 				<th>Name</th>
 				<th>Email</th>

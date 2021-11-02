@@ -29,7 +29,7 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
 
     @Override
     public List<UserModel> findAll() throws SQLException, Exception {
-	String sql = "SELECT * FROM tblUSER";
+	String sql = "SELECT * FROM tblUSER WHERE Active = 1";
 	return query(sql, new UserMapper());
     }
 
@@ -38,7 +38,7 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
 	/* Build a query string */
 	StringBuilder sql = new StringBuilder("SELECT * FROM ");
 	sql.append("(SELECT *, ROW_NUMBER() OVER (ORDER BY Username ASC) AS RowNumber ");
-	sql.append("FROM tblUSER) AS Pagable ");
+	sql.append("FROM tblUSER WHERE Active = 1) AS Pagable ");
 	if (page.getTotalPage() == 1) {
 	    /* When the total items fit on one page */
 	    return query(sql.toString(), new UserMapper());
@@ -55,12 +55,18 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
     @Override
     public List<UserModel> searchBy(PageModel page, String searchKey) throws SQLException, Exception {
 	StringBuilder sql = new StringBuilder("SELECT * FROM ");
+	/* Set the search key for the statement with ... WHERE... LIKE... */
 	String key = "%" + searchKey + "%";
 	sql.append("(SELECT *, ROW_NUMBER() OVER (ORDER BY Username ASC) AS RowNumber "
 		+ "FROM tblUSER WHERE Username LIKE ?) AS Pagable ");
 	if (page.getTotalPage() == 1) {
+	    /* When the total items fit on one page */
 	    return query(sql.toString(), new UserMapper(), key);
 	} else {
+	    /*
+	     * Depending on the current page, the offset and limit will be set to query
+	     * statement
+	     */
 	    sql.append("WHERE RowNumber BETWEEN ? AND ?");
 	    return query(sql.toString(), new UserMapper(), key, page.getOffset() + 1, page.getLimit());
 	}
@@ -123,8 +129,9 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
     }
 
     @Override
-    public void delete(long id) {
-	// TODO Update status for soft delete
+    public void delete(long id) throws SQLException, Exception {
+	String sql = "UPDATE tblUSER SET Active = 0 WHERE UserID = ?";
+	update(sql, id);
     }
 
     @Override
@@ -135,7 +142,7 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
 
     @Override
     public UserModel checkLogin(String username, String password) throws SQLException, Exception {
-	String sql = "SELECT * FROM tblUSER WHERE Username = ? AND Pwd = HASHBYTES('SHA2_256', ?)";
+	String sql = "SELECT * FROM tblUSER WHERE Username = ? AND Pwd = HASHBYTES('SHA2_256', ?) AND Active = 1";
 	List<UserModel> validUser = query(sql, new UserMapper(), username, password);
 	return validUser.isEmpty() ? null : validUser.get(0);
     }

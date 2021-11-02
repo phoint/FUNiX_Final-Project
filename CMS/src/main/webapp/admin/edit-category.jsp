@@ -6,6 +6,14 @@
 	<!-- <a href="" class="btn btn-sm btn-outline-primary mb-3">Add New</a> -->
 </div>
 <div class="container-fluid">
+  <div class="row">
+    <c:if test="${not empty message}">
+      <div id="message" class="alert alert-success">${message}</div>
+    </c:if>
+    <c:if test="${not empty error}">
+      <div id="error" class="alert alert-danger">${error}</div>
+    </c:if>
+  </div>
 	<div class="row">
 		<div class="col-md-8">
 			<form method="post" action="<c:url value="edit-category"/>">

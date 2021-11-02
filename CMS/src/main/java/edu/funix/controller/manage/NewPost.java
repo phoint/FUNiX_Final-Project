@@ -1,3 +1,10 @@
+/*
+ * @(#) NewPost.java 1.0 2021/09/06
+ * 
+ * Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ * Everyone is permitted to copy and distribute verbatim copies
+ * of this license document, but changing it is not allowed.
+ */
 package edu.funix.controller.manage;
 
 import java.io.IOException;
@@ -12,18 +19,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.LoggerFactory;
 
 import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
+import edu.funix.Utils.SlackApiUtil;
 import edu.funix.common.ICategoryService;
-import edu.funix.common.IMediaService;
 import edu.funix.common.IPostGroupService;
 import edu.funix.common.IPostService;
 import edu.funix.common.imp.CategoryService;
-import edu.funix.common.imp.MediaService;
 import edu.funix.common.imp.PostGroupService;
 import edu.funix.common.imp.PostService;
 import edu.funix.model.PostModel;
@@ -35,10 +41,10 @@ import edu.funix.model.PostModel;
 @WebServlet("/admin/new-post")
 public class NewPost extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(NewPost.class);
     private IPostService postService;
     private ICategoryService categoryService;
     private IPostGroupService postGroupService;
-    private IMediaService mediaService;
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -47,42 +53,50 @@ public class NewPost extends HttpServlet {
 	postService = new PostService();
 	categoryService = new CategoryService();
 	postGroupService = new PostGroupService();
-	mediaService = new MediaService();
     }
 
     /**
+     * Set the default informations for displaying new post page
+     * 
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
      *      response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
+	logger.info("called http get method, referer is: " + request.getHeader("referer"));
 	PostModel post = new PostModel();
 
 	/* Sets the blank category to new post page */
 	try {
+	    logger.debug("Get all category for displaying in new post's view");
 	    post.setCategories(categoryService.findAll());
 	} catch (SQLException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    logger.error(e.getMessage(), e);
+	    SlackApiUtil.pushLog(request, e.getMessage());
 	} catch (Exception e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    logger.error(e.getMessage(), e);
+	    SlackApiUtil.pushLog(request, e.getMessage());
 	}
 
 	/* Sets publish date to current date for default */
+	logger.debug("Default published date for new post");
 	post.setPublishDate(new Date(Calendar.getInstance().getTimeInMillis()));
-
+	logger.debug("{}", post.getPublishDate());
 	/* Sets and forwards default post's attribute to new post page */
 	request.setAttribute("p", post);
+	logger.info("Forward default information to new post page");
 	PageInfo.PrepareAndForward(request, response, PageType.NEW_POST);
     }
 
     /**
+     * Save new post
+     * 
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
      *      response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
+	logger.info("called http post method, referer is: " + request.getHeader("referer"));
 	response.setContentType("text/html;charset=UTF-8");
 	request.setCharacterEncoding("UTF-8");
 
@@ -92,29 +106,23 @@ public class NewPost extends HttpServlet {
 	String message = null;
 	String error = null;
 
-	/* Gets image's attribute upload */
-	Part imageUpload = request.getPart("feature-image");
-	String uploadFolder = getServletContext().getRealPath("/images");
-	String contextPath = getServletContext().getContextPath();
-
 	/* Mapping parameter's value to post's model */
 	try {
+	    logger.debug("Mapping new post's attributes to post model");
 	    BeanUtils.populate(post, request.getParameterMap());
+	    logger.debug("{}", post);
 	} catch (IllegalAccessException | InvocationTargetException e1) {
-	    // TODO Auto-generated catch block
-	    e1.printStackTrace();
+	    logger.error(e1.getMessage(), e1);
+	    SlackApiUtil.pushLog(request, e1.getMessage());
 	}
 
 	try {
 	    /* Sets the blank category to new post page in case process fail */
+	    logger.debug("Get all category for displaying in new post's view, in case insert fail");
 	    post.setCategories(categoryService.findAll());
 
-	    /* Checks image's attribute. If presented, sets the upload's info */
-	    if (imageUpload != null) {
-		post.setImage(mediaService.getUploadPath(uploadFolder, contextPath, imageUpload));
-	    }
-
 	    /* Inserts new post's row in database's post table */
+	    logger.debug("Save new post");
 	    Long id = postService.save(post);
 
 	    /*
@@ -122,17 +130,22 @@ public class NewPost extends HttpServlet {
 	     * back
 	     */
 	    if (id != null) {
+		logger.debug("Save success with id = " + id);
+		logger.debug("Update categories is checked");
 		String[] catIds = request.getParameterValues("new-categories");
 		postGroupService.updateCategory(id, catIds);
 		post = postService.findPostById(id);
+		logger.debug("{}", post.getCategories());
 		message = "Success";
 	    }
 	} catch (SQLException e) {
-	    error = e.getMessage() + e.getErrorCode() + e.getSQLState();
-	    e.printStackTrace();
+	    error = e.getMessage();
+	    logger.error(e.getMessage(), e);
+	    SlackApiUtil.pushLog(request, e.getMessage());
 	} catch (Exception e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    error = e.getMessage();
+	    logger.error(e.getMessage(), e);
+	    SlackApiUtil.pushLog(request, e.getMessage());
 	}
 
 	/*
@@ -143,8 +156,10 @@ public class NewPost extends HttpServlet {
 	request.setAttribute("message", message);
 	request.setAttribute("error", error);
 	if (message == null && error != null) {
+	    logger.info("Stay in page if failed");
 	    PageInfo.PrepareAndForward(request, response, PageType.NEW_POST);
 	} else {
+	    logger.info("Redirect to post management page if success");
 	    response.sendRedirect(request.getContextPath() + "/admin/posts");
 	}
     }

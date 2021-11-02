@@ -277,4 +277,9 @@ public class PostModel extends AbstractModel<PostModel> {
 	this.image = image;
     }
 
+    @Override
+    public String toString() {
+	return "PostModel [title=" + title + ", postUrl=" + postUrl + ", publishDate=" + publishDate + ", postStatus="
+		+ postStatus + ", isVisible=" + isVisible + super.toString() + "]";
+    }
 }

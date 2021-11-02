@@ -88,13 +88,15 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void delete(long id) {
-	// TODO Auto-generated method stub
+    public void delete(String[] ids) throws NumberFormatException, SQLException, Exception {
+	for (String id : ids) {
+	    userDAO.delete(Long.parseLong(id));
+	}
     }
 
     @Override
     public void permanentDelete(String[] ids) throws SQLException, Exception {
-	for (String id : ids) {	    
+	for (String id : ids) {
 	    userDAO.permanentDelete(Long.parseLong(id));
 	}
     }
@@ -169,42 +171,48 @@ public class UserService implements IUserService {
 
     @Override
     public UserModel LoginAttempt(UserModel user) throws SQLException, Exception {
-	UserModel userAttempt = findBy(user.getUsername());
 	UserModel loginUser = null;
-	if (userAttempt != null) {
-	    if (userAttempt.isAccountNonLocked()) {
-		if (userAttempt.getFailedAttempts() < MAX_FAILED_ATTEMPTS - 1) {
-		    loginUser = checkLogin(user.getUsername(), user.getPassword());
-		    if (loginUser == null) {
-			increaseFailedAttempts(userAttempt);
-			throw new Exception("Invalid Username or Password.");
-		    } else {
-			resetFailedAttempts(user.getUsername());
-		    }
-		} else {
-		    lockUser(userAttempt);
-		    throw new Exception(
-			    "Your account has been locked due to 3 failed attempts. It will be unlocked after 15 minutes.");
-		}
-	    } else if (!userAttempt.isAccountNonLocked()) {
-		if (unlockWhenTimeExpired(userAttempt)) {
-		    loginUser = checkLogin(user.getUsername(), user.getPassword());
-		    if (loginUser == null) {
-			increaseFailedAttempts(userAttempt);
-			throw new Exception("Invalid Username or Password");
-		    }
-		} else {
-		    long lockTimeInMillis = userAttempt.getLockTime().getTime();
-		    long currentTimeInMillis = System.currentTimeMillis();
-		    long remainHours = TimeUnit.MILLISECONDS
-			    .toMinutes(lockTimeInMillis + LOCK_TIME_DURATION - currentTimeInMillis);
-		    throw new Exception(
-			    "Your account has been locked due to 3 failed attempts. It will be unlocked about "
-				    + remainHours + " minutes.");
-		}
-	    }
+	if (user.getUsername() == null || user.getPassword() == null) {
+	    throw new Exception("The fields must not be empty!");
 	} else {
-	    throw new Exception("Username is not existed");
+	    UserModel userAttempt = findBy(user.getUsername());
+	    if (userAttempt != null) {
+		if (userAttempt.isAccountNonLocked() && userAttempt.isActive()) {
+		    if (userAttempt.getFailedAttempts() < MAX_FAILED_ATTEMPTS - 1) {
+			loginUser = checkLogin(user.getUsername(), user.getPassword());
+			if (loginUser == null) {
+			    increaseFailedAttempts(userAttempt);
+			    throw new Exception("Invalid Username or Password.");
+			} else {
+			    resetFailedAttempts(user.getUsername());
+			}
+		    } else {
+			lockUser(userAttempt);
+			throw new Exception(
+				"Your account has been locked due to 3 failed attempts. It will be unlocked after 15 minutes.");
+		    }
+		} else if (!userAttempt.isAccountNonLocked() && userAttempt.isActive()) {
+		    if (unlockWhenTimeExpired(userAttempt)) {
+			loginUser = checkLogin(user.getUsername(), user.getPassword());
+			if (loginUser == null) {
+			    increaseFailedAttempts(userAttempt);
+			    throw new Exception("Invalid Username or Password");
+			}
+		    } else {
+			long lockTimeInMillis = userAttempt.getLockTime().getTime();
+			long currentTimeInMillis = System.currentTimeMillis();
+			long remainHours = TimeUnit.MILLISECONDS
+				.toMinutes(lockTimeInMillis + LOCK_TIME_DURATION - currentTimeInMillis);
+			throw new Exception(
+				"Your account has been locked due to 3 failed attempts. It will be unlocked about "
+					+ remainHours + " minutes.");
+		    }
+		} else if (!userAttempt.isActive()) {
+		    throw new Exception("This account is disabled. Please contact admin for more detail");
+		}
+	    } else {
+		throw new Exception("Username is not existed");
+	    }
 	}
 	return loginUser;
     }

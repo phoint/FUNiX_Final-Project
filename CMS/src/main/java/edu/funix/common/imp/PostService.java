@@ -16,11 +16,9 @@ import edu.funix.common.ICommentService;
 import edu.funix.common.IPageableService;
 import edu.funix.common.IPostGroupService;
 import edu.funix.common.IPostService;
-import edu.funix.dao.IMediaDAO;
 import edu.funix.dao.IPostDAO;
 import edu.funix.dao.IPostGroupedDAO;
 import edu.funix.dao.IUserDAO;
-import edu.funix.dao.imp.MediaDAO;
 import edu.funix.dao.imp.PostDAO;
 import edu.funix.dao.imp.PostGroupedDAO;
 import edu.funix.dao.imp.UserDAO;
@@ -33,7 +31,6 @@ public class PostService implements IPostService {
     private IUserDAO userDAO;
     private IPostGroupedDAO postGroupDAO;
     private IPostGroupService postGroupService;
-    private IMediaDAO mediaDAO;
     private ICommentService commentService;
     private IPageableService paging;
 
@@ -45,7 +42,6 @@ public class PostService implements IPostService {
 	userDAO = new UserDAO();
 	postGroupDAO = new PostGroupedDAO();
 	postGroupService = new PostGroupService();
-	mediaDAO = new MediaDAO();
 	commentService = new CommentService();
 	paging = new PageableService();
     }
@@ -81,15 +77,15 @@ public class PostService implements IPostService {
 	}
 	return postList;
     }
-    
+
     /**
      * Gets a list of post instances grouped by a category
      * 
      * @param CatID A Long containing category's id
      * @param page  A PageModel containing pagination info
      * @return A list representing the post instances in category
-     * @throws Exception 
-     * @throws SQLException 
+     * @throws Exception
+     * @throws SQLException
      */
     @Override
     public List<PostModel> categoryGroup(Long CatID, PageModel page) throws SQLException, Exception {
@@ -166,9 +162,11 @@ public class PostService implements IPostService {
      * @param id A long containing the post's id
      */
     @Override
-    public void delete(long id) throws SQLException, Exception {
-	postGroupDAO.delete(id);
-	postDAO.delete(id);
+    public void delete(String[] ids) throws SQLException, Exception {
+	for (String id : ids) {
+	    postGroupDAO.delete(Long.parseLong(id));
+	    postDAO.delete(Long.parseLong(id));
+	}
     }
 
     /**

@@ -1,3 +1,10 @@
+/*
+ * @(#) Posts.java 1.0 2021/09/06
+ * 
+ * Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ * Everyone is permitted to copy and distribute verbatim copies
+ * of this license document, but changing it is not allowed.
+ */
 package edu.funix.controller.manage;
 
 import java.io.IOException;
@@ -10,43 +17,46 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.LoggerFactory;
 
 import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
-import edu.funix.common.ICategoryService;
+import edu.funix.Utils.SlackApiUtil;
 import edu.funix.common.IPostService;
-import edu.funix.common.imp.CategoryService;
 import edu.funix.common.imp.PostService;
 import edu.funix.model.PageModel;
 import edu.funix.model.PostModel;
 
 /**
- * Servlet implementation class PostManagement
+ * Servlet implementation class Posts
  */
 @WebServlet("/admin/posts")
 public class Posts extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Posts.class);
     private IPostService postService;
-    private ICategoryService categoryService;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public Posts() {
 	postService = new PostService();
-	categoryService = new CategoryService();
     }
 
     /**
+     * Display posts base on filter specified by client or/and pagination. Also,
+     * this method take action on delete items when getting suitable parameter
+     * 
      * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
      *      response)
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
+	logger.info("called http get method, referer is: " + request.getHeader("referer"));
 	response.setContentType("text/html; charset=UTF-8");
 	request.setCharacterEncoding("UTF-8");
 	/* Gets all id selected from view's form check box */
-	String[] id = request.getParameterValues("id");
+	String[] ids = request.getParameterValues("id");
 	String action = request.getParameter("action");
 	String category = request.getParameter("category");
 	/* Gets the title search key from form input */
@@ -62,47 +72,56 @@ public class Posts extends HttpServlet {
 	 * service calling the right DAO's method
 	 */
 	if (searchKey != null && searchKey.trim().equals("")) {
+	    logger.debug("convert empty searchKey to null - searchKey: " + searchKey);
 	    searchKey = null;
 	}
 	try {
 	    /* Check parameter for deleting feature */
-	    if (id != null && action.equals("delete")) {
-		for (int i = 0; i < id.length; i++) {
-		    postService.delete(Long.parseLong(id[i]));
-		}
+	    if (ids != null && action.equals("delete")) {
+		logger.debug("delete post(s): " + ids);
+		postService.delete(ids);
 		message = "delete success!";
 	    }
 	    /* Check parameter for deleting all items */
 	    if (action != null && action.equals("deleteAll")) {
+		logger.debug("delete all posts");
 		postService.deleteAll();
 		message = "All items deleted!";
 	    }
 	} catch (Exception e) {
 	    /* something go wrong */
 	    error = "Delete fail";
-	    e.printStackTrace();
+	    logger.error(e.getMessage(), e);
+	    SlackApiUtil.pushLog(request, e.getMessage());
 	}
 	try {
+	    logger.debug("Mapping pagination's attributes to page model");
 	    BeanUtils.populate(page, request.getParameterMap());
+	    logger.debug("{}", page);
 	} catch (IllegalAccessException | InvocationTargetException e) {
 	    error = "Something wrong, try later!";
-	    e.printStackTrace();
+	    logger.error(e.getMessage(), e);
+	    SlackApiUtil.pushLog(request, e.getMessage());
 	}
-	
+
 	try {
 	    /* check the category' id for displaying posts in group */
 	    if (category != null && !category.trim().equals("")) {
-	        post.setListResult(postService.categoryGroup(Long.parseLong(category), page));
-	    } else if (searchKey != null) {
+		logger.debug("Display posts by category id = " + category + " on page " + page.getCurrentPage());
+		post.setListResult(postService.categoryGroup(Long.parseLong(category), page));
 		/* Display posts base on search term and pagination */
-	        post.setListResult(postService.search(page, searchKey));
+	    } else if (searchKey != null) {
+		logger.debug("Display posts by searchKey = " + searchKey + " on page " + page.getCurrentPage());
+		post.setListResult(postService.search(page, searchKey));
+		/* Display all post base on pagination */
 	    } else {
-		/* Display all post base on pagination  */
-	        post.setListResult(postService.findAll(page));
+		logger.debug("Display posts on page " + page.getCurrentPage());
+		post.setListResult(postService.findAll(page));
 	    }
 	} catch (Exception e) {
 	    error = "Something wrong, try later!";
-	    e.printStackTrace();
+	    logger.error(e.getMessage(), e);
+	    SlackApiUtil.pushLog(request, e.getMessage());
 	}
 
 	/* Forward to Post view */
@@ -112,15 +131,19 @@ public class Posts extends HttpServlet {
 	request.setAttribute("searchKey", searchKey);
 	request.setAttribute("posts", post);
 	request.setAttribute("page", page);
+	logger.info("Forward to post management page");
 	PageInfo.PrepareAndForward(request, response, PageType.POST_MANAGEMENT_PAGE);
     }
 
     /**
+     * Do everything the same doGet method
+     * 
      * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
      *      response)
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
+	logger.info("called http post method, referer is: " + request.getHeader("referer"));
 	/* Do everything the same doGet method */
 	doGet(request, response);
     }

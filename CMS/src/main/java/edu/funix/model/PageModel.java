@@ -67,4 +67,10 @@ public class PageModel {
     public void setSortBy(String sortBy) {
 	this.sortBy = sortBy;
     }
+
+    @Override
+    public String toString() {
+	return "PageModel [currentPage=" + currentPage + ", maxItem=" + maxItem + ", totalPage=" + totalPage
+		+ ", offset=" + offset + ", limit=" + limit + ", toString()=" + super.toString() + "]";
+    }
 }

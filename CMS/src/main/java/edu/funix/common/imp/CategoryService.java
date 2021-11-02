@@ -11,8 +11,6 @@ import edu.funix.dao.imp.CategoryDAO;
 import edu.funix.dao.imp.PostGroupedDAO;
 import edu.funix.model.CategoryModel;
 import edu.funix.model.PageModel;
-import edu.funix.model.PostGroupedModel;
-import edu.funix.model.PostModel;
 
 public class CategoryService implements ICategoryService {
     ICategoryDAO categoryDAO;
@@ -55,8 +53,12 @@ public class CategoryService implements ICategoryService {
     }
     
     @Override
-    public CategoryModel findCategoryById(int id) throws SQLException, Exception {
-	return categoryDAO.findCategoryById(id);
+    public CategoryModel findCategoryById(long id) throws SQLException, Exception {
+	CategoryModel category = categoryDAO.findCategoryById(id);
+	if (category == null) {
+	    throw new SQLException("The category is not found");
+	}
+	return category;
     }
 
     @Override

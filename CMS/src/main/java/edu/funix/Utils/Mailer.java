@@ -38,7 +38,6 @@ public class Mailer {
 	    
 	    Transport.send(email);
 	    status = "message sent successfully";
-	    System.out.println("Success!");
 	} catch (MessagingException e) {
 	    status = e.getMessage();
 	    throw new RuntimeException(e);

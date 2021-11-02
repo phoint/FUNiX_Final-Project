@@ -156,4 +156,11 @@ public class AbstractModel<T> {
     public void setListResult(List<T> listResult) {
 	this.listResult = listResult;
     }
+
+    @Override
+    public String toString() {
+	return "AbstractModel [id=" + id + ", createdDate=" + createdDate + "]";
+    }
+    
+    
 }

@@ -1,3 +1,10 @@
+/*
+ * @(#) EditPost.java 1.0 2021/09/06
+ * 
+ * Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ * Everyone is permitted to copy and distribute verbatim copies
+ * of this license document, but changing it is not allowed.
+ */
 package edu.funix.controller.manage;
 
 import java.io.IOException;
@@ -10,30 +17,29 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.slf4j.LoggerFactory;
 
 import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
-import edu.funix.common.IMediaService;
+import edu.funix.Utils.SlackApiUtil;
 import edu.funix.common.IPostGroupService;
 import edu.funix.common.IPostService;
-import edu.funix.common.imp.MediaService;
 import edu.funix.common.imp.PostGroupService;
 import edu.funix.common.imp.PostService;
 import edu.funix.model.PostModel;
 
 /**
- * Servlet implementation class Edit
+ * Servlet implementation class EditPost
  */
 @MultipartConfig
 @WebServlet("/admin/edit-post")
 public class EditPost extends HttpServlet {
     private static final long serialVersionUID = 1L;
+    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(EditPost.class);
     private IPostService postService;
     private IPostGroupService postGroupService;
-    private IMediaService mediaService;
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -41,7 +47,6 @@ public class EditPost extends HttpServlet {
     public EditPost() {
 	postService = new PostService();
 	postGroupService = new PostGroupService();
-	mediaService = new MediaService();
     }
 
     /**
@@ -53,29 +58,26 @@ public class EditPost extends HttpServlet {
      */
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
-
+	logger.info("called http get method, referer is: " + request.getHeader("referer"));
 	/* Gets the post's id */
 	String id = request.getParameter("id");
 	PostModel post = null;
 
 	try {
+	    logger.debug("Get the post from id: " + id);
 	    /* Gets the post's attributes */
 	    if (id != null) {
 		post = postService.findPostById(Long.parseLong(id));
+		logger.debug("{}", post);
 	    }
-	} catch (NumberFormatException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	} catch (SQLException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
 	} catch (Exception e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    logger.error(e.getMessage(), e);
+	    SlackApiUtil.pushLog(request, e.getStackTrace().toString());
 	}
 
 	/* Sets and forward post's attribute to edit page */
 	request.setAttribute("p", post);
+	logger.info("Forward to edit post page");
 	PageInfo.PrepareAndForward(request, response, PageType.EDIT_POST);
     }
 
@@ -90,6 +92,7 @@ public class EditPost extends HttpServlet {
 	    throws ServletException, IOException {
 	response.setContentType("text/html;charset=UTF-8");
 	request.setCharacterEncoding("UTF-8");
+	logger.info("called http post method, referer is: " + request.getHeader("referer"));
 	PostModel post = new PostModel();
 
 	/* message and error showing the result of process */
@@ -102,11 +105,14 @@ public class EditPost extends HttpServlet {
 	/* Mapping parameter's value to post's model */
 	try {
 	    BeanUtils.populate(post, request.getParameterMap());
+	    logger.debug("{}", post);
 	} catch (IllegalAccessException | InvocationTargetException e1) {
-	    e1.printStackTrace();
+	    logger.error(e1.getMessage(), e1);
+	    SlackApiUtil.pushLog(request, e1.toString());
 	}
 
 	try {
+	    logger.debug("Update a post");
 	    Long id = post.getId();
 
 	    /* Updates the post's value in database */
@@ -114,16 +120,18 @@ public class EditPost extends HttpServlet {
 
 	    /* Updates the post's categories in database */
 	    postGroupService.updateCategory(id, catIds);
-
 	    /* Gets the post's attribute updated */
 	    post = postService.findPostById(id);
+	    logger.debug("{}", post);
 	    message = "Success";
 	} catch (SQLException sqlEx) {
-	    error = sqlEx.getErrorCode() + sqlEx.getMessage() + sqlEx.getCause();
-	    sqlEx.printStackTrace();
+	    error = "Update failed";
+	    logger.error(sqlEx.getMessage(), sqlEx);
+	    SlackApiUtil.pushLog(request, sqlEx.getMessage());
 	} catch (Exception e) {
 	    error = e.getMessage();
-	    e.printStackTrace();
+	    logger.error(e.getMessage(), e);
+	    SlackApiUtil.pushLog(request, e.getMessage());
 	}
 
 	/* Sets and forward post's attribute with process's message to edit page */
@@ -131,5 +139,6 @@ public class EditPost extends HttpServlet {
 	request.setAttribute("error", error);
 	request.setAttribute("p", post);
 	PageInfo.PrepareAndForward(request, response, PageType.EDIT_POST);
+	logger.info("Forward to edit page " + request.getHeader("referer"));
     }
 }

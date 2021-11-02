@@ -18,7 +18,7 @@ public class PageableService implements IPageableService {
 	    page.setMaxItem(10);
 	}
 	if (totalItems != null) {
-	    page.setTotalPage((long) Math.ceil((double) totalItems / page.getMaxItem()));
+	    page.setTotalPage((long) Math.ceil((double) (totalItems - 1) / page.getMaxItem()));
 	}
 	if (page.getTotalPage() > 1 && page.getCurrentPage() == null) {
 	    page.setCurrentPage(1);

@@ -92,7 +92,7 @@ public interface IPostService {
      * 
      * @param id A long containing the post's id
      */
-    void delete(long id) throws SQLException, Exception;
+    void delete(String[] ids) throws SQLException, Exception;
 
     /**
      * Delete all post items

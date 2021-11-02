@@ -22,6 +22,7 @@ public class UserModel extends AbstractModel<UserModel> {
     private String displayName;
     private boolean role;
     private long totalPost;
+    private boolean active;
     /* Attributes for limiting login failed attempts */
     private boolean accountNonLocked;
     private int failedAttempts;
@@ -38,6 +39,14 @@ public class UserModel extends AbstractModel<UserModel> {
 	this.password = password;
 	this.displayName = displayName;
 	this.role = role;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public boolean isAccountNonLocked() {
@@ -110,5 +119,12 @@ public class UserModel extends AbstractModel<UserModel> {
 
     public void setTotalPost(long totalPost) {
 	this.totalPost = totalPost;
+    }
+
+    @Override
+    public String toString() {
+	return String.format(
+		"UserModel [email=%s, username=%s, password=%s, displayName=%s, role=%s, totalPost=%s, accountNonLocked=%s, failedAttempts=%s, lockTime=%s]",
+		email, username, password, displayName, role, totalPost, accountNonLocked, failedAttempts, lockTime);
     }
 }

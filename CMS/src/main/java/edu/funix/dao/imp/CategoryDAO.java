@@ -8,7 +8,6 @@ import edu.funix.model.CategoryModel;
 import edu.funix.model.PageModel;
 import edu.funix.model.mapper.CategoryMapper;
 import edu.funix.model.mapper.PostGroupedMapper;
-import edu.funix.model.mapper.PostMapper;
 
 public class CategoryDAO extends AbstractDAO<CategoryModel> implements ICategoryDAO {
 

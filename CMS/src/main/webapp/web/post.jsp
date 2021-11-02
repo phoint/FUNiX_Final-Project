@@ -60,7 +60,7 @@
 																<img class="rounded-circle"
 																	src="https://i.imgur.com/RpzrMR2.jpg" width="40">
 																<textarea class="form-control ml-1 shadow-none textarea"
-																	name="comContent"></textarea>
+																	name="comContent">${comContent}</textarea>
 																<input type="hidden" name="submitTo" value="${post.id}">
 																<input type="hidden" name="replyTo"
 																	value="${comment.id}"> <input type="hidden"
@@ -102,7 +102,7 @@
 					</div>
 				</div>
 				<!-- Post new comment -->
-				<c:if test="${not empty sessionScope.loginUser}">
+<%-- 				<c:if test="${not empty sessionScope.loginUser}"> --%>
 					<div class="row new-comment-block">
 						<div class="col">
 							<div class="bg-light p-2">
@@ -112,7 +112,7 @@
 											src="https://i.imgur.com/RpzrMR2.jpg" width="40">
 										<textarea id="new-comment"
 											class="form-control ml-1 shadow-none textarea"
-											name="comContent"></textarea>
+											name="comContent">${comContent}</textarea>
 										<input type="hidden" name="action" value="comment"> <input
 											type="hidden" name="submitTo" value="${post.id}"> <input
 											type="hidden" name="confirm" value="false">
@@ -128,14 +128,14 @@
 							</div>
 						</div>
 					</div>
-				</c:if>
-				<c:if test="${empty sessionScope.loginUser }">
+<%-- 				</c:if> --%>
+<%-- 				<c:if test="${empty sessionScope.loginUser }">
 					<div class="row">
 						<div class="col">
 						  <a href="<c:url value="login?from=${pageContext.request.pathInfo}?${pageContext.request.queryString}"/>">Log in</a> or <a href="<c:url value="register?from=${pageContext.request.requestURI}"/>">Sign up</a> to write comment.
 						</div>
 					</div>
-				</c:if>
+				</c:if> --%>
 			</div>
 
 			<!-- End Comment section -->

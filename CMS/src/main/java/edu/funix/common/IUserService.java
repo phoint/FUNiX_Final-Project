@@ -10,9 +10,6 @@ package edu.funix.common;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import edu.funix.domain.ChangePasswordForm;
 import edu.funix.model.PageModel;
 import edu.funix.model.UserModel;
@@ -103,13 +100,23 @@ public interface IUserService {
     void edit(UserModel user) throws SQLException, Exception;
 
     /**
+     * Update the user's status to inactive but do not delete from database
+     * 
+     * @param id A long containing user's id
+     * @throws Exception
+     * @throws SQLException
+     * @throws NumberFormatException
+     */
+    void delete(String[] ids) throws NumberFormatException, SQLException, Exception;
+
+    /**
      * Delete a user has id matching
      * 
      * @param id A long containing user's id
+     * @throws Exception
+     * @throws SQLException
+     * @throws NumberFormatException
      */
-    void delete(long id);
-
-    // TODO: Separate soft delete with hard delete user's account
     void permanentDelete(String[] ids) throws SQLException, Exception;
 
     /**
@@ -170,6 +177,6 @@ public interface IUserService {
      * @throws Exception
      */
     boolean unlockWhenTimeExpired(UserModel user) throws SQLException, Exception;
-    
+
     UserModel LoginAttempt(UserModel user) throws SQLException, Exception;
 }

@@ -11,7 +11,7 @@ public interface ICategoryService {
     
     List<CategoryModel> search(PageModel page, String searchKey) throws SQLException, Exception;
 
-    CategoryModel findCategoryById(int id) throws SQLException, Exception;
+    CategoryModel findCategoryById(long id) throws SQLException, Exception;
 
     void save(CategoryModel category) throws SQLException, Exception;
 
