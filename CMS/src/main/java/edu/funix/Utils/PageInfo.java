@@ -15,6 +15,7 @@ public class PageInfo {
 		pageRoute.put(PageType.USER_MANAGEMENT_PAGE, new PageInfo("User Management", "users.jsp", null));
 		pageRoute.put(PageType.NEW_USER, new PageInfo("New User", "newuser.jsp", null));
 		pageRoute.put(PageType.EDIT_USER, new PageInfo("Edit User", "edituser.jsp", null));
+		pageRoute.put(PageType.SUBCRIBER_MANAGEMENT_PAGE, new PageInfo("Subcribers Management", "subcribers.jsp", null));
 		pageRoute.put(PageType.CATEGORY_MANAGEMENT_PAGE, new PageInfo("Categories Management", "category.jsp", null));
 		pageRoute.put(PageType.EDIT_CATEGORY, new PageInfo("Edit Category", "edit-category.jsp", null));
 		pageRoute.put(PageType.POST_MANAGEMENT_PAGE, new PageInfo("Post Management", "posts.jsp", null));

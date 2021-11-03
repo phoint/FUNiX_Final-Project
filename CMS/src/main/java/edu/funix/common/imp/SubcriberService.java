@@ -4,123 +4,117 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import edu.funix.common.IAccountService;
 import edu.funix.common.IPageableService;
-import edu.funix.common.IUserService;
-import edu.funix.dao.IPostDAO;
-import edu.funix.dao.IUserDAO;
-import edu.funix.dao.imp.PostDAO;
-import edu.funix.dao.imp.UserDAO;
+import edu.funix.dao.IAccountDAO;
+import edu.funix.dao.imp.SubcriberDAO;
 import edu.funix.domain.ChangePasswordForm;
 import edu.funix.model.PageModel;
-import edu.funix.model.UserModel;
+import edu.funix.model.SubcriberModel;
+import edu.funix.model.SubcriberModel;
+import edu.funix.model.SubcriberModel;
 
-public class UserService implements IUserService {
-    private IUserDAO userDAO;
-    private IPostDAO postDAO;
-    private IPageableService paging;
+public class SubcriberService implements IAccountService<SubcriberModel> {
     /* The limited number of attempts */
     public static final int MAX_FAILED_ATTEMPTS = 3;
     /* The duration of locking user */
     private static final long LOCK_TIME_DURATION = 15 * 60 * 1000; // 15 minutes
+    private IAccountDAO<SubcriberModel> subcriberDAO;
+    private IPageableService paging;
 
-    public UserService() {
-	userDAO = new UserDAO();
+    public SubcriberService() {
+	subcriberDAO = new SubcriberDAO();
 	paging = new PageableService();
-	postDAO = new PostDAO();
     }
 
     @Override
-    public List<UserModel> findAll() throws SQLException, Exception {
-	List<UserModel> users = userDAO.findAll();
-	for (UserModel user : users) {
-	    user.setTotalPost(postDAO.getTotalItems(user.getId()));
+    public List<SubcriberModel> findAll() throws SQLException, Exception {
+	return subcriberDAO.findAll();
+    }
+
+    @Override
+    public List<SubcriberModel> findAll(PageModel page) throws SQLException, Exception {
+	page = paging.pageRequest(page, subcriberDAO.getTotalItems());
+	return subcriberDAO.findAll(page);
+    }
+
+    @Override
+    public List<SubcriberModel> search(PageModel page, String searchKey) throws SQLException, Exception {
+	page = paging.pageRequest(page, subcriberDAO.getTotalItems(searchKey));
+	return subcriberDAO.searchBy(page, searchKey);
+    }
+
+    @Override
+    public SubcriberModel findBy(long id) throws SQLException, Exception {
+	SubcriberModel subcriber = subcriberDAO.findBy(id);
+	if (subcriber == null) {
+	    throw new SQLException("Account is not found");
 	}
-	return users;
+	return subcriber;
     }
 
     @Override
-    public List<UserModel> findAll(PageModel page) throws SQLException, Exception {
-	page = paging.pageRequest(page, userDAO.getTotalItems());
-	List<UserModel> users = userDAO.findAll(page);
-	for (UserModel user : users) {
-	    user.setTotalPost(postDAO.getTotalItems(user.getId()));
+    public SubcriberModel findBy(String email) throws SQLException, Exception {
+	SubcriberModel subcriber = subcriberDAO.findBy(email);
+	if (subcriber == null) {
+	    throw new SQLException("Account is not found");
 	}
-	return users;
+	return subcriber;
     }
 
     @Override
-    public List<UserModel> search(PageModel page, String searchKey) throws SQLException, Exception {
-	page = paging.pageRequest(page, userDAO.getTotalItems(searchKey));
-	List<UserModel> users = userDAO.searchBy(page, searchKey);
-	for (UserModel user : users) {
-	    user.setTotalPost(postDAO.getTotalItems(user.getId()));
-	}
-	return users;
-    }
-
-    @Override
-    public UserModel findBy(String email) throws SQLException, Exception {
-	return userDAO.findBy(email);
-    }
-
-    @Override
-    public Long save(UserModel user) throws SQLException, Exception {
+    public Long save(SubcriberModel account) throws SQLException, Exception {
 	Long newId = null;
 	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
 	String usernameRegex = "[a-zA-Z][a-zA-Z0-9-_]{3,32}";
 	String mailRegex = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 	/* Checks the safe password satisfy with pattern or not */
-	if (!user.getUsername().matches(usernameRegex)) {
+	if (account.getUsername() == null || !account.getUsername().matches(usernameRegex)) {
 	    throw new Exception("Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
-	} else if (user.getEmail().matches(mailRegex)) {
+	} else if (account.getEmail() == null || !account.getEmail().matches(mailRegex)) {
 	    throw new Exception("Invalid email address");
-	}else if (!user.getPassword().matches(pwdRegex)) {
+	}else if (account.getPassword() == null || !account.getPassword().matches(pwdRegex)) {
 	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
 	} else {
-	    newId = userDAO.save(user);
+	    newId = subcriberDAO.save(account);
 	}
 	return newId;
     }
 
     @Override
-    public UserModel findUserById(long id) throws SQLException, Exception {
-	return userDAO.findBy(id);
-    }
-
-    @Override
-    public void edit(UserModel user) throws SQLException, Exception {
+    public void edit(SubcriberModel account) throws SQLException, Exception {
 	/* Regex pattern for nice username */
 	String usernameRegex = "[a-zA-Z][a-zA-Z0-9-_]{3,32}";
 	/* Regex Pattern for safe password */
 	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
-	if (user.getUsername() == null || !user.getUsername().matches(usernameRegex)) {
+	if (account.getUsername() == null || !account.getUsername().matches(usernameRegex)) {
 	    /* Checks the valid username */
 	    throw new Exception("Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
-	} else if (user.getPassword() == null || !user.getPassword().matches(pwdRegex)) {
+	} else if (account.getPassword() != null && !account.getPassword().matches(pwdRegex)) {
 	    /* Checks the safe password satisfy with pattern or not */
 	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
 	} else {	    
-	    userDAO.edit(user);
+	    subcriberDAO.edit(account);
 	}
     }
 
     @Override
     public void delete(String[] ids) throws NumberFormatException, SQLException, Exception {
 	for (String id : ids) {
-	    userDAO.delete(Long.parseLong(id));
+	    subcriberDAO.delete(Long.parseLong(id));
 	}
     }
 
     @Override
     public void permanentDelete(String[] ids) throws SQLException, Exception {
 	for (String id : ids) {
-	    userDAO.permanentDelete(Long.parseLong(id));
+	    subcriberDAO.permanentDelete(Long.parseLong(id));
 	}
     }
 
     @Override
-    public UserModel checkLogin(String username, String password) throws SQLException, Exception {
-	UserModel user = null;
+    public SubcriberModel checkLogin(String username, String password) throws SQLException, Exception {
+	SubcriberModel subcriber = null;
 	/* Regex pattern for nice username */
 	String usernameRegex = "[a-zA-Z][a-zA-Z0-9-_]{3,32}";
 	/* Regex Pattern for safe password */
@@ -132,88 +126,90 @@ public class UserService implements IUserService {
 	    /* Checks the safe password satisfy with pattern or not */
 	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
 	} else {
-	    user = userDAO.checkLogin(username, password);
+	    subcriber = subcriberDAO.checkLogin(username, password);
 	}
-	return user;
+	return subcriber;
     }
 
     @Override
     public void changePassword(ChangePasswordForm newPwd) throws SQLException, Exception {
-	UserModel user = null;
+	SubcriberModel subcriber = null;
 	/* Regex Pattern for safe password */
 	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
 	/* Checks the safe password satisfy with pattern or not */
 	if (!newPwd.getPassword().matches(pwdRegex)) {
 	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
 	} else {
-	    user = userDAO.checkLogin(newPwd.getUsername(), newPwd.getCurrPassword());
-	    if (user != null) {
-		userDAO.changePassword(user.getId(), newPwd.getConfirmPassword());
+	    subcriber = subcriberDAO.checkLogin(newPwd.getUsername(), newPwd.getCurrPassword());
+	    if (subcriber != null) {
+		subcriberDAO.changePassword(subcriber.getId(), newPwd.getConfirmPassword());
 	    } else {
 		throw new Exception("Current password is incorrect");
 	    }
 	}
+	
     }
 
     @Override
-    public void increaseFailedAttempts(UserModel user) throws SQLException, Exception {
-	int newFailedAttempts = user.getFailedAttempts() + 1;
-	userDAO.updateFailedAttempts(newFailedAttempts, user.getUsername());
+    public void increaseFailedAttempts(SubcriberModel account) throws SQLException, Exception {
+	int newFailedAttempts = account.getFailedAttempts() + 1;
+	subcriberDAO.updateFailedAttempts(newFailedAttempts, account.getUsername());
     }
 
     @Override
     public void resetFailedAttempts(String username) throws SQLException, Exception {
-	userDAO.updateFailedAttempts(0, username);
+	subcriberDAO.updateFailedAttempts(0, username);
+	
     }
 
     @Override
-    public void lockUser(UserModel user) throws SQLException, Exception {
-	user.setAccountNonLocked(false);
+    public void lockUser(SubcriberModel account) throws SQLException, Exception {
+	account.setAccountNonLocked(false);
 	long currentTimeInMillis = System.currentTimeMillis();
 	java.sql.Timestamp convertDate = new java.sql.Timestamp(currentTimeInMillis);
-	user.setLockTime(convertDate);
-	userDAO.updateLockUser(user);
+	account.setLockTime(convertDate);
+	subcriberDAO.updateLockUser(account);
     }
 
     @Override
-    public boolean unlockWhenTimeExpired(UserModel user) throws SQLException, Exception {
-	long lockTimeInMillis = user.getLockTime().getTime();
+    public boolean unlockWhenTimeExpired(SubcriberModel account) throws SQLException, Exception {
+	long lockTimeInMillis = account.getLockTime().getTime();
 	long currentTimeInMillis = System.currentTimeMillis();
 
 	if (lockTimeInMillis + LOCK_TIME_DURATION < currentTimeInMillis) {
-	    user.setAccountNonLocked(true);
-	    user.setLockTime(null);
-	    user.setFailedAttempts(0);
-	    userDAO.updateLockUser(user);
+	    account.setAccountNonLocked(true);
+	    account.setLockTime(null);
+	    account.setFailedAttempts(0);
+	    subcriberDAO.updateLockUser(account);
 	    return true;
 	}
 	return false;
     }
 
     @Override
-    public UserModel LoginAttempt(UserModel user) throws SQLException, Exception {
-	UserModel loginUser = null;
+    public SubcriberModel LoginAttempt(SubcriberModel account) throws SQLException, Exception {
+	SubcriberModel loginUser = null;
 	/* Regex pattern for nice username */
 	String usernameRegex = "[a-zA-Z][a-zA-Z0-9-_]{3,32}";
 	/* Regex Pattern for safe password */
 	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
-	if (!user.getUsername().matches(usernameRegex)) {
+	if (!account.getUsername().matches(usernameRegex)) {
 	    /* Checks the valid username */
 	    throw new Exception("Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
-	} else if (!user.getPassword().matches(pwdRegex)) {
+	} else if (!account.getPassword().matches(pwdRegex)) {
 	    /* Checks the safe password satisfy with pattern or not */
 	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
 	} else {
-	    UserModel userAttempt = findBy(user.getUsername());
+	    SubcriberModel userAttempt = findBy(account.getUsername());
 	    if (userAttempt != null) {
 		if (userAttempt.isAccountNonLocked() && userAttempt.isActive()) {
 		    if (userAttempt.getFailedAttempts() < MAX_FAILED_ATTEMPTS - 1) {
-			loginUser = checkLogin(user.getUsername(), user.getPassword());
+			loginUser = checkLogin(account.getUsername(), account.getPassword());
 			if (loginUser == null) {
 			    increaseFailedAttempts(userAttempt);
 			    throw new Exception("Invalid Username or Password.");
 			} else {
-			    resetFailedAttempts(user.getUsername());
+			    resetFailedAttempts(account.getUsername());
 			}
 		    } else {
 			lockUser(userAttempt);
@@ -222,7 +218,7 @@ public class UserService implements IUserService {
 		    }
 		} else if (!userAttempt.isAccountNonLocked() && userAttempt.isActive()) {
 		    if (unlockWhenTimeExpired(userAttempt)) {
-			loginUser = checkLogin(user.getUsername(), user.getPassword());
+			loginUser = checkLogin(account.getUsername(), account.getPassword());
 			if (loginUser == null) {
 			    increaseFailedAttempts(userAttempt);
 			    throw new Exception("Invalid Username or Password");
@@ -245,4 +241,5 @@ public class UserService implements IUserService {
 	}
 	return loginUser;
     }
+
 }

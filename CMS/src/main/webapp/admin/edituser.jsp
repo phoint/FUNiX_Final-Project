@@ -17,7 +17,7 @@
 						class="col-4 col-form-label col-form-label-sm">Username</label>
 					<div class="col-8">
 						<input class="form-control form-control-sm" type="text"
-							name="username" id="username" value="${requestScope.user.username}" disabled>
+							name="username" id="username" value="${requestScope.user.username}" readonly>
 					</div>
 				</div>
 				<div class="form-group row">
@@ -38,7 +38,7 @@
 				<div class="form-group row">
 					<label for="password" class="col-4 col-form-label">Password</label>
 					<div class="col-8">
-					<input type="submit" formaction="<c:url value="edit-user?action=resetPwd"/>" value="reset">
+					<input type="submit" formaction="<c:url value="edit-user?action=resetPwd"/>" formmethod="post" value="reset">
 					</div>
 				</div>
 				<div class="form-group row">
