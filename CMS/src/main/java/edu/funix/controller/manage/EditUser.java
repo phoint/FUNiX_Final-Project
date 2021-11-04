@@ -25,7 +25,7 @@ import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
 import edu.funix.Utils.PasswordUtils;
 import edu.funix.Utils.SlackApiUtil;
-import edu.funix.common.IUserService;
+import edu.funix.common.IAccountService;
 import edu.funix.common.imp.UserService;
 import edu.funix.model.UserModel;
 
@@ -36,7 +36,7 @@ import edu.funix.model.UserModel;
 public class EditUser extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(EditUser.class);
-    private IUserService userService;
+    private IAccountService<UserModel> userService;
 
     /**
      * @see HttpServlet#HttpServlet()
@@ -59,7 +59,7 @@ public class EditUser extends HttpServlet {
 	try {
 	    if (id != null) {
 		logger.debug("Find the user by id " + id);
-		user = userService.findUserById(Long.parseLong(id));
+		user = userService.findBy(Long.parseLong(id));
 		logger.debug("{}", user);
 	    }
 	} catch (NumberFormatException e) {
@@ -111,7 +111,7 @@ public class EditUser extends HttpServlet {
 		    Mailer.getTemplate(user.getPassword());
 		    Mailer.send(user.getEmail(), "Reset Password", Mailer.getTemplate(user.getPassword()));
 		    message = "New password send";
-		    user = userService.findUserById(user.getId());
+		    user = userService.findBy(user.getId());
 		} catch (Exception e) {
 		    error = e.getMessage();
 		    logger.error(e.getMessage(), e);
@@ -121,7 +121,7 @@ public class EditUser extends HttpServlet {
 		try {
 		    logger.debug("Update the user's attribute but not password");
 		    userService.edit(user);
-		    user = userService.findUserById(user.getId());
+		    user = userService.findBy(user.getId());
 		} catch (Exception e) {
 		    error = e.getMessage();
 		    logger.error(e.getMessage(), e);

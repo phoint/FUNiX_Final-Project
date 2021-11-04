@@ -24,9 +24,9 @@ import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
 import edu.funix.Utils.PasswordUtils;
 import edu.funix.Utils.SlackApiUtil;
-import edu.funix.common.IUserService;
-import edu.funix.common.imp.UserService;
-import edu.funix.model.UserModel;
+import edu.funix.common.IAccountService;
+import edu.funix.common.imp.SubcriberService;
+import edu.funix.model.SubcriberModel;
 
 /**
  * Servlet implementation class Register
@@ -35,13 +35,13 @@ import edu.funix.model.UserModel;
 public class Register extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Register.class);
-    private IUserService userService;
+    private IAccountService<SubcriberModel> subcriberService;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public Register() {
-	userService = new UserService();
+	subcriberService = new SubcriberService();
     }
 
     /**
@@ -69,11 +69,14 @@ public class Register extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
 	logger.info("called http post method, referer is: " + request.getHeader("referer"));
-	UserModel newUser = new UserModel();
+	SubcriberModel newUser = new SubcriberModel();
+	String message = null;
+	String error = null;
 	try {
 	    logger.debug("Mapping user's attributes to user model");
 	    BeanUtils.populate(newUser, request.getParameterMap());
 	} catch (IllegalAccessException | InvocationTargetException e) {
+	    error = e.getMessage();
 	    logger.error(e.getMessage(), e);
 	    SlackApiUtil.pushLog(request, e.getMessage());
 	}
@@ -83,16 +86,20 @@ public class Register extends HttpServlet {
 	newUser.setPassword(password);
 	try {
 	    logger.debug("Insert new user");
-	    userService.save(newUser);
+	    subcriberService.save(newUser);
 	    logger.debug("{}", newUser);
 	    /* Send the password to user by mail */
 	    Mailer.send(newUser.getEmail(), "Hello New User", Mailer.getTemplate(password));
 	    logger.debug("Send password to user by mail - Success");
+	    message = "Account is created, please login to continue";
 	} catch (Exception e) {
+	    error = e.getMessage();
 	    logger.error(e.getMessage(), e);
 	    SlackApiUtil.pushLog(request, e.getMessage());
 	}
 	logger.info("Forward to login page");
+	request.setAttribute("error", error);
+	request.setAttribute("message", message);
 	PageInfo.login(request, response, PageType.LOGIN);
     }
 }

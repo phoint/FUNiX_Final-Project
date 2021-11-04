@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import edu.funix.Utils.SessionUtil;
+import edu.funix.model.AccountModel;
 import edu.funix.model.UserModel;
 
 public class AuthorizationFilter implements Filter {
@@ -32,21 +33,24 @@ public class AuthorizationFilter implements Filter {
 	HttpServletResponse response = (HttpServletResponse) servletResponse;
 	String url = request.getRequestURI();
 	if (url.startsWith("/CMS/admin/")) {
-	    UserModel userModel = (UserModel) SessionUtil.get(request, "loginUser");
-	    if (userModel != null) {
-		if (userModel.isRole()) {
-		    chain.doFilter(request, response);
-		} else if (!userModel.isRole()) {
-		    // TODO alerting access permission page for admin
-		    response.sendRedirect(request.getContextPath() + "/login");
+	    String userType = (String) SessionUtil.get(request, "userType");
+	    if (userType != null && userType.equals("User")) {
+		UserModel userModel = (UserModel) SessionUtil.get(request, "loginUser");
+		if (userModel != null) {
+		    if (userModel.isRole()) {
+			chain.doFilter(request, response);
+		    } else if (!userModel.isRole()) {
+			// TODO alerting access permission page for admin
+			response.sendRedirect(request.getContextPath() + "/admin-login");
+		    }
 		}
 	    } else {
 		// TODO alerting access permission page for login user
-		response.sendRedirect(request.getContextPath() + "/login");
+		response.sendRedirect(request.getContextPath() + "/admin-login");
 	    }
+
 	} else if (url.startsWith("/CMS/account")) {
-	    UserModel userModel = (UserModel) SessionUtil.get(request, "loginUser");
-	    if (userModel != null) {
+	    if (SessionUtil.isLogin(request)) {
 		chain.doFilter(request, response);
 	    } else {
 		// TODO alerting access permission page for login user

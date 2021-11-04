@@ -3,6 +3,8 @@ package edu.funix.Utils;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import edu.funix.model.AbstractModel;
+import edu.funix.model.AccountModel;
 import edu.funix.model.UserModel;
 
 public class SessionUtil {
@@ -25,9 +27,9 @@ public class SessionUtil {
 		return get(request, "loginUser") != null;
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public static String getLoginedUsername(HttpServletRequest request) {
-		UserModel username = (UserModel) get(request, "loginUser");
-		return username == null ? null : username.getUsername();
+		return get(request, "loginUser") == null ? null : ((AccountModel) get(request, "loginUser")).getUsername();
 	}
 
 }

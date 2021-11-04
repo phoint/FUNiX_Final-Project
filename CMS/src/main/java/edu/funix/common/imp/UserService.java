@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import edu.funix.common.IAccountService;
 import edu.funix.common.IPageableService;
 import edu.funix.common.IUserService;
 import edu.funix.dao.IPostDAO;
@@ -14,7 +15,7 @@ import edu.funix.domain.ChangePasswordForm;
 import edu.funix.model.PageModel;
 import edu.funix.model.UserModel;
 
-public class UserService implements IUserService {
+public class UserService implements IAccountService<UserModel> {
     private IUserDAO userDAO;
     private IPostDAO postDAO;
     private IPageableService paging;
@@ -83,7 +84,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserModel findUserById(long id) throws SQLException, Exception {
+    public UserModel findBy(long id) throws SQLException, Exception {
 	return userDAO.findBy(id);
     }
 
@@ -96,7 +97,7 @@ public class UserService implements IUserService {
 	if (user.getUsername() == null || !user.getUsername().matches(usernameRegex)) {
 	    /* Checks the valid username */
 	    throw new Exception("Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
-	} else if (user.getPassword() == null || !user.getPassword().matches(pwdRegex)) {
+	} else if (user.getPassword() != null && !user.getPassword().matches(pwdRegex)) {
 	    /* Checks the safe password satisfy with pattern or not */
 	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
 	} else {	    

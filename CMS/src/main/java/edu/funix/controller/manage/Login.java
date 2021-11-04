@@ -5,7 +5,7 @@
  * Everyone is permitted to copy and distribute verbatim copies
  * of this license document, but changing it is not allowed.
  */
-package edu.funix.controller.web;
+package edu.funix.controller.manage;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -27,23 +27,23 @@ import edu.funix.Utils.PasswordUtils;
 import edu.funix.Utils.SessionUtil;
 import edu.funix.Utils.SlackApiUtil;
 import edu.funix.common.IAccountService;
-import edu.funix.common.imp.SubcriberService;
-import edu.funix.model.SubcriberModel;
+import edu.funix.common.imp.UserService;
+import edu.funix.model.UserModel;
 
 /**
  * Servlet implementation class Login
  */
-@WebServlet("/login")
+@WebServlet({"/admin-login", "/admin/login"})
 public class Login extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Login.class);
-    private IAccountService<SubcriberModel> subcriberService;
+    private IAccountService<UserModel> userService;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public Login() {
-	subcriberService = new SubcriberService();
+	userService = new UserService();
     }
 
     /**
@@ -71,7 +71,7 @@ public class Login extends HttpServlet {
 	    return;
 	}
 	logger.debug("Forward to change password page");
-	PageInfo.login(request, response, PageType.LOGIN);
+	PageInfo.adminLogin(request, response, PageType.LOGIN);
     }
 
     /**
@@ -89,8 +89,8 @@ public class Login extends HttpServlet {
 	String from = request.getParameter("from");
 	String message = null;
 	String error = null;
-	SubcriberModel loginUser = new SubcriberModel();
-	SubcriberModel validUser = null;
+	UserModel loginUser = new UserModel();
+	UserModel validUser = null;
 	/* Check the user's login attempt */
 	if (action != null && action.equals("dologin")) {
 	    logger.debug("Try login");
@@ -99,7 +99,7 @@ public class Login extends HttpServlet {
 		BeanUtils.populate(loginUser, request.getParameterMap());
 		logger.debug("{}", loginUser);
 		logger.debug("Check login user");
-		validUser = subcriberService.LoginAttempt(loginUser);
+		validUser = userService.LoginAttempt(loginUser);
 		logger.debug("{}", validUser);
 	    } catch (IllegalAccessException | InvocationTargetException e) {
 		error = e.getMessage();
@@ -116,43 +116,50 @@ public class Login extends HttpServlet {
 	    }
 	    if (validUser != null) {
 		SessionUtil.add(request, "loginUser", validUser);
-		SessionUtil.add(request, "userType", "Subcriber");
+		SessionUtil.add(request, "userType", "User");
 		if (from == null || from.trim().equals("")) {
 		    logger.info("Login from direct page");
-		    response.sendRedirect(request.getContextPath());
+		    if (validUser.isRole()) {
+			logger.info("User's role: " + validUser.isRole());
+			response.sendRedirect(request.getContextPath() + "/admin/posts");
+		    } else {
+			logger.info("User's role: " + validUser.isRole());
+			response.sendRedirect(request.getContextPath());
+		    }
 		} else {
 		    logger.info("Navigate from " + from);
 		    response.sendRedirect(from);
 		}
 	    } else {
-		logger.error("Login failed! invalid username or password");
+		logger.error("Login failed! iInvalid username or password");
 		request.setAttribute("error", error);
 		request.setAttribute("from", from);
-		PageInfo.login(request, response, PageType.LOGIN);
+		PageInfo.adminLogin(request, response, PageType.LOGIN);
 	    }
-	    /* Generate a random password and send to user by mail */
+	/* Generate a random password and send to user by mail */
 	} else if (action != null && action.equals("resetPwd")) {
 	    String email = request.getParameter("userMail");
 	    logger.debug("Try reset password with email: " + email);
-	    SubcriberModel subcriber = null;
+	    UserModel user = null;
 	    try {
 		/* check user's email if it exists */
-		subcriber = subcriberService.findBy(email);
-		logger.debug("{}", subcriber);
+		user = userService.findBy(email);
+		logger.debug("{}", user);
 	    } catch (Exception e) {
 		error = e.getMessage();
 		logger.error(e.getMessage(), e);
 		SlackApiUtil.pushLog(request, e.getMessage());
 	    }
-	    if (subcriber != null) {
+	    if (user != null) {
 		/* Generate new random password and send email */
 		logger.debug("Generate new random password");
-		subcriber.setPassword(PasswordUtils.generate(10));
+		user.setPassword(PasswordUtils.generate(10));
 		try {
 		    logger.debug("Update user's infomation with new password");
-		    subcriberService.edit(subcriber);
-		    logger.debug("{}", subcriber);
-		    Mailer.send(subcriber.getEmail(), "Reset Password", Mailer.getTemplate(subcriber.getPassword()));
+		    userService.edit(user);
+		    logger.debug("{}", user);
+		    Mailer.getTemplate(user.getPassword());
+		    Mailer.send(user.getEmail(), "Reset Password", Mailer.getTemplate(user.getPassword()));
 		    logger.debug("Password was send to user by mail");
 		    message = "New password send";
 		} catch (Exception e) {
@@ -167,8 +174,9 @@ public class Login extends HttpServlet {
 	    request.setAttribute("message", message);
 	    request.setAttribute("error", error);
 	    request.setAttribute("from", from);
+	    ;
 	    logger.info("Forward to login page");
-	    PageInfo.login(request, response, PageType.LOGIN);
+	    PageInfo.adminLogin(request, response, PageType.LOGIN);
 	}
     }
 }

@@ -23,9 +23,13 @@ import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
 import edu.funix.Utils.SessionUtil;
 import edu.funix.Utils.SlackApiUtil;
-import edu.funix.common.IUserService;
+import edu.funix.common.IAccountService;
+import edu.funix.common.imp.SubcriberService;
 import edu.funix.common.imp.UserService;
 import edu.funix.domain.ChangePasswordForm;
+import edu.funix.model.AccountModel;
+import edu.funix.model.SubcriberModel;
+import edu.funix.model.UserModel;
 
 /**
  * Servlet implementation class PasswordChange
@@ -34,13 +38,15 @@ import edu.funix.domain.ChangePasswordForm;
 public class PasswordChange extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(PasswordChange.class);
-    private IUserService userService;
+    private IAccountService<UserModel> userService;
+    private IAccountService<SubcriberModel> subcriberService;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public PasswordChange() {
 	userService = new UserService();
+	subcriberService = new SubcriberService();
     }
 
     /**
@@ -65,7 +71,7 @@ public class PasswordChange extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
 	    throws ServletException, IOException {
-	logger.info("called http get method, referer is: " + request.getHeader("referer"));
+	logger.info("called http post method, referer is: " + request.getHeader("referer"));
 	/* A specific model which store the change password form's value */
 	ChangePasswordForm newPwd = new ChangePasswordForm();
 	String error = null;
@@ -83,7 +89,14 @@ public class PasswordChange extends HttpServlet {
 	logger.debug("{}", newPwd);
 	try {
 	    logger.debug("Change user password and logout current session");
-	    userService.changePassword(newPwd);
+	    String userType = (String) SessionUtil.get(request, "userType");
+	    if (userType.equals("User")) {
+		logger.debug("Account is an user");
+		userService.changePassword(newPwd);		
+	    } else {
+		logger.debug("Account is a subcriber");
+		subcriberService.changePassword(newPwd);
+	    }
 	    /* After changing successful, user will be log out */
 	    SessionUtil.invalidate(request);
 	    message = "Password changed!";

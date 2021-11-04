@@ -38,4 +38,7 @@
 			</div>
 		</div>
 	</form>
+	 <div class="other-option m-4">
+    <small class="d-block mt-2"><a href="<c:url value="/"/>">Back to homepage</a></small>
+  </div>
 </div>

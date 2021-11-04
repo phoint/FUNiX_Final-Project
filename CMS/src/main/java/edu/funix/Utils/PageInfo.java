@@ -27,7 +27,7 @@ public class PageInfo {
 		pageRoute.put(PageType.PASSWORD_CHANGE, new PageInfo("Password Change", "changePwd.jsp", null));		
 		pageRoute.put(PageType.FORGOT_PASSWORD, new PageInfo("Reset password", "forgotPassword.jsp", null));		
 		pageRoute.put(PageType.HOMEPAGE, new PageInfo("Home", "home.jsp", null));		
-		pageRoute.put(PageType.POST_DETAIL, new PageInfo("Post", "post.jsp", null));		
+		pageRoute.put(PageType.POST_DETAIL, new PageInfo("Post", "post.jsp", null));
 	}
 	
 	public static void PrepareAndForward(HttpServletRequest request, HttpServletResponse response, PageType pageType) 
@@ -60,6 +60,12 @@ public class PageInfo {
 	    PageInfo page = pageRoute.get(pageType);
 	    request.setAttribute("pageInfo", page);
 	    request.getRequestDispatcher("web/entry.jsp").forward(request, response);
+	}
+	public static void adminLogin(HttpServletRequest request, HttpServletResponse response, PageType pageType) 
+		throws ServletException, IOException {
+	    PageInfo page = pageRoute.get(pageType);
+	    request.setAttribute("pageInfo", page);
+	    request.getRequestDispatcher("admin/entry.jsp").forward(request, response);
 	}
 	
 	

@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <div class="form-signin">
-	<form id="login-form" class="p-4 border bg-white needs-validation" action="<c:url value="login"/>" method="post" novalidate>
+	<form id="login-form" class="p-4 border bg-white needs-validation" action="<c:url value="admin-login"/>" method="post" novalidate>
 		<h1 class="h3 mb-3 text-center">Log In</h1>
 		<c:if test="${not empty param.error or not empty error }"><div class="alert alert-danger" role="alert">
         ${param.error} ${error}

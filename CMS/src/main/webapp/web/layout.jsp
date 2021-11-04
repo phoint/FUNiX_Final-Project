@@ -64,7 +64,8 @@
 								<a class="dropdown-item" href="#">Subcribe</a>
 								<a class="dropdown-item" href="login?action=resetPwd">Forgot Password</a>
 								</c:if>
-								<c:if test="${not empty loginUser}">								
+								<c:if test="${not empty loginUser}">
+								<c:if test="${userType eq 'User' && loginUser.role}"><a class="dropdown-item" href="admin/posts">Dasboard</a></c:if>							
 								<a class="dropdown-item" href="account/password-change">Change Password</a>
 								<a class="dropdown-item" href="login?action=logout">Logout</a>
 								</c:if>

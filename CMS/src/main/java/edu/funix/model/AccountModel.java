@@ -80,4 +80,10 @@ public class AccountModel<T> extends AbstractModel<T> {
     public void setLockTime(Timestamp lockTime) {
 	this.lockTime = lockTime;
     }
+
+    @Override
+    public String toString() {
+	return "AccountModel [email=" + email + ", username=" + username + ", password=" + password + ", displayName="
+		+ displayName + super.toString() + "]";
+    }
 }

@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
 import edu.funix.Utils.SlackApiUtil;
+import edu.funix.common.IAccountService;
 import edu.funix.common.IUserService;
 import edu.funix.common.imp.UserService;
 import edu.funix.model.UserModel;
@@ -33,7 +34,7 @@ import edu.funix.model.UserModel;
 public class NewUser extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(NewUser.class);
-    private IUserService userService;
+    private IAccountService<UserModel> userService;
 
     /**
      * @see HttpServlet#HttpServlet()

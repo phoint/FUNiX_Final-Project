@@ -7,10 +7,27 @@ body {
   height: 16px;
   vertical-align: text-bottom;
 }
+#user-login {
+  font-size: 1.5em;
+  color:#ffedd3;
+  z-index:9999;
+}
 
-/*
- * Sidebar
- */
+/* Header & banner */
+header .navbar {
+  z-index: 9999;
+}
+
+header .navbar-collapse {
+  border-radius: 10px;
+  padding: 15px;
+  float: right;
+}
+header a {
+  color: whitesmoke !important;
+}
+
+/* Sidebar */
 
 .sidebar {
   position: fixed;
