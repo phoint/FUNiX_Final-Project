@@ -33,20 +33,24 @@ public class AuthorizationFilter implements Filter {
 	HttpServletResponse response = (HttpServletResponse) servletResponse;
 	String url = request.getRequestURI();
 	if (url.startsWith("/CMS/admin/")) {
-	    String userType = (String) SessionUtil.get(request, "userType");
-	    if (userType != null && userType.equals("User")) {
-		UserModel userModel = (UserModel) SessionUtil.get(request, "loginUser");
-		if (userModel != null) {
-		    if (userModel.isRole()) {
-			chain.doFilter(request, response);
-		    } else if (!userModel.isRole()) {
-			// TODO alerting access permission page for admin
-			response.sendRedirect(request.getContextPath() + "/admin-login");
+	    if (SessionUtil.isLogin(request)) {
+		String userType = (String) SessionUtil.get(request, "userType");
+		if (userType != null && userType.equals("User")) {
+		    UserModel userModel = (UserModel) SessionUtil.get(request, "loginUser");
+		    if (userModel != null) {
+			if (userModel.isRole()) {
+			    chain.doFilter(request, response);
+			} else if (!userModel.isRole()) {
+			    // TODO alerting access permission page for admin
+			    response.sendRedirect(request.getContextPath() + "/access-denied");
+			}
 		    }
+		} else {
+		    // TODO alerting access permission page for login user
+		    response.sendRedirect(request.getContextPath() + "/access-denied");
 		}
 	    } else {
-		// TODO alerting access permission page for login user
-		response.sendRedirect(request.getContextPath() + "/admin-login");
+		response.sendRedirect(request.getContextPath() + "/access-denied");
 	    }
 
 	} else if (url.startsWith("/CMS/account")) {

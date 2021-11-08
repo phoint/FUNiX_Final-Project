@@ -10,7 +10,7 @@ package edu.funix.dao.imp;
 import java.sql.SQLException;
 import java.util.List;
 
-import edu.funix.dao.IUserDAO;
+import edu.funix.dao.IAccountDAO;
 import edu.funix.model.PageModel;
 import edu.funix.model.UserModel;
 import edu.funix.model.mapper.UserMapper;
@@ -21,7 +21,7 @@ import edu.funix.model.mapper.UserMapper;
  * @author Phoi Nguyen
  * @version 1.0 06 September 2021
  */
-public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
+public class UserDAO extends AbstractDAO<UserModel> implements IAccountDAO<UserModel> {
     /*
      * This class implements from IUserDAO. All javadoc has written in that
      * interface
@@ -141,9 +141,9 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
     }
 
     @Override
-    public UserModel checkLogin(String username, String password) throws SQLException, Exception {
+    public UserModel checkLogin(UserModel account) throws SQLException, Exception {
 	String sql = "SELECT * FROM tblUSER WHERE Username = ? AND Pwd = HASHBYTES('SHA2_256', ?) AND Active = 1";
-	List<UserModel> validUser = query(sql, new UserMapper(), username, password);
+	List<UserModel> validUser = query(sql, new UserMapper(), account.getUsername(), account.getPassword());
 	return validUser.isEmpty() ? null : validUser.get(0);
     }
 
@@ -163,6 +163,12 @@ public class UserDAO extends AbstractDAO<UserModel> implements IUserDAO {
     public void updateLockUser(UserModel user) throws SQLException, Exception {
 	String sql = "UPDATE tblUSER SET Acc_non_locked = ?, Lock_time = ?, Failed_attempts = ? WHERE Username = ?";
 	update(sql, user.isAccountNonLocked() ? 1 : 0, user.getLockTime(), user.getFailedAttempts(), user.getUsername());
+    }
+
+    @Override
+    public UserModel socialLogin(UserModel account) {
+	// TODO Auto-generated method stub
+	return null;
     }
 
 }

@@ -2,9 +2,13 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div class="page-header">
-	<h2 class="d-inline-flex mr-3">Post</h2>
-	<a href="<c:url value="new-post"/>"
-		class="btn btn-sm btn-outline-primary mb-3">Add New</a>
+	<h2 class="d-inline-flex mr-3">Comments</h2>
+	<c:if test="${not empty message}">
+  <div id="message" class="alert alert-success">${message}</div>
+</c:if>
+<c:if test="${not empty error}">
+  <div id="error" class="alert alert-danger">${error}</div>
+</c:if>
 </div>
 <div class="wrap my-1">
 	<div class="d-inline-flex mr-2">

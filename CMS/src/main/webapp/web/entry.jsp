@@ -22,7 +22,7 @@
     family=Yeseva+One&family=Goldman&display=swap"
     rel="stylesheet">
 <link rel="stylesheet" href="<c:url value="web/css/login.css"/>">
-
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script
   src="https://cdn.ckeditor.com/ckeditor5/29.2.0/classic/ckeditor.js"></script>
 <script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>

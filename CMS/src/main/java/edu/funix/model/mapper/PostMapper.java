@@ -32,7 +32,7 @@ public class PostMapper implements RowMapper<PostModel> {
     public PostModel mapRow(ResultSet rs) {
 	try {
 	    PostModel post = new PostModel();
-	    post.setId(rs.getInt("PostID"));
+	    post.setId(rs.getLong("PostID"));
 	    post.setTitle(rs.getString("PostTitle"));
 	    post.setContent(rs.getNString("Content"));
 	    post.setExcerpt(rs.getNString("Excerpt"));

@@ -9,7 +9,7 @@ package edu.funix.controller.web;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
+import java.security.GeneralSecurityException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.LoggerFactory;
 
+import edu.funix.Utils.GoogleUtil;
 import edu.funix.Utils.Mailer;
 import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
@@ -28,6 +29,7 @@ import edu.funix.Utils.SessionUtil;
 import edu.funix.Utils.SlackApiUtil;
 import edu.funix.common.IAccountService;
 import edu.funix.common.imp.SubcriberService;
+import edu.funix.model.AccountModel;
 import edu.funix.model.SubcriberModel;
 
 /**
@@ -70,7 +72,7 @@ public class Login extends HttpServlet {
 	    PageInfo.login(request, response, PageType.FORGOT_PASSWORD);
 	    return;
 	}
-	logger.debug("Forward to change password page");
+	logger.debug("Forward to login page");
 	PageInfo.login(request, response, PageType.LOGIN);
     }
 
@@ -87,48 +89,50 @@ public class Login extends HttpServlet {
 	logger.info("called http post method, referer is: " + request.getHeader("referer"));
 	String action = request.getParameter("action");
 	String from = request.getParameter("from");
+	String credential = request.getParameter("credential");
 	String message = null;
 	String error = null;
 	SubcriberModel loginUser = new SubcriberModel();
 	SubcriberModel validUser = null;
 	/* Check the user's login attempt */
-	if (action != null && action.equals("dologin")) {
+	if (credential != null && !credential.isEmpty()) {
+	    try {
+		logger.info(credential);
+		logger.debug("Mapping user's attribute from Google ID Token ");
+		BeanUtils.copyProperties(loginUser, GoogleUtil.decode(credential));
+		logger.debug("{}", GoogleUtil.decode(credential).toString());
+		logger.debug("{}", loginUser);
+		try {
+		    validUser = subcriberService.socialLogin((SubcriberModel) loginUser);
+		} catch (Exception e) {
+		    error = e.getMessage();
+		    logger.error(e.getMessage(), e);
+		    SlackApiUtil.pushLog(request, e.getMessage());
+		}
+	    } catch (IllegalAccessException | InvocationTargetException | GeneralSecurityException | IOException e) {
+		error = e.getMessage();
+		logger.error(e.getCause().toString(), e);
+		SlackApiUtil.pushLog(request, e.getMessage());
+	    }
+	} else if (action != null && action.equals("dologin")) {
 	    logger.debug("Try login");
 	    try {
 		logger.debug("Mapping user's attribute ");
 		BeanUtils.populate(loginUser, request.getParameterMap());
 		logger.debug("{}", loginUser);
-		logger.debug("Check login user");
-		validUser = subcriberService.LoginAttempt(loginUser);
-		logger.debug("{}", validUser);
+		try {
+		    logger.debug("Check login user");
+		    validUser = subcriberService.LoginAttempt((SubcriberModel) loginUser);
+		    logger.debug("{}", validUser);
+		} catch (Exception e) {
+		    error = e.getMessage();
+		    logger.error(e.getMessage(), e);
+		    SlackApiUtil.pushLog(request, e.getMessage());
+		}
 	    } catch (IllegalAccessException | InvocationTargetException e) {
 		error = e.getMessage();
 		logger.error(e.getMessage(), e);
 		SlackApiUtil.pushLog(request, e.getMessage());
-	    } catch (SQLException e) {
-		error = e.getMessage();
-		logger.error(e.getMessage(), e);
-		SlackApiUtil.pushLog(request, e.getMessage());
-	    } catch (Exception e) {
-		error = e.getMessage();
-		logger.error(e.getMessage(), e);
-		SlackApiUtil.pushLog(request, e.getMessage());
-	    }
-	    if (validUser != null) {
-		SessionUtil.add(request, "loginUser", validUser);
-		SessionUtil.add(request, "userType", "Subcriber");
-		if (from == null || from.trim().equals("")) {
-		    logger.info("Login from direct page");
-		    response.sendRedirect(request.getContextPath());
-		} else {
-		    logger.info("Navigate from " + from);
-		    response.sendRedirect(from);
-		}
-	    } else {
-		logger.error("Login failed! invalid username or password");
-		request.setAttribute("error", error);
-		request.setAttribute("from", from);
-		PageInfo.login(request, response, PageType.LOGIN);
 	    }
 	    /* Generate a random password and send to user by mail */
 	} else if (action != null && action.equals("resetPwd")) {
@@ -168,6 +172,22 @@ public class Login extends HttpServlet {
 	    request.setAttribute("error", error);
 	    request.setAttribute("from", from);
 	    logger.info("Forward to login page");
+	    PageInfo.login(request, response, PageType.LOGIN);
+	}
+	if (validUser != null) {
+	    SessionUtil.add(request, "loginUser", validUser);
+	    SessionUtil.add(request, "userType", "Subcriber");
+	    if (from == null || from.trim().equals("")) {
+		logger.info("Login from direct page");
+		response.sendRedirect(request.getContextPath());
+	    } else {
+		logger.info("Navigate from " + from);
+		response.sendRedirect(from);
+	    }
+	} else {
+	    logger.error("Login failed! invalid username or password");
+	    request.setAttribute("error", error);
+	    request.setAttribute("from", from);
 	    PageInfo.login(request, response, PageType.LOGIN);
 	}
     }

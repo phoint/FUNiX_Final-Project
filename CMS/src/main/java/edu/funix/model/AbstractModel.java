@@ -18,11 +18,11 @@ import java.util.List;
  * @version 1.0 06 September 2021
  */
 public class AbstractModel<T> {
-    private long id;
+    private Long id;
     private Date createdDate;
     private Date modifiedDate;
-    private long createdBy;
-    private long modifiedBy;
+    private Long createdBy;
+    private Long modifiedBy;
     private PageModel pagination;
     /** Represents a list of generic object */
     private List<T> listResult = new ArrayList<>();
@@ -54,7 +54,7 @@ public class AbstractModel<T> {
      * 
      * @return A long representing the user's id
      */
-    public long getCreatedBy() {
+    public Long getCreatedBy() {
 	return createdBy;
     }
 
@@ -63,7 +63,7 @@ public class AbstractModel<T> {
      * 
      * @param createdBy A long containing the user's id
      */
-    public void setCreatedBy(long createdBy) {
+    public void setCreatedBy(Long createdBy) {
 	this.createdBy = createdBy;
     }
 
@@ -72,7 +72,7 @@ public class AbstractModel<T> {
      * 
      * @return A long representing the user's id
      */
-    public long getModifiedBy() {
+    public Long getModifiedBy() {
 	return modifiedBy;
     }
 
@@ -81,7 +81,7 @@ public class AbstractModel<T> {
      * 
      * @param modifiedBy A long containing the user's id
      */
-    public void setModifiedBy(long modifiedBy) {
+    public void setModifiedBy(Long modifiedBy) {
 	this.modifiedBy = modifiedBy;
     }
 
@@ -90,7 +90,7 @@ public class AbstractModel<T> {
      * 
      * @return A long representing the object's id
      */
-    public long getId() {
+    public Long getId() {
 	return id;
     }
 
@@ -99,7 +99,7 @@ public class AbstractModel<T> {
      * 
      * @param id A long containing the object's id
      */
-    public void setId(long id) {
+    public void setId(Long id) {
 	this.id = id;
     }
 

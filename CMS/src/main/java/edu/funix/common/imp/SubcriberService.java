@@ -1,8 +1,13 @@
 package edu.funix.common.imp;
 
+import java.security.MessageDigest;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import javax.xml.bind.DatatypeConverter;
+
+import org.apache.commons.beanutils.BeanUtils;
 
 import edu.funix.common.IAccountService;
 import edu.funix.common.IPageableService;
@@ -67,14 +72,28 @@ public class SubcriberService implements IAccountService<SubcriberModel> {
 	Long newId = null;
 	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
 	String usernameRegex = "[a-zA-Z][a-zA-Z0-9-_]{3,32}";
-	String mailRegex = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+	String mailRegex = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)"
+		+ "*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+
+	/* MD5 hashing email for gravatar */
+	MessageDigest md = MessageDigest.getInstance("MD5");
+	md.update(account.getEmail().getBytes());
+	byte[] digest = md.digest();
+	String myHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
+
 	/* Checks the safe password satisfy with pattern or not */
-	if (account.getUsername() == null || !account.getUsername().matches(usernameRegex)) {
-	    throw new Exception("Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
-	} else if (account.getEmail() == null || !account.getEmail().matches(mailRegex)) {
-	    throw new Exception("Invalid email address");
-	}else if (account.getPassword() == null || !account.getPassword().matches(pwdRegex)) {
-	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
+	if (account.getSocialId() == null || account.getSocialId().isEmpty()) {
+	    if (account.getUsername() == null || !account.getUsername().matches(usernameRegex)) {
+		throw new Exception("Username must be at least 3 character start with an alphabetic. "
+			+ "Can contain number, - and _, but no space");
+	    } else if (account.getEmail() == null || !account.getEmail().matches(mailRegex)) {
+		throw new Exception("Invalid email address");
+	    } else if (account.getPassword() == null || !account.getPassword().matches(pwdRegex)) {
+		throw new Exception("Password must be at least 8 character, one uppercase and one number");
+	    } else {
+		account.setPictureUrl("https://www.gravatar.com/avatar/" + myHash + "?d=mp");
+		newId = subcriberDAO.save(account);
+	    }
 	} else {
 	    newId = subcriberDAO.save(account);
 	}
@@ -87,13 +106,18 @@ public class SubcriberService implements IAccountService<SubcriberModel> {
 	String usernameRegex = "[a-zA-Z][a-zA-Z0-9-_]{3,32}";
 	/* Regex Pattern for safe password */
 	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
-	if (account.getUsername() == null || !account.getUsername().matches(usernameRegex)) {
-	    /* Checks the valid username */
-	    throw new Exception("Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
-	} else if (account.getPassword() != null && !account.getPassword().matches(pwdRegex)) {
-	    /* Checks the safe password satisfy with pattern or not */
-	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
-	} else {	    
+	if (account.getSocialId() == null || account.getSocialId().isEmpty()) {
+	    if (account.getUsername() == null || !account.getUsername().matches(usernameRegex)) {
+		/* Checks the valid username */
+		throw new Exception("Username must be at least 3 character start with an alphabetic. "
+			+ "Can contain number, - and _, but no space");
+	    } else if (account.getPassword() != null && !account.getPassword().matches(pwdRegex)) {
+		/* Checks the safe password satisfy with pattern or not */
+		throw new Exception("Password must be at least 8 character, one uppercase and one number");
+	    } else {
+		subcriberDAO.edit(account);
+	    }
+	} else {
 	    subcriberDAO.edit(account);
 	}
     }
@@ -112,23 +136,50 @@ public class SubcriberService implements IAccountService<SubcriberModel> {
 	}
     }
 
+    /**
+     * Checks existed subcriber's account for logging in system
+     * 
+     * @param account A SubcriberModel containing subcriber's attribute for checking
+     * @return A SubcriberModel representing the subcriber's attribute from database
+     * @throws SQLException
+     * @throws Exception
+     * @see SubcriberModel
+     */
     @Override
-    public SubcriberModel checkLogin(String username, String password) throws SQLException, Exception {
+    public SubcriberModel checkLogin(SubcriberModel account) throws SQLException, Exception {
 	SubcriberModel subcriber = null;
-	/* Regex pattern for nice username */
-	String usernameRegex = "[a-zA-Z][a-zA-Z0-9-_]{3,32}";
-	/* Regex Pattern for safe password */
-	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
-	if (!username.matches(usernameRegex)) {
-	    /* Checks the valid username */
-	    throw new Exception("Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
-	} else if (!password.matches(pwdRegex)) {
-	    /* Checks the safe password satisfy with pattern or not */
-	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
-	} else {
-	    subcriber = subcriberDAO.checkLogin(username, password);
-	}
+	    /* Regex pattern for nice username */
+	    String usernameRegex = "[a-zA-Z][a-zA-Z0-9-_]{3,32}";
+	    /* Regex Pattern for safe password */
+	    String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
+	    if (!account.getUsername().matches(usernameRegex)) {
+		/* Checks the valid username */
+		throw new Exception("Username must be at least 3 character start with an alphabetic. "
+			+ "Can contain number, - and _, but no space");
+	    } else if (!account.getPassword().matches(pwdRegex)) {
+		/* Checks the safe password satisfy with pattern or not */
+		throw new Exception("Password must be at least 8 character, one uppercase and one number");
+	    } else {
+		subcriber = subcriberDAO.checkLogin(account);
+	    }
 	return subcriber;
+    }
+
+    /**
+     * Check login subcriber's account which registered by social account
+     * 
+     * @param account A SubcriberModel containing the subcriber's attribute for
+     *                checking
+     * @return A SubcriberModel representing the subcriber's attribute from database
+     * @see SubcriberModel
+     */
+    @Override
+    public SubcriberModel socialLogin(SubcriberModel account) throws SQLException, Exception {
+	SubcriberModel validUser = subcriberDAO.socialLogin(account);
+	if (validUser == null) {
+	    throw new Exception("Account is not existed. Please Sign Up to continue.");
+	}
+	return validUser;
     }
 
     @Override
@@ -140,14 +191,16 @@ public class SubcriberService implements IAccountService<SubcriberModel> {
 	if (!newPwd.getPassword().matches(pwdRegex)) {
 	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
 	} else {
-	    subcriber = subcriberDAO.checkLogin(newPwd.getUsername(), newPwd.getCurrPassword());
+	    SubcriberModel account = new SubcriberModel();
+	    BeanUtils.copyProperties(account, newPwd);
+	    subcriber = subcriberDAO.checkLogin(account);
 	    if (subcriber != null) {
 		subcriberDAO.changePassword(subcriber.getId(), newPwd.getConfirmPassword());
 	    } else {
 		throw new Exception("Current password is incorrect");
 	    }
 	}
-	
+
     }
 
     @Override
@@ -159,7 +212,7 @@ public class SubcriberService implements IAccountService<SubcriberModel> {
     @Override
     public void resetFailedAttempts(String username) throws SQLException, Exception {
 	subcriberDAO.updateFailedAttempts(0, username);
-	
+
     }
 
     @Override
@@ -195,7 +248,8 @@ public class SubcriberService implements IAccountService<SubcriberModel> {
 	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
 	if (!account.getUsername().matches(usernameRegex)) {
 	    /* Checks the valid username */
-	    throw new Exception("Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
+	    throw new Exception(
+		    "Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
 	} else if (!account.getPassword().matches(pwdRegex)) {
 	    /* Checks the safe password satisfy with pattern or not */
 	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
@@ -204,7 +258,7 @@ public class SubcriberService implements IAccountService<SubcriberModel> {
 	    if (userAttempt != null) {
 		if (userAttempt.isAccountNonLocked() && userAttempt.isActive()) {
 		    if (userAttempt.getFailedAttempts() < MAX_FAILED_ATTEMPTS - 1) {
-			loginUser = checkLogin(account.getUsername(), account.getPassword());
+			loginUser = checkLogin(account);
 			if (loginUser == null) {
 			    increaseFailedAttempts(userAttempt);
 			    throw new Exception("Invalid Username or Password.");
@@ -218,7 +272,7 @@ public class SubcriberService implements IAccountService<SubcriberModel> {
 		    }
 		} else if (!userAttempt.isAccountNonLocked() && userAttempt.isActive()) {
 		    if (unlockWhenTimeExpired(userAttempt)) {
-			loginUser = checkLogin(account.getUsername(), account.getPassword());
+			loginUser = checkLogin(account);
 			if (loginUser == null) {
 			    increaseFailedAttempts(userAttempt);
 			    throw new Exception("Invalid Username or Password");

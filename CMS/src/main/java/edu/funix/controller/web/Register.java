@@ -9,6 +9,7 @@ package edu.funix.controller.web;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.security.GeneralSecurityException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.LoggerFactory;
 
+import edu.funix.Utils.GoogleUtil;
 import edu.funix.Utils.Mailer;
 import edu.funix.Utils.PageInfo;
 import edu.funix.Utils.PageType;
@@ -70,36 +72,63 @@ public class Register extends HttpServlet {
 	    throws ServletException, IOException {
 	logger.info("called http post method, referer is: " + request.getHeader("referer"));
 	SubcriberModel newUser = new SubcriberModel();
+	String credential = request.getParameter("credential");
 	String message = null;
 	String error = null;
-	try {
-	    logger.debug("Mapping user's attributes to user model");
-	    BeanUtils.populate(newUser, request.getParameterMap());
-	} catch (IllegalAccessException | InvocationTargetException e) {
-	    error = e.getMessage();
-	    logger.error(e.getMessage(), e);
-	    SlackApiUtil.pushLog(request, e.getMessage());
+
+	if (credential == null || credential.isEmpty()) {
+	    try {
+		logger.debug("Mapping user's attributes to user model");
+		BeanUtils.populate(newUser, request.getParameterMap());
+	    } catch (IllegalAccessException | InvocationTargetException e) {
+		error = e.getMessage();
+		logger.error(e.getMessage(), e);
+		SlackApiUtil.pushLog(request, e.getMessage());
+	    }
+	    /* Auto generate a safe password has length = 10 */
+	    logger.debug("Generate random password");
+	    String password = PasswordUtils.generate(10);
+	    newUser.setPassword(password);
+	    try {
+		logger.debug("Insert new user");
+		subcriberService.save(newUser);
+		logger.debug("{}", newUser);
+		/* Send the password to user by mail */
+		Mailer.send(newUser.getEmail(), "Hello New User", Mailer.getTemplate(password));
+		logger.debug("Send password to user by mail - Success");
+		message = "Account is created, please login to continue";
+	    } catch (Exception e) {
+		error = e.getMessage();
+		logger.error(e.getMessage(), e);
+		SlackApiUtil.pushLog(request, e.getMessage());
+	    }
+	    logger.info("Forward to login page");
+	    request.setAttribute("error", error);
+	    request.setAttribute("message", message);
+	    PageInfo.login(request, response, PageType.LOGIN);
+	} else {
+	    try {
+		logger.debug("Verify the ID Token");
+		BeanUtils.copyProperties(newUser, GoogleUtil.decode(credential));
+		try {
+		    logger.debug("Insert new user");
+		    subcriberService.save(newUser);
+		    logger.debug("{}", newUser);
+		    message = "Account is created, please login to continue";
+		} catch (Exception e) {
+		    error = e.getMessage();
+		    logger.error(e.getMessage(), e);
+		    SlackApiUtil.pushLog(request, e.getMessage());
+		}
+		request.setAttribute("error", error);
+		request.setAttribute("message", message);
+		PageInfo.login(request, response, PageType.LOGIN);
+
+	    } catch (GeneralSecurityException | IOException | IllegalAccessException | InvocationTargetException e) {
+		error = e.getMessage();
+		logger.error(e.getMessage(), e);
+		SlackApiUtil.pushLog(request, e.getMessage());
+	    }
 	}
-	/* Auto generate a safe password has length = 10 */
-	logger.debug("Generate random password");
-	String password = PasswordUtils.generate(10);
-	newUser.setPassword(password);
-	try {
-	    logger.debug("Insert new user");
-	    subcriberService.save(newUser);
-	    logger.debug("{}", newUser);
-	    /* Send the password to user by mail */
-	    Mailer.send(newUser.getEmail(), "Hello New User", Mailer.getTemplate(password));
-	    logger.debug("Send password to user by mail - Success");
-	    message = "Account is created, please login to continue";
-	} catch (Exception e) {
-	    error = e.getMessage();
-	    logger.error(e.getMessage(), e);
-	    SlackApiUtil.pushLog(request, e.getMessage());
-	}
-	logger.info("Forward to login page");
-	request.setAttribute("error", error);
-	request.setAttribute("message", message);
-	PageInfo.login(request, response, PageType.LOGIN);
     }
 }

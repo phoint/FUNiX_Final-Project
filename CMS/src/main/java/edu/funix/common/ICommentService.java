@@ -3,6 +3,7 @@ package edu.funix.common;
 import java.sql.SQLException;
 import java.util.List;
 
+import edu.funix.model.AccountModel;
 import edu.funix.model.CommentModel;
 
 public interface ICommentService {
@@ -14,7 +15,7 @@ public interface ICommentService {
 
     List<CommentModel> findAllReply(long id) throws SQLException, Exception;
     
-    void save(CommentModel comment) throws SQLException, Exception;
+    <T> void save(CommentModel comment, AccountModel<T> account) throws SQLException, Exception;
     
     void delete(String[] ids) throws NumberFormatException, SQLException, Exception;
     

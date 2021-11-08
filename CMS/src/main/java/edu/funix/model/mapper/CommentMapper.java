@@ -15,6 +15,7 @@ public class CommentMapper implements RowMapper<CommentModel> {
 			comment.setComContent(rs.getString("ComContent"));
 			comment.setCreatedDate(rs.getDate("CreateDate"));
 			comment.setCreatedBy(rs.getLong("SubmitBy"));
+			comment.setSeedBy(rs.getLong("SeedingBy"));
 			comment.setSubmitTo(rs.getLong("SubmitTo"));
 			comment.setReplyTo(rs.getLong("ReplyTo"));
 			comment.setConfirm(rs.getInt("Confirm") == 1 ? true : false);

@@ -33,5 +33,17 @@
 					<button class="btn btn-sm btn-primary" type="submit">Register</button>
 				</div>
 			</div>
+			<div class="mt-3">
+				<div id="g_id_onload"
+					data-client_id="486895749872-mg1uv9uvfe7kvmff3si6mna3dcq57ca0.apps.googleusercontent.com"
+					data-context="signup" data-ux_mode="popup"
+					data-login_uri="http://localhost:8080/CMS/register" data-nonce=""
+					data-auto_prompt="false"></div>
+
+				<div class="g_id_signin" data-type="standard"
+					data-shape="rectangular" data-theme="outline"
+					data-text="$ {button.text}" data-size="medium" data-locale="en-US"
+					data-logo_alignment="left"></div>
+			</div>
 		</form>
 	</div>

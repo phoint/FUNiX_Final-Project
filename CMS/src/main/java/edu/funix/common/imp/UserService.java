@@ -4,19 +4,22 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.beanutils.BeanUtils;
+
 import edu.funix.common.IAccountService;
 import edu.funix.common.IPageableService;
-import edu.funix.common.IUserService;
+import edu.funix.dao.IAccountDAO;
 import edu.funix.dao.IPostDAO;
-import edu.funix.dao.IUserDAO;
 import edu.funix.dao.imp.PostDAO;
 import edu.funix.dao.imp.UserDAO;
 import edu.funix.domain.ChangePasswordForm;
+import edu.funix.model.CommentModel;
 import edu.funix.model.PageModel;
+import edu.funix.model.SubcriberModel;
 import edu.funix.model.UserModel;
 
 public class UserService implements IAccountService<UserModel> {
-    private IUserDAO userDAO;
+    private IAccountDAO<UserModel> userDAO;
     private IPostDAO postDAO;
     private IPageableService paging;
     /* The limited number of attempts */
@@ -120,22 +123,31 @@ public class UserService implements IAccountService<UserModel> {
     }
 
     @Override
-    public UserModel checkLogin(String username, String password) throws SQLException, Exception {
+    public UserModel checkLogin(UserModel account) throws SQLException, Exception {
 	UserModel user = null;
 	/* Regex pattern for nice username */
 	String usernameRegex = "[a-zA-Z][a-zA-Z0-9-_]{3,32}";
 	/* Regex Pattern for safe password */
 	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
-	if (!username.matches(usernameRegex)) {
+	if (!account.getUsername().matches(usernameRegex)) {
 	    /* Checks the valid username */
 	    throw new Exception("Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
-	} else if (!password.matches(pwdRegex)) {
+	} else if (!account.getPassword().matches(pwdRegex)) {
 	    /* Checks the safe password satisfy with pattern or not */
 	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
 	} else {
-	    user = userDAO.checkLogin(username, password);
+	    user = userDAO.checkLogin(account);
 	}
 	return user;
+    }
+    
+    @Override
+    public UserModel socialLogin(UserModel account) throws SQLException, Exception {
+	UserModel validUser = userDAO.socialLogin(account);
+	if (validUser == null) {
+	    throw new Exception("Account is not existed. Please Sign Up to continue.");
+	}
+	return validUser;
     }
 
     @Override
@@ -147,7 +159,9 @@ public class UserService implements IAccountService<UserModel> {
 	if (!newPwd.getPassword().matches(pwdRegex)) {
 	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
 	} else {
-	    user = userDAO.checkLogin(newPwd.getUsername(), newPwd.getCurrPassword());
+	    UserModel account = new UserModel();
+	    BeanUtils.copyProperties(account, newPwd);
+	    user = userDAO.checkLogin(account);
 	    if (user != null) {
 		userDAO.changePassword(user.getId(), newPwd.getConfirmPassword());
 	    } else {
@@ -209,7 +223,7 @@ public class UserService implements IAccountService<UserModel> {
 	    if (userAttempt != null) {
 		if (userAttempt.isAccountNonLocked() && userAttempt.isActive()) {
 		    if (userAttempt.getFailedAttempts() < MAX_FAILED_ATTEMPTS - 1) {
-			loginUser = checkLogin(user.getUsername(), user.getPassword());
+			loginUser = checkLogin(user);
 			if (loginUser == null) {
 			    increaseFailedAttempts(userAttempt);
 			    throw new Exception("Invalid Username or Password.");
@@ -223,7 +237,7 @@ public class UserService implements IAccountService<UserModel> {
 		    }
 		} else if (!userAttempt.isAccountNonLocked() && userAttempt.isActive()) {
 		    if (unlockWhenTimeExpired(userAttempt)) {
-			loginUser = checkLogin(user.getUsername(), user.getPassword());
+			loginUser = checkLogin(user);
 			if (loginUser == null) {
 			    increaseFailedAttempts(userAttempt);
 			    throw new Exception("Invalid Username or Password");

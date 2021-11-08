@@ -115,14 +115,24 @@ public interface IAccountDAO<T> extends GenericDAO<T> {
     /**
      * Checks existed user's account for logging in system
      * 
-     * @param username A String containing the account's username
-     * @param password A String containing the account's password
-     * @return A UserModel representing the user's attribute
+     * @param username An AccountModel containing the user's attribute for checking
+     * @return An AccountModel representing the user's attribute from database
      * @throws SQLException
      * @throws Exception
      * @see UserModel
      */
-    T checkLogin(String username, String password) throws SQLException, Exception;
+    T checkLogin(T account) throws SQLException, Exception;
+
+    /**
+     * Checks login for user's account which register by social account
+     * 
+     * @param username An AccountModel containing the user's attribute for checking
+     * @return An AccountModel representing the user's attribute from database
+     * @return
+     * @throws SQLException
+     * @throws Exception
+     */
+    T socialLogin(T account) throws SQLException, Exception;
 
     /**
      * Gets all the users will be displayed on one specific page. The PageModel's
@@ -130,10 +140,10 @@ public interface IAccountDAO<T> extends GenericDAO<T> {
      * database.
      * 
      * @param page A PageModel containing information for pagination
-     * @return A List representing the users on specific page
+     * @return A List representing the accounts on specific page
      * @throws SQLException
      * @throws Exception
-     * @see UserModel
+     * @see AccountModel
      * @see PageModel
      */
     List<T> findAll(PageModel page) throws SQLException, Exception;

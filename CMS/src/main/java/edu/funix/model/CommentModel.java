@@ -8,12 +8,24 @@ public class CommentModel extends AbstractModel<CommentModel> {
     private Long replyTo;
     private Boolean confirm;
     private List<CommentModel> replies;
-    private UserModel author;
-    private PostModel responseIn;
+    private Long seedBy;
+    private AccountModel<?> author;
+    private PostModel responseIn; 
 
     public CommentModel() {
 	super();
     }
+
+    
+    public Long getSeedBy() {
+        return seedBy;
+    }
+
+
+    public void setSeedBy(Long seedBy) {
+        this.seedBy = seedBy;
+    }
+
 
     public String getComContent() {
 	return comContent;
@@ -55,11 +67,11 @@ public class CommentModel extends AbstractModel<CommentModel> {
 	this.replies = replies;
     }
 
-    public UserModel getAuthor() {
+    public AccountModel<?> getAuthor() {
 	return author;
     }
 
-    public void setAuthor(UserModel author) {
+    public void setAuthor(AccountModel<?> author) {
 	this.author = author;
     }
 

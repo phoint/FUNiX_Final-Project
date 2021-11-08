@@ -93,24 +93,37 @@ public class SubcriberDAO extends AbstractDAO<SubcriberModel> implements IAccoun
 
     @Override
     public Long save(SubcriberModel subcriber) throws SQLException, Exception {
-	String sql = "INSERT INTO tblSUBCRIBER(UserMail, Username, Pwd,"
-		+ "DisplayName) VALUES (?,?,HASHBYTES('SHA2_256', ?),?)";
-	return insert(sql, subcriber.getEmail(), subcriber.getUsername(), subcriber.getPassword(), subcriber.getDisplayName());
+	Long id = null;
+	if (subcriber.getSocialId() == null) {
+	    String sql = "INSERT INTO tblSUBCRIBER(UserMail, Username, Pwd,"
+		    + "DisplayName, CreatedFrom) VALUES (?,?,HASHBYTES('SHA2_256', ?),?, 'form')";
+	    id = insert(sql, subcriber.getEmail(), subcriber.getUsername(), subcriber.getPassword(),
+		    subcriber.getDisplayName());
+	} else {
+	    StringBuilder sql = new StringBuilder(
+		    "INSERT INTO tblSUBCRIBER(UserMail, Username, Pwd, DisplayName, CreatedFrom, SocialID, Avatar) ");
+	    sql.append("VALUES (?, ?, HASHBYTES('SHA2_256', ?), ?, ?, ?, ? )");
+	    id = insert(sql.toString(), subcriber.getEmail(), subcriber.getEmail(), subcriber.getSocialId(),
+		    subcriber.getDisplayName(), subcriber.getRegisteredFrom(), subcriber.getSocialId(),
+		    subcriber.getPictureUrl());
+	}
+	return id;
     }
 
     @Override
     public void edit(SubcriberModel subcriber) throws SQLException, Exception {
 	StringBuilder sql = new StringBuilder("UPDATE tblSUBCRIBER SET UserMail = ?, ");
-	if (subcriber.getPassword() != null) {	    
+	if (subcriber.getPassword() != null) {
 	    sql.append("Pwd = HASHBYTES('SHA2_256', ?), ");
 	    sql.append("DisplayName = ? WHERE UserID = ?");
 	} else {
 	    sql.append("DisplayName = ? WHERE UserID = ?");
 	}
-	if (subcriber.getPassword() != null) {	    	    
-	    update(sql.toString(), subcriber.getEmail(), subcriber.getPassword(), subcriber.getDisplayName(), subcriber.getId());
+	if (subcriber.getPassword() != null) {
+	    update(sql.toString(), subcriber.getEmail(), subcriber.getPassword(), subcriber.getDisplayName(),
+		    subcriber.getId());
 	} else {
-	    update(sql.toString(), subcriber.getEmail(), subcriber.getDisplayName(), subcriber.getId());	    
+	    update(sql.toString(), subcriber.getEmail(), subcriber.getDisplayName(), subcriber.getId());
 	}
     }
 
@@ -119,12 +132,12 @@ public class SubcriberDAO extends AbstractDAO<SubcriberModel> implements IAccoun
 	String sql = "SELECT count(*) FROM tblSUBCRIBER";
 	return count(sql);
     }
-    
+
     @Override
     public Long getTotalItems(String username) throws SQLException, Exception {
-        String sql = "SELECT count(*) FROM tblSUBCRIBER WHERE username LIKE ?";
-        String key = "%" + username + "%";
-        return count(sql, key);
+	String sql = "SELECT count(*) FROM tblSUBCRIBER WHERE username LIKE ?";
+	String key = "%" + username + "%";
+	return count(sql, key);
     }
 
     @Override
@@ -140,9 +153,9 @@ public class SubcriberDAO extends AbstractDAO<SubcriberModel> implements IAccoun
     }
 
     @Override
-    public SubcriberModel checkLogin(String username, String password) throws SQLException, Exception {
+    public SubcriberModel checkLogin(SubcriberModel account) throws SQLException, Exception {
 	String sql = "SELECT * FROM tblSUBCRIBER WHERE Username = ? AND Pwd = HASHBYTES('SHA2_256', ?) AND Active = 1";
-	List<SubcriberModel> validUser = query(sql, new SubcriberMapper(), username, password);
+	List<SubcriberModel> validUser = query(sql, new SubcriberMapper(), account.getUsername(), account.getPassword());
 	return validUser.isEmpty() ? null : validUser.get(0);
     }
 
@@ -151,17 +164,25 @@ public class SubcriberDAO extends AbstractDAO<SubcriberModel> implements IAccoun
 	String sql = "UPDATE tblSUBCRIBER SET Pwd = HASHBYTES('SHA2_256', ?) WHERE UserID = ?";
 	update(sql, newPassword, userID);
     }
-    
+
     @Override
     public void updateFailedAttempts(int failedAttempts, String username) throws SQLException, Exception {
-        String sql = "UPDATE tblSUBCRIBER SET Failed_attempts = ? WHERE Username = ?";
-        update(sql, failedAttempts, username);
+	String sql = "UPDATE tblSUBCRIBER SET Failed_attempts = ? WHERE Username = ?";
+	update(sql, failedAttempts, username);
     }
-    
+
     @Override
     public void updateLockUser(SubcriberModel subcriber) throws SQLException, Exception {
 	String sql = "UPDATE tblSUBCRIBER SET Acc_non_locked = ?, Lock_time = ?, Failed_attempts = ? WHERE Username = ?";
-	update(sql, subcriber.isAccountNonLocked() ? 1 : 0, subcriber.getLockTime(), subcriber.getFailedAttempts(), subcriber.getUsername());
+	update(sql, subcriber.isAccountNonLocked() ? 1 : 0, subcriber.getLockTime(), subcriber.getFailedAttempts(),
+		subcriber.getUsername());
+    }
+
+    @Override
+    public SubcriberModel socialLogin(SubcriberModel account) throws SQLException, Exception {
+	String sql = "SELECT * FROM tblSUBCRIBER WHERE SocialID = ?";
+	List<SubcriberModel> subcriber = query(sql, new SubcriberMapper(), account.getSocialId());
+	return subcriber.isEmpty() ? null : subcriber.get(0);
     }
 
 }

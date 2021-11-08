@@ -34,6 +34,7 @@ import edu.funix.model.CommentModel;
 import edu.funix.model.PageModel;
 import edu.funix.model.PostModel;
 import edu.funix.model.UserModel;
+import edu.funix.model.SubcriberModel;
 
 /**
  * Servlet implementation class Home
@@ -142,13 +143,13 @@ public class Home extends HttpServlet {
 	    }
 	    /* Save the comment */
 	    if (SessionUtil.isLogin(request)) {
-		logger.debug("Get author for comment");
-		UserModel loginUser = (UserModel) SessionUtil.get(request, "loginUser");
-		comment.setCreatedBy(loginUser.getId());
-		logger.debug("{}", comment);
 		try {
 		    logger.debug("Save the comment");
-		    commentService.save(comment);
+		    if (SessionUtil.get(request, "userType").equals("User")) {
+			commentService.save(comment, (UserModel) SessionUtil.get(request, "loginUser"));			
+		    } else {
+			commentService.save(comment, (SubcriberModel) SessionUtil.get(request, "loginUser"));					
+		    }
 		    message = "The comment is submited";
 		    logger.debug("Success");
 		} catch (Exception e) {

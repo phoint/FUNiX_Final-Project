@@ -40,14 +40,15 @@
 					<label class="col-lg-3 col-form-label" for="email">Email</label>
 					<div class="col-lg-9">
 						<input id="email" class="form-control" type="text" name="email"
-							value="${subcribers.email}"> <small id="slugHelpBlock"
+							value="${subcribers.email}" <c:if test="${subcribers.registeredFrom ne 'form'}">readonly</c:if>> <small id="slugHelpBlock"
 							class="form-text text-muted"> The email for receiving
 							weekly/ monthly news</small>
 					</div>
 				</div>
 				<c:if test="${not empty param.action && param.action eq 'edit'}">
 				  <input type="hidden" name="action" value="edit">
-				  <input type="hidden" name="id" value="${param.id}">				  
+				  <input type="hidden" name="id" value="${param.id}">
+				  <c:if test="${subcribers.registeredFrom eq 'form'}">	  
 					<div class="form-group row">
 						<label for="password" class="col-lg-3 col-form-label">Password</label>
 						<div class="col-lg-9">
@@ -56,6 +57,7 @@
 								value="reset">
 						</div>
 					</div>
+					</c:if>
 				</c:if>
 				<div class="d-flex flex-row-reverse align-items-center">
 					<button class="btn btn-primary" type="submit">${not empty param.action && param.action eq 'edit' ? 'Update' : 'Add New'}</button>
@@ -100,6 +102,7 @@
 							<th>Username</th>
 							<th>Name</th>
 							<th>Email</th>
+							<th>From</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -118,6 +121,7 @@
 								</td>
 								<td>${subcriber.displayName}</td>
 								<td>${subcriber.email}</td>
+								<td>${subcriber.registeredFrom}</td>
 							</tr>
 						</c:forEach>
 					</tbody>

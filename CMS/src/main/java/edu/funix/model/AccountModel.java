@@ -8,10 +8,39 @@ public class AccountModel<T> extends AbstractModel<T> {
     private String password;
     private String displayName;
     private boolean active;
+    private String pictureUrl;
     /* Attributes for limiting login failed attempts */
     private boolean accountNonLocked;
     private int failedAttempts;
     private Timestamp lockTime;
+    /* Social Login's Attribute */
+    private String registeredFrom;
+    private String socialId;
+
+    
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
+
+    public String getRegisteredFrom() {
+        return registeredFrom;
+    }
+
+    public void setRegisteredFrom(String registeredFrom) {
+        this.registeredFrom = registeredFrom;
+    }
+
+    public String getSocialId() {
+        return socialId;
+    }
+
+    public void setSocialId(String socialId) {
+        this.socialId = socialId;
+    }
 
     public AccountModel() {
 	super();

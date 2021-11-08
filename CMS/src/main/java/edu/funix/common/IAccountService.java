@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import edu.funix.domain.ChangePasswordForm;
+import edu.funix.model.CommentModel;
 import edu.funix.model.PageModel;
 import edu.funix.model.UserModel;
 
@@ -122,14 +123,22 @@ public interface IAccountService<T> {
     /**
      * Checks existed user's account for logging in system
      * 
-     * @param username A String containing the account's username
-     * @param password A String containing the account's password
-     * @return A UserModel representing the user's attribute
+     * @param account An GenericModel containing account's attribute for checking
+     * @return A GenericModel representing the account's attribute from database
      * @throws SQLException
      * @throws Exception
-     * @see UserModel
      */
-    T checkLogin(String username, String password) throws SQLException, Exception;
+    T checkLogin(T account) throws SQLException, Exception;
+
+    /**
+     * Check login account which registered by social account
+     * 
+     * @param account An GenericModel containing account's attribute for checking
+     * @return A GenericModel representing the account's attribute from database
+     * @throws SQLException
+     * @throws Exception
+     */
+    T socialLogin(T account) throws SQLException, Exception;
 
     /**
      * Updates new password for user has id matching
@@ -178,5 +187,15 @@ public interface IAccountService<T> {
      */
     boolean unlockWhenTimeExpired(T user) throws SQLException, Exception;
 
-    T LoginAttempt(T user) throws SQLException, Exception;
+    /**
+     * Checks the login attempts and prevents login for a while if failed a limited
+     * times
+     * 
+     * @param account A GenericModel containing the account's attributes for
+     *                checking login
+     * @return A GenericModel representing the account'sattributes from database
+     * @throws SQLException
+     * @throws Exception
+     */
+    T LoginAttempt(T account) throws SQLException, Exception;
 }

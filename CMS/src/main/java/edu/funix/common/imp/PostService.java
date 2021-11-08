@@ -16,19 +16,20 @@ import edu.funix.common.ICommentService;
 import edu.funix.common.IPageableService;
 import edu.funix.common.IPostGroupService;
 import edu.funix.common.IPostService;
+import edu.funix.dao.IAccountDAO;
 import edu.funix.dao.IPostDAO;
 import edu.funix.dao.IPostGroupedDAO;
-import edu.funix.dao.IUserDAO;
 import edu.funix.dao.imp.PostDAO;
 import edu.funix.dao.imp.PostGroupedDAO;
 import edu.funix.dao.imp.UserDAO;
 import edu.funix.model.PageModel;
 import edu.funix.model.PostModel;
+import edu.funix.model.UserModel;
 
 public class PostService implements IPostService {
 
     private IPostDAO postDAO;
-    private IUserDAO userDAO;
+    private IAccountDAO<UserModel> userDAO;
     private IPostGroupedDAO postGroupDAO;
     private IPostGroupService postGroupService;
     private ICommentService commentService;
