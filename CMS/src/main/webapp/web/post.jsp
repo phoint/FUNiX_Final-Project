@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<div class="container post-detail">
+<div class="container-fluid post-detail">
 	<section class="row justify-content-center">
 		<div class="col-sm-8 heading-container">
 			<c:forEach items="${post.categories}" var="category">
@@ -140,7 +140,9 @@
 				<%-- 				<c:if test="${empty sessionScope.loginUser }">
 					<div class="row">
 						<div class="col">
-						  <a href="<c:url value="login?from=${pageContext.request.pathInfo}?${pageContext.request.queryString}"/>">Log in</a> or <a href="<c:url value="register?from=${pageContext.request.requestURI}"/>">Sign up</a> to write comment.
+						  <a href="<c:url value="login?from=${pageContext.request.pathInfo}?${pageContext.request.queryString}"/>">
+						  Log in</a> or <a href="<c:url value="register?from=${pageContext.request.requestURI}"/>">
+						  Sign up</a> to write comment.
 						</div>
 					</div>
 				</c:if> --%>
@@ -152,8 +154,8 @@
 		<div class="col-md-3">
 			<h4>Danh mục</h4>
 			<c:forEach items="${post.categories}" var="category">
-				<div class="post-properties py-1 position-relative">
-					<a class="category-display text-decoration-none stretched-link"
+				<div class="post-properties py-1">
+					<a class="category-display text-decoration-none"
 						href="<c:url value="?category=${category.id}"/>">${category.name}</a>
 				</div>
 			</c:forEach>

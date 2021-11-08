@@ -5,28 +5,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<meta name="Description" content="Enter your description here" />
-<title>${pageInfo.title }</title>
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link
-	href="https://fonts.googleapis.com/css2?family=Barlow:wght@100;300;400;700&family=Yeseva+One&family=Goldman&display=swap"
-	rel="stylesheet">
-<link rel="stylesheet" href="<c:url value="web/css/home.css"/>">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="Description" content="Enter your description here" />
+  <title>${pageInfo.title }</title>
+  <link rel="stylesheet" 
+    href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Barlow:wght@100;300;400;700&family=Yeseva+One&family=Goldman&display=swap">
+  <link rel="stylesheet" href="<c:url value="web/css/home.css"/>">
 </head>
 <body>
 	<header>
-		<div class="container position-relative">
+		<div class="container">
 			<div class="row">
-				<nav
-					class="navbar navbar-expand-lg navbar-dark bg-dark w-100 rounded position-absolute">
+				<nav class="navbar navbar-expand-lg navbar-dark bg-dark rounded">
 					<a class="navbar-brand" href="#">Navbar</a>
 					<button class="navbar-toggler" type="button" data-toggle="collapse"
 						data-target="#navbarSupportedContent"
@@ -37,12 +35,18 @@
 
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav mr-auto">
-							<li class="nav-item active"><a class="nav-link" href="#">Home
-									<span class="sr-only">(current)</span>
-							</a></li>
-							<li class="nav-item"><a class="nav-link" href="#">Link</a></li>
-							<li class="nav-item"><a class="nav-link disabled" href="#"
-								tabindex="-1" aria-disabled="true">Disabled</a></li>
+							<li class="nav-item active">
+						    <a class="nav-link" href="#">Home
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+							<li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+							</li>
+							<li class="nav-item">
+						    <a class="nav-link disabled" href="#" tabindex="-1" 
+						    aria-disabled="true">Disabled</a>
+					    </li>
 						</ul>
 						<form class="form-inline my-2 my-lg-0">
 							<input class="form-control mr-sm-2" type="search"
@@ -55,20 +59,21 @@
 								data-toggle="dropdown"> <i id="user-login"
 								class="far fa-user ml-sm-3"></i>
 							</a>
-							<div
-								class="dropdown-menu dropdown-menu-left dropdown-menu-lg-right bg-dark text-lg-right"
+							<div class="dropdown-menu dropdown-menu-left dropdown-menu-lg-right bg-dark text-lg-right"
 								aria-labelledby="navbarDropdown">
-								<c:if test="${empty loginUser}">
+							<c:if test="${empty loginUser}">
 								<a class="dropdown-item" href="login">Login</a> 
 								<a class="dropdown-item" href="register">Register</a> 
 								<a class="dropdown-item" href="#">Subcribe</a>
 								<a class="dropdown-item" href="login?action=resetPwd">Forgot Password</a>
-								</c:if>
-								<c:if test="${not empty loginUser}">
-								<c:if test="${userType eq 'User' && loginUser.role}"><a class="dropdown-item" href="admin/posts">Dasboard</a></c:if>							
+							</c:if>
+							<c:if test="${not empty loginUser}">
+							<c:if test="${userType eq 'User' && loginUser.role}">
+								<a class="dropdown-item" href="admin/posts">Dasboard</a>
+							</c:if>							
 								<a class="dropdown-item" href="account/password-change">Change Password</a>
 								<a class="dropdown-item" href="login?action=logout">Logout</a>
-								</c:if>
+							</c:if>
 							</div>
 						</div>
 					</div>
@@ -105,14 +110,10 @@
 			</div>
 		</div>
 	</footer>
-	<script
-		src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.slim.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
 	<script src="<c:url value="vendor/jquery.twbsPagination.min.js"/>"></script>
 	<script src="<c:url value="web/js/scripts.js"/>"></script>
 	<script type="text/javascript">

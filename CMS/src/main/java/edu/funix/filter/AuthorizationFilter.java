@@ -57,8 +57,13 @@ public class AuthorizationFilter implements Filter {
 	    if (SessionUtil.isLogin(request)) {
 		chain.doFilter(request, response);
 	    } else {
-		// TODO alerting access permission page for login user
-		response.sendRedirect(request.getContextPath() + "/login");
+		response.sendRedirect(request.getContextPath() + "/access-denied");
+	    }
+	} else if (url.contains("login")) {
+	    if (SessionUtil.isLogin(request)) {
+		response.sendRedirect(request.getContextPath() + "/access-denied?login-already=true");
+	    } else {		
+		chain.doFilter(request, response);
 	    }
 	} else {
 	    chain.doFilter(request, response);

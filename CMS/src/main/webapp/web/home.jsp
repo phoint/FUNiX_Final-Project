@@ -50,10 +50,12 @@
 			<div class="col-md-3 sidebar">
 				<h4>Danh mục</h4>
         <c:forEach items="${posts.categories}" var="category">
-        <div class="post-properties py-1 position-relative">
-          <a class="category-display text-decoration-none stretched-link" href="<c:url value="?category=${category.id}&title=${category.name }"/>">${category.name}</a>
+        <div class="post-properties py-1">
+          <a class="category-display text-decoration-none" 
+            href="<c:url value="?category=${category.id}&title=${category.name }"/>">
+            ${category.name}</a>
         </div>
-      </c:forEach>
+        </c:forEach>
 			</div>
 	</div>
 </div>
