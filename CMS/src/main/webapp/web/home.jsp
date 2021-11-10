@@ -4,7 +4,7 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="banner">
-			<img class="img-fluid" src="images/lede.jpg" alt="">
+			<img src="${applicationScope.webOpt.bannerPath}">
 		</div>
 	</div>
 </div>

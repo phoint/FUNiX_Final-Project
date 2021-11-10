@@ -17,12 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.LoggerFactory;
 
-import edu.funix.Utils.PageInfo;
-import edu.funix.Utils.PageType;
-import edu.funix.Utils.SlackApiUtil;
 import edu.funix.common.ICommentService;
 import edu.funix.common.imp.CommentService;
 import edu.funix.model.CommentModel;
+import edu.funix.utils.PageInfo;
+import edu.funix.utils.PageType;
+import edu.funix.utils.SlackApiUtil;
 
 /**
  * Servlet implementation class Comments

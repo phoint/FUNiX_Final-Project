@@ -20,10 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.LoggerFactory;
 
-import edu.funix.Utils.PageInfo;
-import edu.funix.Utils.PageType;
-import edu.funix.Utils.SessionUtil;
-import edu.funix.Utils.SlackApiUtil;
 import edu.funix.common.ICategoryService;
 import edu.funix.common.ICommentService;
 import edu.funix.common.IPostService;
@@ -34,6 +30,10 @@ import edu.funix.model.CommentModel;
 import edu.funix.model.PageModel;
 import edu.funix.model.PostModel;
 import edu.funix.model.UserModel;
+import edu.funix.utils.PageInfo;
+import edu.funix.utils.PageType;
+import edu.funix.utils.SessionUtil;
+import edu.funix.utils.SlackApiUtil;
 import edu.funix.model.SubcriberModel;
 
 /**

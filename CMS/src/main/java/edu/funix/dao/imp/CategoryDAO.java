@@ -85,7 +85,7 @@ public class CategoryDAO extends AbstractDAO<CategoryModel> implements ICategory
     @Override
     public void delete(long id) throws SQLException, Exception {
 	String sql = "DELETE FROM tblCATEGORY WHERE CatID = ?";
-	query(sql, new PostGroupedMapper(), id);
+	update(sql, id);
     }
 
 }

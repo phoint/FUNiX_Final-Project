@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.funix.Utils.PageInfo;
-import edu.funix.Utils.PageType;
+import edu.funix.utils.PageInfo;
+import edu.funix.utils.PageType;
 
 /**
  * Servlet implementation class AccessDenied

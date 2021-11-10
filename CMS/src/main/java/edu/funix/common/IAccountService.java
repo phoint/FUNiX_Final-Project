@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import edu.funix.domain.ChangePasswordForm;
-import edu.funix.model.CommentModel;
 import edu.funix.model.PageModel;
 import edu.funix.model.UserModel;
 

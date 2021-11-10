@@ -19,13 +19,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.LoggerFactory;
 
-import edu.funix.Utils.PageInfo;
-import edu.funix.Utils.PageType;
-import edu.funix.Utils.SlackApiUtil;
+import edu.funix.common.ICategoryService;
 import edu.funix.common.IPostService;
+import edu.funix.common.imp.CategoryService;
 import edu.funix.common.imp.PostService;
 import edu.funix.model.PageModel;
 import edu.funix.model.PostModel;
+import edu.funix.utils.PageInfo;
+import edu.funix.utils.PageType;
+import edu.funix.utils.SlackApiUtil;
 
 /**
  * Servlet implementation class Posts
@@ -35,12 +37,14 @@ public class Posts extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Posts.class);
     private IPostService postService;
+    private ICategoryService categoryService;
 
     /**
      * @see HttpServlet#HttpServlet()
      */
     public Posts() {
 	postService = new PostService();
+	categoryService = new CategoryService();
     }
 
     /**
@@ -123,7 +127,15 @@ public class Posts extends HttpServlet {
 	    logger.error(e.getMessage(), e);
 	    SlackApiUtil.pushLog(request, e.getMessage());
 	}
-
+	try {
+	    logger.debug("Set the categories for dropdown filter");
+	    post.setCategories(categoryService.findAll());
+	    logger.debug("{}", post.getCategories());
+	} catch (Exception e) {
+	    error = "Something wrong, try later!";
+	    logger.error(e.getMessage(), e);
+	    SlackApiUtil.pushLog(request, e.getMessage());
+	}
 	/* Forward to Post view */
 	request.setAttribute("message", message);
 	request.setAttribute("error", error);

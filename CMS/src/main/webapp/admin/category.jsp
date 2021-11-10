@@ -102,16 +102,6 @@
 								<td>${cat.totalPost}</td>
 							</tr>
 						</c:forEach>
-						<tr>
-							<td><input type="checkbox" name="" id=""></td>
-							<td>
-								<div>title</div>
-								<div>edit</div>
-							</td>
-							<td>data</td>
-							<td>placeholder</td>
-							<td>text</td>
-						</tr>
 					</tbody>
 				</table>
 				<div class="container justify-content-center">
@@ -119,7 +109,7 @@
 						<ul class="pagination" id="pagination"></ul>
 					</nav>
 				</div>
-				<form action="<c:url value="/admin-categories"/>"
+				<form action="<c:url value="categories"/>"
 					id="pagination-info" method="get">
 					<input type="hidden" name="maxItem" id="maxItem" /> <input
 						type="hidden" name="currentPage" id="currentPage" />

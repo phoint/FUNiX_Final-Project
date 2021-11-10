@@ -20,17 +20,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.LoggerFactory;
 
-import edu.funix.Utils.GoogleUtil;
-import edu.funix.Utils.Mailer;
-import edu.funix.Utils.PageInfo;
-import edu.funix.Utils.PageType;
-import edu.funix.Utils.PasswordUtils;
-import edu.funix.Utils.SessionUtil;
-import edu.funix.Utils.SlackApiUtil;
 import edu.funix.common.IAccountService;
 import edu.funix.common.imp.SubcriberService;
 import edu.funix.model.AccountModel;
 import edu.funix.model.SubcriberModel;
+import edu.funix.utils.GoogleUtil;
+import edu.funix.utils.Mailer;
+import edu.funix.utils.PageInfo;
+import edu.funix.utils.PageType;
+import edu.funix.utils.PasswordUtils;
+import edu.funix.utils.SessionUtil;
+import edu.funix.utils.SlackApiUtil;
 
 /**
  * Servlet implementation class Login

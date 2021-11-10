@@ -40,7 +40,7 @@
 					<label class="col-lg-3 col-form-label" for="email">Email</label>
 					<div class="col-lg-9">
 						<input id="email" class="form-control" type="text" name="email"
-							value="${subcribers.email}" <c:if test="${subcribers.registeredFrom ne 'form'}">readonly</c:if>> <small id="slugHelpBlock"
+							value="${subcribers.email}" <c:if test="${subcribers.registeredFrom ne 'form' && not empty subcribers.email}">readonly</c:if>> <small id="slugHelpBlock"
 							class="form-text text-muted"> The email for receiving
 							weekly/ monthly news</small>
 					</div>

@@ -20,12 +20,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.LoggerFactory;
 
-import edu.funix.Utils.PageInfo;
-import edu.funix.Utils.PageType;
-import edu.funix.Utils.SlackApiUtil;
 import edu.funix.common.ICategoryService;
 import edu.funix.common.imp.CategoryService;
 import edu.funix.model.CategoryModel;
+import edu.funix.utils.PageInfo;
+import edu.funix.utils.PageType;
+import edu.funix.utils.SlackApiUtil;
 
 /**
  * Servlet implementation class EditCategory

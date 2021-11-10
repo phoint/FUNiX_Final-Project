@@ -12,9 +12,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import edu.funix.Utils.SessionUtil;
 import edu.funix.model.AccountModel;
 import edu.funix.model.UserModel;
+import edu.funix.utils.SessionUtil;
 
 public class AuthorizationFilter implements Filter {
 

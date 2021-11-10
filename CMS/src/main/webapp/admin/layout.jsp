@@ -65,7 +65,9 @@
 			<nav id="sidebarMenu"
 				class="col-md-3 col-lg-2 d-md-block bg-dark sidebar collapse">
 				<div class="brand text-white text-center">
-					<a href="<c:url value="/"/>" role="button"><h1>LOGO</h1></a>
+					<a href="<c:url value="/"/>" role="button">
+            <img src="${applicationScope.webOpt.logoPath}" width="100px">
+          </a>
 				</div>
 				<div class="sidebar-sticky pt-3">
 					<ul class="nav flex-column">
@@ -115,14 +117,8 @@
 	<script src="<c:url value="js/admin.js"/>"></script>
 	<script type="text/javascript">
 		var maxItem = 10;
-		var totalPage = $
-		{
-			page.totalPage
-		};
-		var currentPage = $
-		{
-			page.currentPage
-		};
+		var totalPage = ${page.totalPage};
+		var currentPage = ${page.currentPage};
 		$(function() {
 			window.pagObj = $('#pagination').twbsPagination({
 				totalPages : totalPage,

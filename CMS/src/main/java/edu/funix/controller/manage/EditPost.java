@@ -21,14 +21,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.LoggerFactory;
 
-import edu.funix.Utils.PageInfo;
-import edu.funix.Utils.PageType;
-import edu.funix.Utils.SlackApiUtil;
 import edu.funix.common.IPostGroupService;
 import edu.funix.common.IPostService;
 import edu.funix.common.imp.PostGroupService;
 import edu.funix.common.imp.PostService;
 import edu.funix.model.PostModel;
+import edu.funix.utils.PageInfo;
+import edu.funix.utils.PageType;
+import edu.funix.utils.SlackApiUtil;
 
 /**
  * Servlet implementation class EditPost
