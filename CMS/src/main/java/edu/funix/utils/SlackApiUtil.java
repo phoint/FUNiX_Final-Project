@@ -1,4 +1,4 @@
-package edu.funix.Utils;
+package edu.funix.utils;
 
 import static com.slack.api.webhook.WebhookPayloads.payload;
 import static com.slack.api.model.block.Blocks.*;

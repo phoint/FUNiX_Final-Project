@@ -1,4 +1,4 @@
-package edu.funix.Utils;
+package edu.funix.utils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,6 +12,7 @@ public class PageInfo {
     public static Map<PageType, PageInfo> pageRoute = new HashMap<PageType, PageInfo>();
 
     static {
+	pageRoute.put(PageType.OPTION, new PageInfo("Option", "option.jsp", null));
 	pageRoute.put(PageType.ACCESS_DENIED, new PageInfo("Access Denied", "accessDenied.jsp", null));
 	pageRoute.put(PageType.LOGIN_ALREADY, new PageInfo("Login Already", "loginAlready.jsp", null));
 	pageRoute.put(PageType.USER_MANAGEMENT_PAGE, new PageInfo("User Management", "users.jsp", null));

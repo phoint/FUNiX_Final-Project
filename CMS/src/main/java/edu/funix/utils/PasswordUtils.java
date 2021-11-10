@@ -1,4 +1,4 @@
-package edu.funix.Utils;
+package edu.funix.utils;
 
 import java.util.Random;
 

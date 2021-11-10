@@ -1,4 +1,4 @@
-package edu.funix.Utils;
+package edu.funix.utils;
 
 import java.util.Properties;
 import java.util.ResourceBundle;

@@ -1,4 +1,4 @@
-package edu.funix.Utils;
+package edu.funix.utils;
 
 public class GoogleConstants {
     public static String GOOGLE_CLIENT_ID = "486895749872-mg1uv9uvfe7kvmff3si6mna3dcq57ca0.apps.googleusercontent.com";
