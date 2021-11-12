@@ -122,7 +122,27 @@ public class PostService implements IPostService {
      */
     @Override
     public Long save(PostModel postModel) throws SQLException, Exception {
-	return postDAO.save(postModel);
+	Long id = null;
+	if (postModel.getTitle() == null || postModel.getTitle().trim().equals("")) {
+	    throw new SQLException("Can not leave the title blank");
+	} else if (postModel.getPostUrl() == null || postModel.getPostUrl().trim().equals("")) {
+	    throw new SQLException("Can not leave the url snippet blank");
+	} else if (postModel.getPostStatus() == 1 && postModel.getPublishDate() == null) {
+	    throw new SQLException("Please choose a day for publishing.");
+	} else {
+	    try {
+		id = postDAO.save(postModel);
+	    } catch (Exception e) {
+		if (e.getMessage().contains("UQ__tblPOST__AF49EBA443428087")) {
+		    throw new SQLException("The url is existed, please choose another");
+		} else if (e.getMessage().contains("UQ__tblPOST__F9522A8EFDB1E844")) {
+		    throw new SQLException("The title is existed, please choose another");
+		} else {
+		    throw new Exception(e);
+		}
+	    }
+	}
+	return id;
     }
 
     /**
@@ -153,8 +173,27 @@ public class PostService implements IPostService {
      */
     @Override
     public void edit(PostModel postModel) throws SQLException, Exception {
-	postModel.setModifiedDate(new Date(Calendar.getInstance().getTimeInMillis()));
-	postDAO.edit(postModel);
+	if (postModel.getTitle() == null || postModel.getTitle().trim().equals("")) {
+	    throw new SQLException("Can not leave the title blank");
+
+	} else if (postModel.getPostUrl() == null || postModel.getPostUrl().trim().equals("")) {
+	    throw new SQLException("Can not leave the url snippet blank");
+	} else if (postModel.getPostStatus() == 1 && postModel.getPublishDate() == null) {
+	    throw new SQLException("Please choose a day for publishing.");
+	} else {
+	    postModel.setModifiedDate(new Date(Calendar.getInstance().getTimeInMillis()));
+	    try {
+		postDAO.edit(postModel);
+	    } catch (Exception e) {
+		if (e.getMessage().contains("UQ__tblPOST__AF49EBA443428087")) {
+		    throw new SQLException("The url is existed, please choose another");
+		} else if (e.getMessage().contains("UQ__tblPOST__F9522A8EFDB1E844")) {
+		    throw new SQLException("The title is existed, please choose another");
+		} else {
+		    throw new Exception(e);
+		}
+	    }
+	}
     }
 
     /**

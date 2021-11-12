@@ -78,13 +78,7 @@ public class NewUser extends HttpServlet {
 		message = "Success";
 		request.setAttribute("users", userService.findAll());
 	    } catch (Exception e) {
-		if (e.getMessage().contains("UQ_tblUSER_UserMail")) {
-		    error = "Email is existed!";
-		} else if (e.getMessage().contains("UQ_tblUSER_Username")) {
-		    error = "Username is existed!";
-		} else {
-		    error = e.getMessage();
-		}
+		error = e.getMessage();
 		logger.error(e.getMessage(), e);
 		SlackApiUtil.pushLog(request, e.getMessage());
 	    }

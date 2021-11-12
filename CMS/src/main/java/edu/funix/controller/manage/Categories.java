@@ -64,7 +64,7 @@ public class Categories extends HttpServlet {
 	/* Message and error return on process */
 	String message = null;
 	String error = null;
-	
+
 	/* Delete a category has matching id */
 	try {
 	    if (id != null && action.equals("delete")) {
@@ -77,7 +77,7 @@ public class Categories extends HttpServlet {
 	    logger.error(e.getMessage(), e);
 	    SlackApiUtil.pushLog(request, e.getMessage());
 	}
-	
+
 	/* Mapping parameter to PageModel */
 	try {
 	    logger.debug("Mapping pagination's attributes to page model");
@@ -105,7 +105,7 @@ public class Categories extends HttpServlet {
 	    logger.error(e.getMessage(), e);
 	    SlackApiUtil.pushLog(request, e.getMessage());
 	}
-	
+
 	request.setAttribute("error", error);
 	request.setAttribute("message", message);
 	request.setAttribute("searchKey", searchKey);
@@ -134,37 +134,45 @@ public class Categories extends HttpServlet {
 	String error = null;
 
 	try {
-	    if (ids != null && action.equals("delete")) {
-		logger.debug("delete categories by ids: " + ids);
-		categoryService.delete(ids);
-		message = "Delete Success";
-	    } else if (ids == null) {
-		logger.debug("Mapping category's attribute to category model");
-		BeanUtils.populate(category, request.getParameterMap());
-		if (category.getDesc() != null && category.getDesc().equals("")) {
-		    category.setDesc(null);
+	    logger.debug("Mapping page's attribute to page model");
+	    BeanUtils.populate(page, request.getParameterMap());
+	    logger.debug("{}", page);
+	    try {
+		if (ids != null && action.equals("delete")) {
+		    logger.debug("delete categories by ids: " + ids);
+		    categoryService.delete(ids);
+		    message = "Delete Success";
+		} else {
+		    logger.debug("Mapping category's attribute to category model");
+		    BeanUtils.populate(category, request.getParameterMap());
+		    if (category.getDesc() != null && category.getDesc().equals("")) {
+			category.setDesc(null);
+		    }
+		    logger.debug("{}", category);
+		    logger.debug("Insert new category into database");
+		    categoryService.save(category);
+		    message = "New category inserted";
 		}
-		logger.debug("{}", category);
-		logger.debug("Insert new category into database");
-		categoryService.save(category);
-		message = "New category inserted";
+	    } catch (Exception e) {
+		error = e.getMessage();
+		logger.error(e.getMessage(), e);
+		SlackApiUtil.pushLog(request, e.getMessage());
 	    }
-	    logger.debug("Get new category list");
-	    category.setListResult(categoryService.findAll(page));
-	    logger.debug("{}", category.getListResult());
+	    try {
+		logger.debug("Get new category list");
+		category.setListResult(categoryService.findAll(page));
+		logger.debug("{}", category.getListResult());
+	    } catch (Exception e) {
+		error = e.getMessage();
+		logger.error(e.getMessage(), e);
+		SlackApiUtil.pushLog(request, e.getMessage());
+	    }
 	} catch (IllegalAccessException | InvocationTargetException e) {
 	    error = e.getMessage();
 	    logger.error(e.getMessage(), e);
 	    SlackApiUtil.pushLog(request, e.getMessage());
-	} catch (SQLException e) {
-	    error = e.getMessage();
-	    logger.error(e.getMessage(), e);
-	    SlackApiUtil.pushLog(request, e.getMessage());
-	} catch (Exception e) {
-	    error = e.getMessage();
-	    logger.error(e.getMessage(), e);
-	    SlackApiUtil.pushLog(request, e.getMessage());
 	}
+
 	request.setAttribute("message", message);
 	request.setAttribute("error", error);
 	request.setAttribute("categories", category);

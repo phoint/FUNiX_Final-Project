@@ -11,6 +11,11 @@ public class SessionUtil {
 		session.setAttribute(name, value);
 	}
 
+	public static void remove(HttpServletRequest request, String name) {
+	    HttpSession session = request.getSession();
+	    session.removeAttribute(name);
+	}
+
 	public static Object get(HttpServletRequest request, String name) {
 		HttpSession session = request.getSession();
 		return session.getAttribute(name);

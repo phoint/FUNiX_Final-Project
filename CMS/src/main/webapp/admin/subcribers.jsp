@@ -22,7 +22,7 @@
 					<div class="col-lg-9">
 						<input id="name" class="form-control" type="text" name="username"
 							value="${subcribers.username}"
-							<c:if test="${not empty param.id}">readonly</c:if>> <small
+							<c:if test="${param.action eq 'edit'}">readonly</c:if>> <small
 							id="nameHelpBlock" class="form-text text-muted"> The name
 							is using for login.</small>
 					</div>
@@ -40,7 +40,7 @@
 					<label class="col-lg-3 col-form-label" for="email">Email</label>
 					<div class="col-lg-9">
 						<input id="email" class="form-control" type="text" name="email"
-							value="${subcribers.email}" <c:if test="${subcribers.registeredFrom ne 'form' && not empty subcribers.email}">readonly</c:if>> <small id="slugHelpBlock"
+							value="${subcribers.email}" <c:if test="${subcribers.registeredFrom ne 'form' && param.action eq 'edit'}">readonly</c:if>> <small id="slugHelpBlock"
 							class="form-text text-muted"> The email for receiving
 							weekly/ monthly news</small>
 					</div>
@@ -48,6 +48,7 @@
 				<c:if test="${not empty param.action && param.action eq 'edit'}">
 				  <input type="hidden" name="action" value="edit">
 				  <input type="hidden" name="id" value="${param.id}">
+				  <input type="hidden" name="registeredFrom" value="${subcribers.registeredFrom}">
 				  <c:if test="${subcribers.registeredFrom eq 'form'}">	  
 					<div class="form-group row">
 						<label for="password" class="col-lg-3 col-form-label">Password</label>
@@ -81,7 +82,7 @@
 					</form>
 				</div>
 				<div class="d-inline-flex mr-2">
-					<form class="form-inline" action="users" method="get">
+					<form class="form-inline" action="subcribers" method="get">
 						<input class="form-control form-control-sm" type="text"
 							name="searchKey" value="${searchKey}" placeholder="Search...">
 						<c:if test="${empty searchKey}">
@@ -89,7 +90,7 @@
 						</c:if>
 					</form>
 					<c:if test="${not empty searchKey}">
-						<a href="<c:url value="users"/>" role="button"
+						<a href="<c:url value="subcribers"/>" role="button"
 							class="btn btn-sm btn-outline-primary mx-1">Clear</a>
 					</c:if>
 				</div>

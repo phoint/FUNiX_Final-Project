@@ -27,6 +27,7 @@ import edu.funix.model.PageModel;
 import edu.funix.model.PostModel;
 import edu.funix.utils.PageInfo;
 import edu.funix.utils.PageType;
+import edu.funix.utils.SessionUtil;
 import edu.funix.utils.SlackApiUtil;
 
 /**
@@ -143,6 +144,7 @@ public class Posts extends HttpServlet {
 	request.setAttribute("searchKey", searchKey);
 	request.setAttribute("posts", post);
 	request.setAttribute("page", page);
+	SessionUtil.remove(request, "addNewSuccess");
 	logger.info("Forward to post management page");
 	PageInfo.PrepareAndForward(request, response, PageType.POST_MANAGEMENT_PAGE);
     }

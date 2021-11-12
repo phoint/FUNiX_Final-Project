@@ -123,11 +123,18 @@ public class EditPost extends HttpServlet {
 	    /* Gets the post's attribute updated */
 	    post = postService.findPostById(id);
 	    logger.debug("{}", post);
-	    message = "Success";
+	    message = "Post is updated";
 	} catch (SQLException sqlEx) {
-	    error = "Update failed";
+	    error = sqlEx.getMessage();
 	    logger.error(sqlEx.getMessage(), sqlEx);
 	    SlackApiUtil.pushLog(request, sqlEx.getMessage());
+	} catch (Exception e) {
+	    error = e.getMessage();
+	    logger.error(e.getMessage(), e);
+	    SlackApiUtil.pushLog(request, e.getMessage());
+	}
+	try {
+	    post.setCategories(postGroupService.findCategoryInUse(post.getId()));
 	} catch (Exception e) {
 	    error = e.getMessage();
 	    logger.error(e.getMessage(), e);

@@ -32,6 +32,7 @@ import edu.funix.common.imp.PostService;
 import edu.funix.model.PostModel;
 import edu.funix.utils.PageInfo;
 import edu.funix.utils.PageType;
+import edu.funix.utils.SessionUtil;
 import edu.funix.utils.SlackApiUtil;
 
 /**
@@ -136,7 +137,7 @@ public class NewPost extends HttpServlet {
 		postGroupService.updateCategory(id, catIds);
 		post = postService.findPostById(id);
 		logger.debug("{}", post.getCategories());
-		message = "Success";
+		message = "New post is saved";
 	    }
 	} catch (SQLException e) {
 	    error = e.getMessage();
@@ -159,6 +160,7 @@ public class NewPost extends HttpServlet {
 	    logger.info("Stay in page if failed");
 	    PageInfo.PrepareAndForward(request, response, PageType.NEW_POST);
 	} else {
+	    SessionUtil.add(request, "addNewSuccess", message);
 	    logger.info("Redirect to post management page if success");
 	    response.sendRedirect(request.getContextPath() + "/admin/posts");
 	}

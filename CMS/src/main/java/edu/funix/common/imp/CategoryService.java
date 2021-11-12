@@ -20,7 +20,7 @@ public class CategoryService implements ICategoryService {
     public CategoryService() {
 	categoryDAO = new CategoryDAO();
 	postGroupDAO = new PostGroupedDAO();
-	paging =new PageableService();
+	paging = new PageableService();
     }
 
     @Override
@@ -51,7 +51,7 @@ public class CategoryService implements ICategoryService {
 	}
 	return categories;
     }
-    
+
     @Override
     public CategoryModel findCategoryById(long id) throws SQLException, Exception {
 	CategoryModel category = categoryDAO.findCategoryById(id);
@@ -63,12 +63,44 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public void save(CategoryModel category) throws SQLException, Exception {
-	categoryDAO.save(category);
+	if (category.getName() == null) {
+	    throw new SQLException("Can not leave the category's name blank");
+	} else if (category.getUrl() == null) {
+	    throw new SQLException("Can not leave the category's url blank");
+	} else {
+	    try {
+		categoryDAO.save(category);
+	    } catch (Exception e) {
+		if (e.getMessage().contains("UQ__tblCATEG__9C61AB2658B4A229")) {
+		    throw new Exception("The category's name is existed");
+		} else if (e.getMessage().contains("UQ__tblCATEG__239D501FAF2356F7")) {
+		    throw new Exception("The category's url is existed");
+		} else {
+		    throw new Exception(e);
+		}
+	    }
+	}
     }
 
     @Override
     public void edit(CategoryModel category) throws SQLException, Exception {
-	categoryDAO.edit(category);
+	if (category.getName() == null) {
+	    throw new SQLException("Can not leave the category's name blank");
+	} else if (category.getUrl() == null) {
+	    throw new SQLException("Can not leave the category's url blank");
+	} else {
+	    try {
+		categoryDAO.edit(category);
+	    } catch (Exception e) {
+		if (e.getMessage().contains("UQ__tblCATEG__9C61AB2658B4A229")) {
+		    throw new Exception("The category's name is existed");
+		} else if (e.getMessage().contains("UQ__tblCATEG__239D501FAF2356F7")) {
+		    throw new Exception("The category's url is existed");
+		} else {
+		    throw new Exception(e);
+		}
+	    }
+	}
     }
 
     @Override

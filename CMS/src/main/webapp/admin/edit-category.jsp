@@ -44,7 +44,10 @@
 							may show it. </small>
 					</div>
 				</div>
+				<div class="d-flex flex-row-reverse align-items-center">
 				<button class="btn btn-primary" type="submit">Update</button>
+				<div class="mx-3"><a class="d-block" href="<c:url value="categories"/>">Cancel</a></div>
+				</div>
 			</form>
 		</div>
 	</div>

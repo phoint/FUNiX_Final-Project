@@ -54,7 +54,7 @@ public class PostDAO extends AbstractDAO<PostModel> implements IPostDAO {
 	    return query(sql.toString(), new PostMapper(), page.getOffset() + 1, page.getLimit());
 	}
     }
-    
+
     /**
      * Gets a list of post instances grouped by a category
      * 
@@ -67,7 +67,7 @@ public class PostDAO extends AbstractDAO<PostModel> implements IPostDAO {
 	String sql = "{CALL CategoryGroup(?,?,?)}";
 	return call(sql, new PostMapper(), CatID, page.getLimit(), page.getOffset());
     }
-    
+
     /**
      * Gets a list of post instances has title matching search key
      * 
@@ -109,13 +109,21 @@ public class PostDAO extends AbstractDAO<PostModel> implements IPostDAO {
      */
     @Override
     public Long save(PostModel post) throws SQLException, Exception {
+	Long id = null;
 	StringBuilder sql = new StringBuilder("INSERT INTO tblPOST ");
-	sql.append("(PostTitle, Excerpt, Content, PostURL, PublishDate, ");
-	sql.append("PostStatus, IsVisible, Author, Feature) ");
-	sql.append("VALUES (?,?,?,?,?,?,?,?,?)");
-	return insert(sql.toString(), post.getTitle(), post.getExcerpt(), post.getContent(), post.getPostUrl(),
-		post.getPublishDate(), post.getPostStatus(), post.getIsVisible(), post.getCreatedBy(),
-		post.getFeature());
+	sql.append("(PostTitle, Excerpt, Content, PostURL, ");
+	sql.append("PostStatus, IsVisible, Author, Feature");
+	if (post.getPublishDate() == null) {
+	    sql.append(") VALUES (?,?,?,?,?,?,?,?)");
+	    id = insert(sql.toString(), post.getTitle(), post.getExcerpt(), post.getContent(), post.getPostUrl(),
+		    post.getPostStatus(), post.getIsVisible(), post.getCreatedBy(), post.getFeature());
+	} else {
+	    sql.append(", PublishDate) VALUES (?,?,?,?,?,?,?,?,?)");
+	    id = insert(sql.toString(), post.getTitle(), post.getExcerpt(), post.getContent(), post.getPostUrl(),
+		    post.getPostStatus(), post.getIsVisible(), post.getCreatedBy(), post.getFeature(),
+		    post.getPublishDate());
+	}
+	return id;
     }
 
     /**
@@ -125,11 +133,19 @@ public class PostDAO extends AbstractDAO<PostModel> implements IPostDAO {
      */
     @Override
     public void edit(PostModel post) throws SQLException, Exception {
-	String sql = "UPDATE tblPOST SET PostTitle = ?, Excerpt = ?, "
-		+ "Content = ?, PostURL = ?, PublishDate = ?, ModifyDate = ?, "
-		+ "PostStatus = ?, IsVisible = ?, Feature = ? WHERE PostID = ?";
-	update(sql, post.getTitle(), post.getExcerpt(), post.getContent(), post.getPostUrl(), post.getPublishDate(),
-		post.getModifiedDate(), post.getPostStatus(), post.getIsVisible(), post.getFeature(), post.getId());
+	StringBuilder sql = new StringBuilder(
+		"UPDATE tblPOST SET PostTitle = ?, Excerpt = ?, Content = ?, PostURL = ?, ModifyDate = ?, ");
+	sql.append("PostStatus = ?, IsVisible = ?, Feature = ? ");
+	if (post.getPublishDate() == null) {
+	    sql.append("WHERE PostID = ?");
+	    update(sql.toString(), post.getTitle(), post.getExcerpt(), post.getContent(), post.getPostUrl(),
+		    post.getModifiedDate(), post.getPostStatus(), post.getIsVisible(), post.getFeature(), post.getId());
+	} else {
+	    sql.append(", PublishDate = ? WHERE PostID = ?");
+	    update(sql.toString(), post.getTitle(), post.getExcerpt(), post.getContent(), post.getPostUrl(),
+		    post.getModifiedDate(), post.getPostStatus(), post.getIsVisible(), post.getFeature(),
+		    post.getPublishDate(), post.getId());
+	}
     }
 
     /**
@@ -155,11 +171,11 @@ public class PostDAO extends AbstractDAO<PostModel> implements IPostDAO {
 	String key = "%" + postTitle + "%";
 	return count(sql, key);
     }
-    
+
     @Override
     public Long getTotalItems(long userID) throws SQLException, Exception {
-        String sql = "SELECT count(*) FROM tblPOST WHERE Author = ?";
-        return count(sql, userID);
+	String sql = "SELECT count(*) FROM tblPOST WHERE Author = ?";
+	return count(sql, userID);
     }
 
     /**

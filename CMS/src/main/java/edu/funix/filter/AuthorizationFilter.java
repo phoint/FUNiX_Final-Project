@@ -32,6 +32,7 @@ public class AuthorizationFilter implements Filter {
 	HttpServletRequest request = (HttpServletRequest) servletRequest;
 	HttpServletResponse response = (HttpServletResponse) servletResponse;
 	String url = request.getRequestURI();
+	String queryString = request.getQueryString();
 	if (url.startsWith("/CMS/admin/")) {
 	    if (SessionUtil.isLogin(request)) {
 		String userType = (String) SessionUtil.get(request, "userType");
@@ -59,7 +60,7 @@ public class AuthorizationFilter implements Filter {
 	    } else {
 		response.sendRedirect(request.getContextPath() + "/access-denied");
 	    }
-	} else if (url.contains("login")) {
+	} else if ((url.endsWith("/CMS/login") || url.endsWith("/CMS/admin-login")) && queryString == null) {
 	    if (SessionUtil.isLogin(request)) {
 		response.sendRedirect(request.getContextPath() + "/access-denied?login-already=true");
 	    } else {		

@@ -97,9 +97,6 @@ public class EditCategory extends HttpServlet {
 	try {
 	    logger.debug("Mapping category's attributes to category model");
 	    BeanUtils.populate(category, request.getParameterMap());
-	    if (category.getDesc().equals("")) {
-		category.setDesc(null);
-	    }
 	    logger.debug("{}", category);
 	    try {
 		logger.debug("Update category");

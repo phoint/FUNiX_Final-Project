@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebListener;
 import org.apache.commons.beanutils.ConversionException;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
+import org.apache.commons.beanutils.converters.DateConverter;
 
 /**
  * Application Lifecycle Listener implementation class BeanUtilsListener
@@ -33,6 +34,7 @@ public class BeanUtilsListener implements ServletContextListener {
      * @see ServletContextListener#contextInitialized(ServletContextEvent)
      */
     public void contextInitialized(ServletContextEvent arg0) {
+	/* Convert empty to null for java.sql.Date type */
 	ConvertUtils.register(new Converter() {
 
 	    @SuppressWarnings("unchecked")
@@ -55,6 +57,9 @@ public class BeanUtilsListener implements ServletContextListener {
 	    }
 
 	}, String.class);
+	
+	/* Convert empty to null for java.sql.Date type */
+	ConvertUtils.register(new DateConverter(null),java.sql.Date.class);
     }
 
 }

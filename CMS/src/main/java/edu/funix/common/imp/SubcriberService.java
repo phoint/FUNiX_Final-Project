@@ -75,11 +75,7 @@ public class SubcriberService implements IAccountService<SubcriberModel> {
 	String mailRegex = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)"
 		+ "*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 
-	/* MD5 hashing email for gravatar */
-	MessageDigest md = MessageDigest.getInstance("MD5");
-	md.update(account.getEmail().getBytes());
-	byte[] digest = md.digest();
-	String myHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
+	
 
 	/* Checks the safe password satisfy with pattern or not */
 	if (account.getSocialId() == null || account.getSocialId().isEmpty()) {
@@ -91,8 +87,23 @@ public class SubcriberService implements IAccountService<SubcriberModel> {
 	    } else if (account.getPassword() == null || !account.getPassword().matches(pwdRegex)) {
 		throw new Exception("Password must be at least 8 character, one uppercase and one number");
 	    } else {
+		/* MD5 hashing email for gravatar */
+		MessageDigest md = MessageDigest.getInstance("MD5");
+		md.update(account.getEmail().getBytes());
+		byte[] digest = md.digest();
+		String myHash = DatatypeConverter.printHexBinary(digest).toUpperCase();
 		account.setPictureUrl("https://www.gravatar.com/avatar/" + myHash + "?d=mp");
-		newId = subcriberDAO.save(account);
+		try {
+		    newId = subcriberDAO.save(account);
+		} catch (Exception e) {
+		    if (e.getMessage().contains("UQ_tblSUBCRIBER_Username")) {
+			throw new SQLException("Username is existed!");
+		    } else if (e.getMessage().contains("UQ_tblSUBCRIBER_login")) {
+			throw new SQLException("Email is existed!");
+		    } else {
+			throw new Exception(e);
+		    }
+		}
 	    }
 	} else {
 	    newId = subcriberDAO.save(account);
@@ -115,7 +126,17 @@ public class SubcriberService implements IAccountService<SubcriberModel> {
 		/* Checks the safe password satisfy with pattern or not */
 		throw new Exception("Password must be at least 8 character, one uppercase and one number");
 	    } else {
-		subcriberDAO.edit(account);
+		try {
+		    subcriberDAO.edit(account);
+		} catch (Exception e) {
+		    if (e.getMessage().contains("UQ_tblSUBCRIBER_Username")) {
+			throw new SQLException("Username is existed!");
+		    } else if (e.getMessage().contains("UQ_tblSUBCRIBER_login")) {
+			throw new SQLException("Email is existed!");
+		    } else {
+			throw new Exception(e);
+		    }
+		}
 	    }
 	} else {
 	    subcriberDAO.edit(account);
@@ -148,20 +169,20 @@ public class SubcriberService implements IAccountService<SubcriberModel> {
     @Override
     public SubcriberModel checkLogin(SubcriberModel account) throws SQLException, Exception {
 	SubcriberModel subcriber = null;
-	    /* Regex pattern for nice username */
-	    String usernameRegex = "[a-zA-Z][a-zA-Z0-9-_]{3,32}";
-	    /* Regex Pattern for safe password */
-	    String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
-	    if (!account.getUsername().matches(usernameRegex)) {
-		/* Checks the valid username */
-		throw new Exception("Username must be at least 3 character start with an alphabetic. "
-			+ "Can contain number, - and _, but no space");
-	    } else if (!account.getPassword().matches(pwdRegex)) {
-		/* Checks the safe password satisfy with pattern or not */
-		throw new Exception("Password must be at least 8 character, one uppercase and one number");
-	    } else {
-		subcriber = subcriberDAO.checkLogin(account);
-	    }
+	/* Regex pattern for nice username */
+	String usernameRegex = "[a-zA-Z][a-zA-Z0-9-_]{3,32}";
+	/* Regex Pattern for safe password */
+	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
+	if (!account.getUsername().matches(usernameRegex)) {
+	    /* Checks the valid username */
+	    throw new Exception("Username must be at least 3 character start with an alphabetic. "
+		    + "Can contain number, - and _, but no space");
+	} else if (!account.getPassword().matches(pwdRegex)) {
+	    /* Checks the safe password satisfy with pattern or not */
+	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
+	} else {
+	    subcriber = subcriberDAO.checkLogin(account);
+	}
 	return subcriber;
     }
 

@@ -137,9 +137,9 @@ public class Subcribers extends HttpServlet {
 	String message = null;
 	String error = null;
 	try {
-	    logger.debug("Mapping subcriber's attribute to subcriber model");
-	    BeanUtils.populate(subcriber, request.getParameterMap());
-	    logger.debug("{}", subcriber);
+	    logger.debug("Mapping page's attribute to page model");
+	    BeanUtils.populate(page, request.getParameterMap());
+	    logger.debug("{}", page);
 	    try {
 		if (ids != null && action != null && action.equals("delete")) {
 		    logger.debug("Delete subcriber(s) by id = " + ids);
@@ -158,8 +158,11 @@ public class Subcribers extends HttpServlet {
 		    logger.debug("Send password by email: " + subcriber.getEmail());
 		    Mailer.send(subcriber.getEmail(), "Reset Password", Mailer.getTemplate(subcriber.getPassword()));
 		    message = "New password send";
-		    subcriber = subcriberService.findBy(subcriber.getId());
+		    subcriber = new SubcriberModel();
 		} else {
+		    logger.debug("Mapping subcriber's attribute to subcriber model");
+		    BeanUtils.populate(subcriber, request.getParameterMap());
+		    logger.debug("{}", subcriber);
 		    /* Auto generate a safe password has length = 10 */
 		    logger.debug("Generate random password");
 		    String password = PasswordUtils.generate(10);
@@ -172,15 +175,21 @@ public class Subcribers extends HttpServlet {
 		    subcriber = new SubcriberModel();
 		    message = "New subcriber inserted";
 		}
-		logger.debug("Get new subcriber list");
-		subcriber.setListResult(subcriberService.findAll(page));
-		logger.debug("{}", subcriber.getListResult());
 	    } catch (Exception e) {
 		error = e.getMessage();
 		logger.error(e.getMessage(), e);
 		SlackApiUtil.pushLog(request, e.getMessage());
 	    }
 	} catch (IllegalAccessException | InvocationTargetException e) {
+	    error = e.getMessage();
+	    logger.error(e.getMessage(), e);
+	    SlackApiUtil.pushLog(request, e.getMessage());
+	}
+	try {
+	    logger.debug("Get new subcriber list");
+	    subcriber.setListResult(subcriberService.findAll(page));
+	    logger.debug("{}", subcriber.getListResult());
+	} catch (Exception e) {
 	    error = e.getMessage();
 	    logger.error(e.getMessage(), e);
 	    SlackApiUtil.pushLog(request, e.getMessage());

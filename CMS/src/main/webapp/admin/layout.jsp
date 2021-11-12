@@ -81,18 +81,22 @@
 						</a></li>
 						<li class="nav-item"><a class="nav-link text-light"
 							href="<c:url value="categories"/>"> <span
-								data-feather="shopping-cart"></span> Category
+								data-feather="folder"></span> Category
 						</a></li>
 						<li class="nav-item"><a class="nav-link text-light"
 							href="<c:url value="users"/>"> <span data-feather="users"></span>
 								User
 						</a></li>
 						<li class="nav-item"><a class="nav-link text-light"
-							href="<c:url value="comments"/>"> <span
-								data-feather="bar-chart-2"></span> Comment
+							href="<c:url value="subcribers"/>"> <span data-feather="user-minus"></span>
+								Subcriber
 						</a></li>
-						<li class="nav-item"><a class="nav-link text-light" href="#">
-								<span data-feather="layers"></span> Setting
+						<li class="nav-item"><a class="nav-link text-light"
+							href="<c:url value="comments"/>"> <span
+								data-feather="message-square"></span> Comment
+						</a></li>
+						<li class="nav-item"><a class="nav-link text-light" href="<c:url value="option"/>">
+								<span data-feather="settings"></span> Setting
 						</a></li>
 					</ul>
 				</div>

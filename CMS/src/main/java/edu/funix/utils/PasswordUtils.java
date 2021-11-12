@@ -25,7 +25,8 @@ public class PasswordUtils {
 	char[] password = new char[len];
 	password[0] = Capital_chars.charAt(rndm_method.nextInt(Capital_chars.length()));
 	password[1] = numbers.charAt(rndm_method.nextInt(numbers.length()));
-	for (int i = 2; i < len; i++) {
+	password[2] = Small_chars.charAt(rndm_method.nextInt(numbers.length()));
+	for (int i = 3; i < len; i++) {
 	    // Use of charAt() method : to get character value
 	    // Use of nextInt() as it is scanning the value as int
 	    password[i] = values.charAt(rndm_method.nextInt(values.length()));

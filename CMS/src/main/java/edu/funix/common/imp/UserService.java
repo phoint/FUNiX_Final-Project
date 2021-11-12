@@ -72,14 +72,25 @@ public class UserService implements IAccountService<UserModel> {
 	String usernameRegex = "[a-zA-Z][a-zA-Z0-9-_]{3,32}";
 	String mailRegex = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
 	/* Checks the safe password satisfy with pattern or not */
-	if (!user.getUsername().matches(usernameRegex)) {
-	    throw new Exception("Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
-	} else if (user.getEmail().matches(mailRegex)) {
+	if (user.getUsername() == null || !user.getUsername().matches(usernameRegex)) {
+	    throw new Exception(
+		    "Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
+	} else if (user.getEmail() == null || !user.getEmail().matches(mailRegex)) {
 	    throw new Exception("Invalid email address");
-	}else if (!user.getPassword().matches(pwdRegex)) {
+	} else if (user.getPassword() == null || !user.getPassword().matches(pwdRegex)) {
 	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
 	} else {
-	    newId = userDAO.save(user);
+	    try {
+		newId = userDAO.save(user);
+	    } catch (SQLException e) {
+		if (e.getMessage().contains("UQ_tblUSER_Username")) {
+		    throw new SQLException("Username is existed!");
+		} else if (e.getMessage().contains("UQ_tblUSER_login")) {
+		    throw new SQLException("Email is existed!");
+		} else {
+		    throw new Exception(e);
+		}
+	    }
 	}
 	return newId;
     }
@@ -95,14 +106,26 @@ public class UserService implements IAccountService<UserModel> {
 	String usernameRegex = "[a-zA-Z][a-zA-Z0-9-_]{3,32}";
 	/* Regex Pattern for safe password */
 	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
-	if (user.getUsername() == null || !user.getUsername().matches(usernameRegex)) {
+	/* Regrex pattern for email */
+	String mailRegex = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+	if (user.getEmail() == null || !user.getEmail().matches(mailRegex)) {
 	    /* Checks the valid username */
-	    throw new Exception("Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
+	    throw new Exception("Invalid email address");
 	} else if (user.getPassword() != null && !user.getPassword().matches(pwdRegex)) {
 	    /* Checks the safe password satisfy with pattern or not */
 	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
-	} else {	    
-	    userDAO.edit(user);
+	} else {
+	    try {
+		userDAO.edit(user);
+	    } catch (SQLException e) {
+		if (e.getMessage().contains("UQ_tblUSER_login")) {
+		    throw new SQLException("Email is existed!");
+		} else if (e.getMessage().contains("UQ_tblUSER_Username")) {
+		    throw new SQLException("Username is existed!");
+		} else {
+		    throw new Exception(e);
+		}
+	    }
 	}
     }
 
@@ -129,7 +152,8 @@ public class UserService implements IAccountService<UserModel> {
 	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
 	if (!account.getUsername().matches(usernameRegex)) {
 	    /* Checks the valid username */
-	    throw new Exception("Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
+	    throw new Exception(
+		    "Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
 	} else if (!account.getPassword().matches(pwdRegex)) {
 	    /* Checks the safe password satisfy with pattern or not */
 	    throw new Exception("Password must be at least 8 character, one uppercase and one number");
@@ -138,7 +162,7 @@ public class UserService implements IAccountService<UserModel> {
 	}
 	return user;
     }
-    
+
     @Override
     public UserModel socialLogin(UserModel account) throws SQLException, Exception {
 	UserModel validUser = userDAO.socialLogin(account);
@@ -212,7 +236,8 @@ public class UserService implements IAccountService<UserModel> {
 	String pwdRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d_@$!%*#?&\\.]{8,}$";
 	if (!user.getUsername().matches(usernameRegex)) {
 	    /* Checks the valid username */
-	    throw new Exception("Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
+	    throw new Exception(
+		    "Username must be at least 3 character start with an alphabetic. Can contain number, - and _, but no space");
 	} else if (!user.getPassword().matches(pwdRegex)) {
 	    /* Checks the safe password satisfy with pattern or not */
 	    throw new Exception("Password must be at least 8 character, one uppercase and one number");

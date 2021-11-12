@@ -5,14 +5,12 @@
 	<h2 class="d-inline-flex mr-3">Categories</h2>
 </div>
 <div class="container-fluid">
-	<div class="row">
 		<c:if test="${not empty message}">
 			<div id="message" class="alert alert-success">${message}</div>
 		</c:if>
 		<c:if test="${not empty error}">
 			<div id="error" class="alert alert-danger">${error}</div>
 		</c:if>
-	</div>
 	<div class="row">
 		<div class="col-lg-4">
 			<form method="post" action="categories">
@@ -64,6 +62,8 @@
 							name="searchKey" value="${searchKey}" placeholder="Search...">
 						<button type="submit" class="btn btn-sm btn-outline-primary mx-1">Search</button>
 					</form>
+				    <a role="button" class="btn btn-sm btn-outline-primary mx-1" 
+				    href="<c:url value="categories" />">Clear</a>
 				</div>
 			</div>
 			<div class="table-responsive">
@@ -96,10 +96,10 @@
 										</c:if>
 									</div>
 								</td>
-								<td>${empty cat.desc ? "-
-											" :cat.desc}</td>
+								<td>${empty cat.desc ? "-" :cat.desc}</td>
 								<td>${cat.url}</td>
-								<td>${cat.totalPost}</td>
+								<td><a href="<c:url value="posts?category=${cat.id}"/>"
+                        class="ml-2">${cat.totalPost}</a></td>
 							</tr>
 						</c:forEach>
 					</tbody>

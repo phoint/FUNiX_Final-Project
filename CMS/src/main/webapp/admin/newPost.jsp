@@ -93,15 +93,6 @@
 									class="form-check-label">${category.name}</label>
 							</div>
 						</c:forEach>
-						<!-- <a href="#new-category" data-toggle="collapse" role="button"
-							aria-expanded="false" aria-controls="new-category">+ Add new
-							category</a>
-						<div class="collapse" id="new-category">
-							<div class="form-group">
-								<input class="form-control form-control-sm" type="text">
-							</div>
-							<input class="btn btn-secondary" type="button" value="submit">
-						</div>  -->
 					</div>
 				</div>
 				<div class="card mb-4">
