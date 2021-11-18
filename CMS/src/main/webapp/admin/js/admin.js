@@ -11,12 +11,12 @@ $(document).ready(function() {
     $('.select-item').not(this).prop('checked', this.checked)
   });
 
-  /** Bulk approving for comment management (pending) */
-  // $(".comment-approve, .comment-unapprove").on("click", function() {
-  //   $(this).siblings('input[type=hidden]').each().prop('form', 'multiselect');
-  //   $('#multiselect').submit();
-  //   $(this).siblings('input[type=hidden]').each().removeProp('form');
-  // });
+  /** Auto fill the permalink field when add new post or edit post */
+  $('input[name=title]').blur(function (e) { 
+    e.preventDefault();
+    let urlstring = $('input[name=title]').val();
+    $('input[name=postUrl]').val(slugify(urlstring));
+  });
 
   /** Form Validation */
   // Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -38,3 +38,22 @@ $(document).ready(function() {
     feather.replace()
   })();
 });
+
+  /** Changing Vietnamese character to non-accent */
+  function slugify(text) {
+  const from = "ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ·/_,:;"
+  const to = "AAAAEEEIIOOOOUUADIUOaaaaeeeiioooouuadiuoUAAAAAAAAAAAAEEEEEEuaaaaaaaaaaaaeeeeeeEEIIOOOOOOOOOOOOUUUUeeiioooooooooooouuuuUUUYYYYYuuuyyyy------"
+
+  for (var i = 0, len = from.length; i < len; i++) {
+    text = text.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+  }
+
+  return text
+    .toString()                     // Cast to string
+    .toLowerCase()                  // Convert the string to lowercase letters
+    .trim()                         // Remove whitespace from both sides of a string
+    .replace(/\s+/g, '-')           // Replace spaces with -
+    .replace(/&/g, '-y-')           // Replace & with 'and'
+    .replace(/[^\w\-]+/g, '')       // Remove all non-word chars
+    .replace(/\-\-+/g, '-');        // Replace multiple - with single -
+}
